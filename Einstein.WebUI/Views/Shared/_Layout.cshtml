@@ -1,0 +1,71 @@
+﻿<!DOCTYPE html>
+<html> 
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@ViewBag.Title - My Telerik MVC Application</title>
+
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/kendo")
+    @Scripts.Render("~/bundles/bootstrap")
+
+	<link href="@Url.Content("~/Content/bootstrap.min.css")" rel="stylesheet" type="text/css" />
+	<link href="@Url.Content("~/Content/Site.css")" rel="stylesheet" type="text/css" />
+	<script src="@Url.Content("~/Scripts/kendo/2019.3.1023/jszip.min.js")"></script>
+	<script src="@Url.Content("~/Scripts/bootstrap.min.js")"></script>
+    <script>
+        kendo.culture("ru-RU");
+    </script>
+</head>
+       @(Html.Kendo().Menu()
+           .Name("mainMenu")
+           .Items(item=>
+           {
+               item.Add().Text("Заявка").Action("Index", "Order");
+               item.Add().Text("Таблица").Action("GridView", "Order");
+               item.Add().Text("Календарь").Action("Index", "Scheduler");
+           })
+    )
+<body>
+    
+    @RenderBody()
+
+    <div id="notification"></div>
+
+</body>
+   
+</html>
+<script>
+    function showSuccess(message) {
+
+        var notification = $("#notification").kendoNotification({
+            autoHideAfter: 4000,
+            position: {
+                top: 30
+            },
+            stacking: "down",
+            button: true
+        }).data("kendoNotification");
+
+        notification.show(message, "success");
+    }
+
+    function showError(message) {
+
+        var notification = $("#notification").kendoNotification({
+            position: {
+                pinned: true,
+                top: 30,
+                right: 30
+            },
+            autoHideAfter: 0,
+            stacking: "down",
+            button: true
+        }).data("kendoNotification");
+
+        notification.show(message, "error");
+       
+
+    }
+</script>

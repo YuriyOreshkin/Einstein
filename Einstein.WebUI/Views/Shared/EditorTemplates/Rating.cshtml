@@ -1,0 +1,7 @@
+@model short
+
+@(Html.Kendo().RatingFor(m => m)
+      .HtmlAttributes(new { style = "width:100%" })
+      .Min(1)
+      .Max(3)
+)

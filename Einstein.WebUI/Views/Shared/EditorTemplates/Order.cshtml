@@ -1,0 +1,102 @@
+﻿@model Einstein.WebUI.Models.OrderViewModel
+<script id="timesTemplate" type="text/x-kendo-template">
+    <span>#: kendo.toString(kendo.parseDate(Start),"HH:mm") # - #: kendo.toString(kendo.parseDate(End),"HH:mm") #</span>
+</script>
+<div style="margin: 0 15px">
+    <div class="k-form-field">
+        @Html.EditorFor(m=>m.eventid)
+        <label class="k-label k-form-label" for="eventid">Мероприятие:</label>
+        <span class="k-form-field-wrap">
+            @(Html.Kendo().DropDownListFor(m => m.eventname)
+                .HtmlAttributes(new { style = "width:100%;" })
+                .DataTextField("Title")
+                .DataValueField("Title")
+                .ValuePrimitive(true)
+                .AutoBind(false)
+                .DataSource(source => source.Read(read => read.Action("DropDownListReadNames", "SchedulerService"))) //.Data("getParameters")
+                .Events(ev => ev.Change("onDropDownListEventsNamesChange"))
+            )
+        </span>
+    </div>
+    <div class="k-form-field">
+        <label class="k-label k-form-label" for="date">Дата посещения:</label>
+        <div class="k-form-field-wrap">
+            @(Html.Kendo().DatePickerFor(m => m.dateevent)
+                 .HtmlAttributes(new { style = "width:100%;" })
+                 .Enable(false)
+                 .Events(ev => ev.Change("onDatePickerDateChange"))
+                 )
+        </div>
+        <span class="k-invalid-msg" data-for="date"></span>
+    </div>
+    <div class="k-form-field">
+        <label class="k-label k-form-label" for="time">Время посещения:</label>
+        <div class="k-form-field-wrap">
+            @(Html.Kendo().DropDownListFor(m => m.timeevent)
+                .HtmlAttributes(new { style = "width:100%;" })
+                .Enable(false)
+                .AutoBind(false)
+                //.TemplateId("timesTemplate")
+                //.ValueTemplateId("timesTemplate")
+                .DataTextField("Value")
+                .DataValueField("Value")
+                .ValuePrimitive(true)
+                .Events(ev => ev.Change("onDropDownListTimesChange"))
+            )
+        </div>
+        <span class="k-invalid-msg" data-for="time"></span>
+    </div>
+    <div class="k-form-field">
+        @Html.EditorFor(m=>m.freeplaces)
+        <label class="k-label k-form-label" for="persons">Количество посетителей (макс. кол-во  <span id="freeplaces-view"></span>):</label>
+        <div class="k-form-field-wrap">
+            @(Html.Kendo().NumericTextBoxFor(m => m.persons)
+                .Format("n0")
+                .Min(1)
+                .Decimals(0)
+                .HtmlAttributes(new { style = "width:100%;" })
+                .Enable(false)
+                )
+        </div>
+        <span class="k-invalid-msg" data-for="persons"></span>
+    </div>
+    <div class="k-form-field">
+        <label class="k-label k-form-label" for="email">Электронная почта:</label>
+        <div class="k-form-field-wrap">
+            @(Html.Kendo().TextBoxFor(m => m.email)
+                .HtmlAttributes(new { placeholder = "myname@example.net", type = "email", data_email_msg = "Неверный формат электронной почты", style = "width:100%;" })
+                )
+        </div>
+    </div>
+    <div class="k-form-field">
+        <label class="k-label k-form-label" for="phonenumber">Номер телефона:</label>
+        <div class="k-form-field-wrap">
+            @(Html.Kendo().MaskedTextBoxFor(m => m.phonenumber)
+                .Mask("(999) 000-0000")
+                .HtmlAttributes(new { placeholder = "(999) 000-0000", type = "tel", validationmessage = "Телефон должен содержать 10 цифр", style = "width: 100%" })
+                )
+        </div>
+        <span class="k-invalid-msg" data-for="phonenumber"></span>
+    </div>
+</div>
+<style>
+    legend {
+        border-bottom: 1px solid #e5e5e5;
+        margin-bottom: 20px;
+    }
+
+    .k-form-fieldset {
+        margin: 32px 0 0;
+        padding: 0 0;
+        border-width: 0;
+        box-sizing: border-box;
+    }
+
+    .k-form-field-wrap {
+        width: 100%;
+    }
+
+    .k-form-field {
+        margin-bottom: 10px;
+    }
+</style>

@@ -1,0 +1,29 @@
+@model Einstein.WebUI.Models.TestViewModel
+
+    <ul class="fieldlist">
+        <li>
+            @Html.LabelFor(f => f.name)
+            @Html.TextAreaFor(f => f.name,new { @class="k-textbox", style = "width: 100%;" })
+        </li>
+        <li>
+            @Html.LabelFor(f => f.duration)
+            @Html.Kendo().IntegerTextBoxFor(f => f.duration).Step(10)
+        </li>
+        <li>
+            @Html.LabelFor(f => f.categoryid)
+            @(Html.Kendo().DropDownListFor(f=>f.categoryid)
+                                               .DataTextField("name")
+                                               .DataValueField("id")
+                                               .HtmlAttributes(new { style = "width: 100%;" })
+                                               .DataSource(ds =>
+                                               {
+                                                   ds.Read("ReadForDropDownList", "CategoryService");
+                                               })
+            )
+
+        </li>
+        <li>
+            @Html.Kendo().CheckBoxFor(f=>f.once) 
+        </li>
+    </ul>
+

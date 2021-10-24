@@ -1,0 +1,84 @@
+﻿
+@{
+    ViewBag.Title = "GridView";
+}
+@Scripts.Render("~/Scripts/OrderEvents.js")
+<h2>Заявки на посещение мероприятий</h2>
+
+@(Html.Kendo().Grid<Einstein.WebUI.Models.OrderViewModel>()
+                                                        .Name("gridOrders")
+                                                        .HtmlAttributes(new { @class = "data-view", style = "margin: 10px 5px;" })
+                                                        .ToolBar(toolbar =>
+                                                        {
+                                                            toolbar.Create();
+                                                            toolbar.Excel();
+                                                        })
+                                                        .Columns(columns =>
+                                                        {
+                                                            columns.Bound(p => p.dateorder).Format("{0:dd.MM.yyyy HH:mm}").Width(140).ClientFooterTemplate("Всего:");
+                                                            columns.Bound(p => p.dateevent).Format("{0:dd.MM.yyyy}").Width(140);
+                                                            columns.Bound(p => p.eventname).ClientFooterTemplate("#=count#").ClientGroupHeaderColumnTemplate(" #= count#");
+                                                            columns.Bound(p => p.timeevent).Width(100);
+                                                            columns.Bound(p => p.persons).Width(100).ClientGroupHeaderColumnTemplate("#=sum#").ClientFooterTemplate("#=sum#");
+                                                            columns.Bound(p => p.email).Width(250);
+                                                            columns.Bound(p => p.phonenumber).Width(200);
+                                                            columns.Command(commands =>
+                                                            {
+                                                                commands.Edit();
+                                                                commands.Destroy();
+                                                            }).Width(300);
+                                                        })
+                                                        .Sortable()
+                                                        .Editable(edit => edit.Mode(GridEditMode.PopUp).TemplateName("Order"))
+                                                        .Resizable(r => r.Columns(true))
+                                                        .Groupable()
+                                                        //.Scrollable()
+                                                        .Filterable()
+                                                        .DataSource(dataSource => dataSource
+                                                            .Ajax()
+                                                             .Aggregates(aggregates =>
+                                                             {
+                                                                 aggregates.Add(p => p.eventname).Count();
+                                                                 aggregates.Add(p => p.persons).Sum();
+                                                             })
+                                                            .Sort(s=>s.Add(f=>f.dateorder).Descending())
+                                                            .ServerOperation(false)
+                                                            .Model(model =>
+                                                            {
+                                                                model.Id(p => p.id);
+                                                            })
+                                                            //.PageSize(50)
+                                                            .Read(read => read.Action("ReadGrid", "OrderService"))
+                                                            .Create(update => update.Action("CreateForGrid", "OrderService"))
+                                                            .Update(update => update.Action("UpdateForGrid", "OrderService"))
+                                                            .Destroy(update => update.Action("DestroyForGrid", "OrderService"))
+                                                            .Events(events => events.Error("error_handler"))
+
+                                                )
+)
+
+
+<script>
+
+
+  
+    //Show Errors
+    function error_handler(e) {
+        if (e.errors) {
+            var message = "<strong>Ошибки:</strong>";
+            message += "<ul>"
+            $.each(e.errors, function (key, value) {
+
+                if ('errors' in value) {
+                    $.each(value.errors, function () {
+                        message += "<li>" + this + "<br></li>";
+                    });
+                }
+            });
+            message += "</ul>"
+            showError(message);
+            this.cancelChanges();
+        }
+    }
+
+</script>

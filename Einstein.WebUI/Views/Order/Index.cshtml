@@ -1,0 +1,90 @@
+﻿@model Einstein.WebUI.Models.OrderViewModel
+@{
+    ViewBag.Title = "Заявка";
+}
+@Scripts.Render("~/Scripts/OrderEvents.js")
+<div style="height:82vh;">
+    <div class="k-form-container" style="margin-left: 25%; width:50%;">
+        <form id="order">
+            <fieldset class="k-form-fieldset k-widget">
+                <legend class="k-form-legend">Заявка на посещение мероприятия</legend>
+
+                @Html.Partial("~/Views/Shared/EditorTemplates/Order.cshtml", Model)
+
+            </fieldset>
+            <div style="float:right;">
+                @(Html.Kendo().Button().Name("Save").Tag("div").HtmlAttributes(new { type = "button", @class = "k-primary" }).Icon("flip-vertical").Content("Отправить").Events(ev => ev.Click("SendOrder")))
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+
+    
+    function  ShowMessage(e)
+    {
+        
+        if (e.Errors) {
+            var message = "<strong>Ошибки:</strong>";
+            message += "<ul>"
+            $.each(e.Errors, function (key, value) {
+
+                if ('errors' in value) {
+                    $.each(value.errors, function () {
+                        message += "<li>" + this + "<br></li>";
+                    });
+                }
+            });
+            message += "</ul>"
+            showError(message);
+
+        }
+        else
+        {
+            showSuccess("Заявка успешно создана!<p>С Вами свяжется оператор, чтобы уточнить данные.</p>")
+        }
+    }
+    function SendOrder(e) {
+
+        var validator = $("#order").kendoValidator().data("kendoValidator");
+
+         if (validator.validate()) {
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("CreateForGrid", "OrderService") ", 
+                datatype: 'json',
+                data: $('#order').serialize(),
+                success: function (data) {
+
+                        ShowMessage(data);
+                    },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    
+                    showError(xhr.status + " " + thrownError);
+                    }
+            });
+        }
+    }
+</script>
+<style>
+    legend {
+        border-bottom: 1px solid #e5e5e5;
+        margin-bottom: 20px;
+    }
+
+    .k-form-fieldset {
+        margin: 32px 0 0;
+        padding: 0 0;
+        border-width: 0;
+        box-sizing: border-box;
+    }
+
+    .k-form-field-wrap {
+        width: 100%;
+    }
+
+    .k-form-field {
+        margin-bottom: 10px;
+    }
+</style>
