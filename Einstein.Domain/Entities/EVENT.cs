@@ -33,6 +33,14 @@ namespace Einstein.Domain.Entities
                 return MaxPersons - Orders.Sum(s => s.PERSONS);
             } }
 
+        [NotMapped]
+        public int Persons
+        {
+            get
+            {
+                return  Orders.Sum(s => s.PERSONS);
+            }
+        }
         public virtual ICollection<ORDER> Orders { get; set; }
         
     }

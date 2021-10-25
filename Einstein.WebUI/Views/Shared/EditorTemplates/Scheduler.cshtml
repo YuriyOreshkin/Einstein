@@ -87,7 +87,16 @@
     @(Html.LabelFor(model => model.RecurrenceRule))
 </div>
 <div data-container-for="recurrenceRule" class="k-edit-field task-edit-box">
-    @(Html.Kendo().RecurrenceEditorFor(model => model.RecurrenceRule).HtmlAttributes(new { data_bind = "value:recurrenceRule" }))
+    @(Html.Kendo().RecurrenceEditorFor(model => model.RecurrenceRule).Timezone("W-SU").Messages(mes=> {
+    mes.Daily(d => d.Interval("дней").RepeatEvery("Повторять каждые:"));
+    mes.End(end => end.After("После").Occurrence("входит").Label("Конец:").Never("Никогда").On("В").MobileLabel("Окончание"));
+    mes.Frequencies(f => f.Daily("Ежедневно").Monthly("Ежемесячно").Never("Никогда").Weekly("Еженедельно").Yearly("Ежегодно"));
+    mes.Monthly(m => m.Day("День").Interval("месяцы").RepeatEvery("Повторять каждый:").RepeatOn("Повторение:"));
+    mes.OffsetPositions(off => off.First("первый").Fourth("четвертый").Last("последний").Second("второй").Third("третий"));
+    mes.Weekly(w => w.RepeatEvery("Повторять каждую:").RepeatOn("Повторение:").Interval("неделя"));
+    mes.Yearly(y => y.Of("из").RepeatEvery("Повторять каждый:").RepeatOn("Повторение:").Interval("годы"));
+    mes.Weekdays(wd => wd.Day("день").Weekday("будний").Weekend("выходной")); 
+}).HtmlAttributes(new { data_bind = "value:recurrenceRule" }))
 </div>
 
 <div class="k-edit-label task-edit-label">

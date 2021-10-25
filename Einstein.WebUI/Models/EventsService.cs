@@ -163,7 +163,9 @@ namespace Einstein.WebUI.Models
                 RecurrenceException = task.RecurrenceException,
                 RecurrenceID = task.RecurrenceID,
                 MaxPersons = task.MaxPersons,
-                FreePlaces =task.FreePlaces
+                FreePlaces =task.FreePlaces,
+                Persons=task.Persons
+
             };
     }
 
@@ -191,10 +193,12 @@ namespace Einstein.WebUI.Models
             if (ValidateModel(appointment, modelState))
             {
                
-                    var entity = appointment.ToEntity();
+                    var entity = appointment.ToEntity(new EVENT());
                     
                     entities.AddEvent(entity);
                     appointment.TaskID = entity.EventID;
+                    appointment.Persons = entity.Persons;
+                appointment.FreePlaces = entity.FreePlaces;
                 
             }
         }
@@ -208,8 +212,12 @@ namespace Einstein.WebUI.Models
                     appointment.Title = "";
                 }
                
-                    var entity = appointment.ToEntity();
+                    var entity = entities.Events.FirstOrDefault(e=>e.EventID == appointment.TaskID);
+                    entity= appointment.ToEntity(entity); 
                     entities.UpdateEvent(entity);
+                
+                appointment.Persons = entity.Persons;
+                appointment.FreePlaces = entity.FreePlaces;
             }
         }
 
@@ -258,7 +266,7 @@ namespace Einstein.WebUI.Models
                 result= false;
             }
 
-            if (appointment.FreePlaces > appointment.MaxPersons)
+            if (appointment.Persons > appointment.MaxPersons)
             {
                 modelState.AddModelError("errors", "Максимальное количество мест не должно быть меньше заявленых.");
                 result= false;

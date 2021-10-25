@@ -1,4 +1,35 @@
-﻿function getParameters(data)
+﻿//Валидация данных
+(function ($, kendo) {
+    $.extend(true, kendo.ui.validator, {
+        rules: { // custom rules
+            validmask: function (input) {
+                if (input.is("[data-validmask-msg]") && input.val() != "") {
+                    var maskedtextbox = input.data("kendoMaskedTextBox");
+                    return maskedtextbox.value().indexOf(maskedtextbox.options.promptChar) === -1;
+                }
+
+                return true;
+            },
+            maximumvalidation: function (input, params) {
+
+                if (input.is("[name='persons']") && input.val() != "") {
+
+                    var numerictextbox = input.data("kendoNumericTextBox");
+                    var val = numerictextbox.value();
+                    var max = numerictextbox.max();
+                    input.attr("data-maximumvalidation-msg", "Количество посетителей должно быть в диапазоне от 1 до " + max);
+
+                    return (val <= max);
+                }
+
+                return true
+            }
+        }
+    });
+})(jQuery, kendo);
+
+
+function getParameters(data)
 {
     var grid = $("#gridOrders").data("kendoGrid");
     var uid = $('#eventid').closest(".k-popup-edit-form").data("uid");
@@ -9,9 +40,11 @@
     return { eventid: 0 }
 }
 function SetFreePlaces(num) {
+    
     var numerictextbox = $("#persons").data("kendoNumericTextBox");
     if (num > 0) {
 
+        numerictextbox.value(1);
         numerictextbox.enable(true);
         numerictextbox.max(num);
 
@@ -19,6 +52,7 @@ function SetFreePlaces(num) {
     }
     else {
 
+        numerictextbox.value(1);
         numerictextbox.enable(false);
     }
     //for view
@@ -38,20 +72,22 @@ function SetEventId(id)
 
 function SetTimes(times) {
     var dropdowntimes = $("#timeevent").data("kendoDropDownList");
+    dropdowntimes.select(-1);
+    dropdowntimes.trigger("select");
 
     if (times.length > 0) {
         var dataSource = new kendo.data.DataSource({
-            data: times
+            data: times.sort()
         });
         dropdowntimes.setDataSource(dataSource);
         //times.forEach(function (obj, index) {
         //    dropdowntimes.da
         //});
-        dropdowntimes.enable();
+        dropdowntimes.enable(true);
     }
     else {
 
-        dropdowntimes.disable();
+        dropdowntimes.enable(false);
     }
 }
 
@@ -90,7 +126,9 @@ function DisableDates(dates, start, end) {
 
 function SetDates(dates) {
     var datepicker = $("#dateevent").data("kendoDatePicker");
+    var value = datepicker.value();
     datepicker.value("");
+    datepicker.trigger("change");
 
     if (dates.length > 0) {
         var min = GetMinDate(dates);
@@ -109,6 +147,7 @@ function SetDates(dates) {
         datepicker.enable();
     }
     else {
+        
         datepicker.disable();
     }
 
@@ -142,17 +181,24 @@ function AvailableEvents(dates) {
 
 
 function onDropDownListEventsNamesChange(e) {
-    var event = this.dataItem();
+   
+    var event = e.dataItem;
     if (event) {
         AvailableEvents(event.Dates)
     }
 }
 
 function onDropDownListTimesChange(e) {
-    var item = this.dataItem();
+
+    var item = e.dataItem;
+ 
     if (item) {
         SetFreePlaces(item.FreePlaces);
         SetEventId(item.EventId);
+    }
+    else {
+        SetFreePlaces(0);
+        SetEventId(0);
     }
 }
 
@@ -161,7 +207,7 @@ function onDatePickerDateChange(e) {
     var dropdownnames = $("#eventname").data("kendoDropDownList");
     var event = dropdownnames.dataItem();
 
-    if (event) {
+    if (event && date) {
 
         event.Dates.forEach(function (obj, index) {
             var avdate = kendo.parseDate(obj.Date);
@@ -169,7 +215,8 @@ function onDatePickerDateChange(e) {
                 SetTimes(obj.Times);
             }
         });
-
-
+    }
+    else {
+        SetTimes([]);
     }
 }

@@ -33,7 +33,7 @@ namespace Einstein.WebUI.Models
                 eventid = order.EVENTID,
                 dateorder = order.DATE,
                 persons = order.PERSONS,
-                dateevent = order.EVENT.Start,
+                dateevent = order.EVENT.Start.Date,
                 timeevent = order.EVENT.Start.ToString("HH:mm") + " - " + order.EVENT.End.ToString("HH:mm"),
                 freeplaces = order.EVENT.FreePlaces
 

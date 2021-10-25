@@ -20,11 +20,36 @@
 </div>
 
 <script>
+    var dataSource;
+    $(document).ready(function () {
 
+        var dropdownlist = $("#eventname").data("kendoDropDownList");
+        dataSource = dropdownlist.dataSource;
+        
+        dataSource.bind("requestEnd", dataSource_requestEnd);
+        dataSource.read();
+       
+    });
+
+    function dataSource_requestEnd(e) {
+        var response = e.response;
+        var type = e.type;
+       
+        if (response.length > 0) {
+           
+            onDropDownListEventsNamesChange({ dataItem: response[0] })
+            
+        }
+        else {
+
+        };
+    }
+   
+   
+   
     
     function  ShowMessage(e)
     {
-        
         if (e.Errors) {
             var message = "<strong>Ошибки:</strong>";
             message += "<ul>"
@@ -57,7 +82,8 @@
                 data: $('#order').serialize(),
                 success: function (data) {
 
-                        ShowMessage(data);
+                    ShowMessage(data);
+                    dataSource.read();
                     },
                 error: function (xhr, ajaxOptions, thrownError) {
                     

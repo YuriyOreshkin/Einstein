@@ -66,6 +66,7 @@ namespace Einstein.WebUI.Models
         [Range(1, int.MaxValue)]
         public int MaxPersons { get; set; }
 
+        public int Persons { get; set; }
         public int FreePlaces { get; set; }
 
         private bool isAllDay;
@@ -82,24 +83,24 @@ namespace Einstein.WebUI.Models
             }
         }
 
-       
-        public EVENT ToEntity()
+
+        public EVENT ToEntity(EVENT @event)
         {
-            return new EVENT
-            {
-                EventID = TaskID,
-                Title = Title,
-                Start = Start,
-                End = End,
-                Description = Description,
-                RecurrenceRule = RecurrenceRule,
-                RecurrenceException = RecurrenceException,
-                StartTimezone = StartTimezone,
-                EndTimezone = EndTimezone,
-                RecurrenceID = RecurrenceID,
-                IsAllDay = IsAllDay,
-                MaxPersons = MaxPersons
-            };
+
+            @event.EventID = TaskID;
+            @event.Title = Title;
+            @event.Start = Start;
+            @event.End = End;
+            @event.Description = Description;
+            @event.RecurrenceRule = RecurrenceRule;
+            @event.RecurrenceException = RecurrenceException;
+            @event.StartTimezone = StartTimezone;
+            EndTimezone = EndTimezone;
+            @event.RecurrenceID = RecurrenceID;
+            @event.IsAllDay = IsAllDay;
+            @event.MaxPersons = MaxPersons;
+            return @event;
+
         }
 
     }

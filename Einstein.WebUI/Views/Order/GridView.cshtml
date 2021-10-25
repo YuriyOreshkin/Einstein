@@ -28,6 +28,7 @@
                                                                 commands.Destroy();
                                                             }).Width(300);
                                                         })
+                                                        .Events(ev=>ev.Edit("onGridOrdersEdit"))
                                                         .Sortable()
                                                         .Editable(edit => edit.Mode(GridEditMode.PopUp).TemplateName("Order"))
                                                         .Resizable(r => r.Columns(true))
@@ -61,6 +62,15 @@
 <script>
 
 
+    function onGridOrdersEdit(e)
+    {
+        if (!e.model.isNew()) {
+            
+            e.model.freeplaces = e.model.freeplaces + e.model.persons;
+            var numeric = e.container.find("input[name=persons]").data("kendoNumericTextBox");
+            numeric.max(e.model.freeplaces);
+        }
+    }
   
     //Show Errors
     function error_handler(e) {

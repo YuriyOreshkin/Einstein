@@ -12,6 +12,7 @@
                 .StartTime(new DateTime(2020, 1, 1, 7, 00, 00))
                 .WorkDayStart(new DateTime(2020, 1, 1, 8, 00, 00))
                 .WorkDayEnd(new DateTime(2020, 1, 1, 18, 00, 00))
+                .EndTime(new DateTime(2020, 1, 1, 21, 00, 00))
                 .MajorTimeHeaderTemplate("#=kendo.toString(date, 'HH:mm')#")
                 .Views(views =>
                 {
@@ -65,23 +66,46 @@
                 //    new { Text = "Marketing", Value = 5, Color = "#FFC600" }
                 //        });
                 //})
-                //.Events(e => e.Edit("onSchedulerEdit").Change("onSchedulerChange")
+                //.Events(e => e.Edit("onSchedulerEdit"))
                 )
 
 </div>
 <script id="eventTemplate" type="text/x-kendo-template">
-    <div class='event-template #if(FreePlaces > 0){# enable-background #}else{# disable-background #}#'>
+    <div class='event-template #if(FreePlaces > 0 && start> new Date()){# enable-background #}else{# disable-background #}#' title='#: kendo.toString(start, 'HH:mm') # - #: kendo.toString(end, 'HH:mm') #'>
                 @*<span>#= start#</span>*@
                 <span class='title'>#= title#</span>
-                <p>
-                 <span class="k-icon  k-i-user"></span><span>#=MaxPersons-FreePlaces# </span>
-                 <span class="k-icon  k-i-checkbox"></span><span>#=FreePlaces# </span>
-               </p>
+                <div class='orders-info'>
+                    <div class='orders-info-item' title="Заявлено человек">
+                        <span class="k-icon  k-i-user"></span>
+                        <span class="badge badge-persons">#=Persons# </span>
+                    </div>
+                    <div class='orders-info-item' style="margin-left: 10px;" title="Свободных мест">
+                        <span class="k-icon  k-i-checkbox"></span>
+                        <span class="badge badge-freeplaces">#=FreePlaces# </span>
+                    </div>
+                </div>
     </div>
 </script>
 <script>
 
-    function onDataBound(e) {
+    function onSchedulerEdit(e) {
+        var recurrenceEditor = e.container.find('#RecurrenceRule').data('kendoRecurrenceEditor');
+        console.log(recurrenceEditor);
+        recurrenceEditor.setOptions({
+            messages: {
+                daily: { interval: "дней", repeatEvery: "Повторять каждые:" },
+                end: { after: "После", occurrence: "входит", label: "Конец:", never: "Никогда", on: "В", mobileLabel: "Окончание" },
+                frequencies: { daily: "Ежедневно", monthly: "Ежемесячно", never: "Никогда", weekly: "Еженедельно", yearly: "Ежегодно" },
+                monthly: { day: "День", interval: "месяцы", repeatEvery: "Повторять каждый:", repeatOn: "Повторение:" },
+                offsetPositions: { first: "первый", fourth: "четвертый", last: "последний", second: "второй", third: "третий" },
+                weekly: { repeatEvery: "Повторять каждую:", repeatOn: "Повторение:", interval: "неделя" },
+                yearly: { of: "из", repeatEvery: "Повторять каждый:", repeatOn: "Повторение:", interval: "годы" },
+                weekdays: { day: "день", weekday: "будний", weekend: "выходной" }
+            }
+        });
+    }
+
+  function onDataBound(e) {
         var view = this.view();
         var events = this.dataSource.view();
         var eventElement;
@@ -119,6 +143,33 @@
     }
 </script>
 <style>
+    .badge {
+        /*padding: 2px;*/
+        /*border-width: 1px;*/
+        font-size: 13px;
+        line-height: 1;
+        
+    }
+    .badge-persons {
+        border-color: #ff6358;
+        color: #fff;
+        background-color: #ff6358;
+    }
+    .badge-freeplaces {
+        border-color: #3e80ed;
+        color: #fff;
+        background-color: #3e80ed;
+    }
+
+    .orders-info {
+        position: absolute;
+        bottom: 0px;
+        margin: 0 8px 5px; 
+    }
+    .orders-info-item {
+        display: inline-block;
+        
+    }
     .event-template {
         border-style: solid;
         border-width: 2px;

@@ -4,7 +4,7 @@
 </script>
 <div style="margin: 0 15px">
     <div class="k-form-field">
-        @Html.EditorFor(m=>m.eventid)
+        @Html.HiddenFor(m=>m.eventid)
         <label class="k-label k-form-label" for="eventid">Мероприятие:</label>
         <span class="k-form-field-wrap">
             @(Html.Kendo().DropDownListFor(m => m.eventname)
@@ -14,7 +14,7 @@
                 .ValuePrimitive(true)
                 .AutoBind(false)
                 .DataSource(source => source.Read(read => read.Action("DropDownListReadNames", "SchedulerService"))) //.Data("getParameters")
-                .Events(ev => ev.Change("onDropDownListEventsNamesChange"))
+                .Events(ev => ev.Select("onDropDownListEventsNamesChange"))
             )
         </span>
     </div>
@@ -41,13 +41,13 @@
                 .DataTextField("Value")
                 .DataValueField("Value")
                 .ValuePrimitive(true)
-                .Events(ev => ev.Change("onDropDownListTimesChange"))
+                .Events(ev => ev.Select("onDropDownListTimesChange"))
             )
         </div>
         <span class="k-invalid-msg" data-for="time"></span>
     </div>
     <div class="k-form-field">
-        @Html.EditorFor(m=>m.freeplaces)
+        @Html.HiddenFor(m=>m.freeplaces)
         <label class="k-label k-form-label" for="persons">Количество посетителей (макс. кол-во  <span id="freeplaces-view"></span>):</label>
         <div class="k-form-field-wrap">
             @(Html.Kendo().NumericTextBoxFor(m => m.persons)
@@ -73,7 +73,8 @@
         <div class="k-form-field-wrap">
             @(Html.Kendo().MaskedTextBoxFor(m => m.phonenumber)
                 .Mask("(999) 000-0000")
-                .HtmlAttributes(new { placeholder = "(999) 000-0000", type = "tel", validationmessage = "Телефон должен содержать 10 цифр", style = "width: 100%" })
+                //pattern = "\\([0-9]{3}\\) [0-9]{3}-[0-9]{4}", 
+                .HtmlAttributes(new { placeholder = "(999) 000-0000", type = "tel", data_validmask_msg ="Телефон должен содержать 10 цифр", style = "width: 100%" })
                 )
         </div>
         <span class="k-invalid-msg" data-for="phonenumber"></span>
