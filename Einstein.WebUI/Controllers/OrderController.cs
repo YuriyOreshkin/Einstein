@@ -22,7 +22,7 @@ namespace Einstein.WebUI.Controllers
         }
 
         
-        public ActionResult GridView(long? eventid, long? recurrenceId)
+        public ActionResult GridView(long? eventid)
         {
             
             if (eventid.HasValue)
@@ -34,6 +34,23 @@ namespace Einstein.WebUI.Controllers
                 }
             }
             return View(new EventViewModel());
+        }
+
+        public ActionResult GridViewByDate(int? recurrenceId,string start)
+        {
+
+            if (recurrenceId.HasValue)
+            {
+                EventViewModel @event = service.GetAll().FirstOrDefault(e => e.TaskID == recurrenceId);
+                if (@event != null)
+                {
+                    @event.Start = DateTime.Parse(start);
+                    @event.RecurrenceID = recurrenceId;
+                    //@event.TaskID = 0;
+                    return View("GridView",@event);
+                }
+            }
+            return View("GridView", new EventViewModel());
         }
     }
 }

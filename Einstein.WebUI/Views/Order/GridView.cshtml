@@ -1,13 +1,13 @@
 ﻿@model Einstein.WebUI.Models.EventViewModel
 @{
-    ViewBag.Title = "GridView";
+    ViewBag.Title = "Таблица";
 }
 @Scripts.Render("~/Scripts/OrderEvents.js")
-<h2>Заявки на посещение мероприятий</h2>
+@*<h2>Заявки на посещение мероприятий</h2>*@
 
 @(Html.Kendo().Grid<Einstein.WebUI.Models.OrderViewModel>()
                                                                 .Name("gridOrders")
-                                                                .HtmlAttributes(new { @class = "data-view", style = "margin: 10px 5px;" })
+                                                                .HtmlAttributes(new { @class = "data-view" })
                                                                 .ToolBar(toolbar =>
                                                                 {
 
@@ -45,7 +45,7 @@
                                                                      })
                                                                     .Sort(s => s.Add(f => f.dateorder).Descending())
                                                                     .Filter(f => {
-                                                                        if (Model.TaskID != 0)
+                                                                        if (Model.TaskID != 0 || Model.RecurrenceID != null)
                                                                         {
                                                                             f.Add(ev => ev.eventname).IsEqualTo(Model.Title);
                                                                             f.Add(ev => ev.dateevent).IsEqualTo(Model.Start.Date);

@@ -140,7 +140,6 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\OrderController.cs" />
-    <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\SchedulerController.cs" />
     <Compile Include="Controllers\Services\OrderServiceController.cs" />
     <Compile Include="Controllers\Services\SchedulerServiceController.cs" />
@@ -226,6 +225,7 @@
     <Content Include="Content\kendo\2019.3.1023\textures\stripe6.png" />
     <Content Include="Content\kendo\2019.3.1023\textures\transparency.png" />
     <Content Include="Content\kendo\2019.3.1023\textures\transtexture.png" />
+    <Content Include="Content\Site.css" />
     <Content Include="Global.asax" />
     <Content Include="Content\bootstrap.min.css.map" />
     <Content Include="Content\bootstrap.css.map" />
@@ -320,7 +320,6 @@
     <Content Include="Views\Shared\EditorTemplates\Order.cshtml" />
     <Content Include="Views\Scheduler\Index.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Scheduler.cshtml" />
-    <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Scripts\kendo\2019.3.1023\kendo.timezones.min.js.map" />
   </ItemGroup>
   <ItemGroup />

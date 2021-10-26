@@ -136,7 +136,7 @@ namespace Einstein.WebUI.Models
 
             if (eVENT != null && orderview.persons > eVENT.FreePlaces)
             {
-                modelState.AddModelError("errors", "Количество человек("+orderview.persons+") превышает количество свободных мест ("+orderview.freeplaces+")");
+                modelState.AddModelError("errors", "Количество человек("+orderview.persons+") превышает количество свободных мест ("+ eVENT.FreePlaces + ")");
                 return false;
             }
             return result;

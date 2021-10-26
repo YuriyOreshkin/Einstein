@@ -3,7 +3,7 @@
     ViewBag.Title = "Календарь";
 }
 
-<h2>Календарь мероприятий</h2>
+@*<h2>Календарь мероприятий</h2>*@
 
 <div class="inner-section">
     @(Html.Kendo().Scheduler<Einstein.WebUI.Models.EventViewModel>()
@@ -111,7 +111,7 @@
                 <span class="badge badge-freeplaces">#=FreePlaces# </span>
             </div>
             <div style="display:inline-block;float:right;">
-                <a class="action-orders"  target="_blank" title="Заявки" href="@Url.Action("GridView","Order")?Title=#= title#&Start=#= start#&Time "><span class="k-icon k-i-file-add" style="color:\\#fff;font-size: 20px;"></span></a>
+                <a class="action-orders"  target="_blank" title="Заявки" href="#if(TaskID > 0) {  #@Url.Action("GridView","Order")?eventid=#=TaskID# #}else {#@Url.Action("GridViewByDate","Order")?recurrenceId=#=recurrenceId#&start=#: kendo.toString(start, 'dd.MM.yyyy HH:mm' )# #}#"><span class="k-icon k-i-list-ordered" style="color:\\#fff;font-size: 20px;"></span></a>
             </div>
 
 
