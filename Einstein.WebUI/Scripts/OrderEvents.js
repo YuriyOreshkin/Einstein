@@ -19,7 +19,7 @@
                     var max = numerictextbox.max();
                     input.attr("data-maximumvalidation-msg", "Количество посетителей должно быть в диапазоне от 1 до " + max);
 
-                    return (val <= max);
+                    return  (val>=1 && val <= max);
                 }
 
                 return true
@@ -31,20 +31,35 @@
 
 function getParameters(data)
 {
-    var grid = $("#gridOrders").data("kendoGrid");
-    var uid = $('#eventid').closest(".k-popup-edit-form").data("uid");
-    if (grid && uid) {
-        var item = grid.dataSource.getByUid(uid);
-        return { eventid: item.eventid };
+    //var grid = $("#gridOrders").data("kendoGrid");
+    //var uid = $('#eventid').closest(".k-popup-edit-form").data("uid");
+    //if (grid && uid) {
+    //    var item = grid.dataSource.getByUid(uid);
+    //    return { eventid: item.eventid };
+    //}
+    //return { eventid: 0 }
+    var orderid = $("#id").val();
+    
+    if (orderid) {
+
+        return { orderid: orderid }
     }
-    return { eventid: 0 }
+    else {
+
+        return { orderid: orderid }
+    }
+
 }
 function SetFreePlaces(num) {
     
     var numerictextbox = $("#persons").data("kendoNumericTextBox");
     if (num > 0) {
 
-        numerictextbox.value(1);
+        var val = numerictextbox.value();
+        if (val > num) {
+            numerictextbox.value(1);
+            numerictextbox.trigger("change");
+        }
         numerictextbox.enable(true);
         numerictextbox.max(num);
 

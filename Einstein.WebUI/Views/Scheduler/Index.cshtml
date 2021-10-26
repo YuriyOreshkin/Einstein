@@ -7,122 +7,120 @@
 
 <div class="inner-section">
     @(Html.Kendo().Scheduler<Einstein.WebUI.Models.EventViewModel>()
-                .Name("scheduler")
-                .Toolbar(t => t.Pdf())
-                .StartTime(new DateTime(2020, 1, 1, 7, 00, 00))
-                .WorkDayStart(new DateTime(2020, 1, 1, 8, 00, 00))
-                .WorkDayEnd(new DateTime(2020, 1, 1, 18, 00, 00))
-                .EndTime(new DateTime(2020, 1, 1, 21, 00, 00))
-                .MajorTimeHeaderTemplate("#=kendo.toString(date, 'HH:mm')#")
-                .Views(views =>
-                {
-                    views.DayView(d => d.DateHeaderTemplate("#=kendo.toString(date, 'dddd dd.MM.yyyy')#"));
-                    views.WeekView(w=>w.Selected(true).DateHeaderTemplate("#=kendo.toString(date, 'ddd dd.MM.yyyy')#"));
-                    views.MonthView();
-                    views.AgendaView();
+                                        .Name("scheduler")
+                                        .Toolbar(t => t.Pdf())
+                                        .StartTime(new DateTime(2020, 1, 1, 7, 00, 00))
+                                        .WorkDayStart(new DateTime(2020, 1, 1, 8, 00, 00))
+                                        .WorkDayEnd(new DateTime(2020, 1, 1, 18, 00, 00))
+                                        .EndTime(new DateTime(2020, 1, 1, 21, 00, 00))
+                                        .MajorTimeHeaderTemplate("#=kendo.toString(date, 'HH:mm')#")
+                                        .Views(views =>
+                                        {
+                                            views.DayView(d => d.DateHeaderTemplate("#=kendo.toString(date, 'dddd dd.MM.yyyy')#"));
+                                            views.WeekView(w => w.Selected(true).DateHeaderTemplate("#=kendo.toString(date, 'ddd dd.MM.yyyy')#"));
+                                            views.MonthView();
+                                            views.AgendaView();
 
-                })
+                                        })
 
-                .Pdf(pdf=>pdf.FileName("Расписание мероприятий.pdf").Title("Расписание мероприятий"))
-                .EventTemplateId("eventTemplate")
-                .Timezone("W-SU")
-                //.Events(ev=>ev.("onDataBound"))
-                //.Selectable(true)
-                .DataSource(d => d
-                    .Model(m =>
-                    {
-                        m.Id(f => f.TaskID);
-                        m.Field(f => f.Title).DefaultValue("");
-                        m.Field(f => f.MaxPersons).DefaultValue(1);
-                        m.RecurrenceId(f => f.RecurrenceID);
-                    })
-                    .Read("Read", "SchedulerService")
-                    .Create("Create", "SchedulerService")
-                    .Destroy("Destroy", "SchedulerService")
-                    .Update("Update", "SchedulerService")
-                    .Events(events => events.Error("error_handler"))
-                //.Filter(filters =>
-                //{
-                //    filters.Add(model => model.Category)
-                //        .IsEqualTo(1);
-                //})
-                )
+                                        .Pdf(pdf => pdf.FileName("Расписание мероприятий.pdf").Title("Расписание мероприятий"))
+                                        .EventTemplateId("eventTemplate")
+                                        .Timezone("W-SU")
+                                        //.Events(ev=>ev.("onDataBound"))
+                                        //.Selectable(true)
+                                        .DataSource(d => d
+                                            .Model(m =>
+                                            {
+                                                m.Id(f => f.TaskID);
+                                                m.Field(f => f.Title).DefaultValue("");
+                                                m.Field(f => f.MaxPersons).DefaultValue(1);
+                                                m.RecurrenceId(f => f.RecurrenceID);
+                                            })
+                                            .Read("Read", "SchedulerService")
+                                            .Create("Create", "SchedulerService")
+                                            .Destroy("Destroy", "SchedulerService")
+                                            .Update("Update", "SchedulerService")
+                                            .Events(events => events.Error("error_handler"))
+                                        //.Filter(filters =>
+                                        //{
+                                        //    filters.Add(model => model.Category)
+                                        //        .IsEqualTo(1);
+                                        //})
+                                        )
 
-                 .Editable(editable => {
-                     editable.TemplateName("Scheduler");
-                     editable.Move(false); })
-                //.Resources(resource =>
-                //{
-                //    resource.Add(m => m.Category)
-                //        .Title("Category")
-                //        .DataTextField("Text")
-                //        .DataValueField("Value")
-                //        .DataColorField("Color")
-                //        .BindTo(new[] {
-                //    new { Text = "Personal", Value = 1, Color = "#6BCC65" } ,
-                //    new { Text = "Work", Value = 2, Color = "#1E8EDF" } ,
-                //    new { Text = "Development", Value = 3, Color = "#E155D9" } ,
-                //    new { Text = "Design", Value = 4, Color = "#DD1C3C" } ,
-                //    new { Text = "Marketing", Value = 5, Color = "#FFC600" }
-                //        });
-                //})
-                //.Events(e => e.Edit("onSchedulerEdit"))
-                )
+                                         .Editable(editable =>
+                                         {
+                                             editable.TemplateName("Scheduler");
+                                             editable.Move(false);
+                                         })
+            //.Resources(resource =>
+            //{
+            //    resource.Add(m => m.Category)
+            //        .Title("Category")
+            //        .DataTextField("Text")
+            //        .DataValueField("Value")
+            //        .DataColorField("Color")
+            //        .BindTo(new[] {
+            //    new { Text = "Personal", Value = 1, Color = "#6BCC65" } ,
+            //    new { Text = "Work", Value = 2, Color = "#1E8EDF" } ,
+            //    new { Text = "Development", Value = 3, Color = "#E155D9" } ,
+            //    new { Text = "Design", Value = 4, Color = "#DD1C3C" } ,
+            //    new { Text = "Marketing", Value = 5, Color = "#FFC600" }
+            //        });
+            //})
+            //.Events(e => e.Edit("onSchedulerEdit"))
+    )
 
 </div>
+<div id="window-details">
+    @(Html.Kendo().Window()
+                                                    .Name("windowMessage")
+                                                    .Modal(true)
+                                                    .Visible(false)
+                                                    .Draggable()
+                                                    //.HtmlAttributes(new { @class = "k-popup-edit-form" })
+                                                    //.Events(ev => ev.Refresh("onWindowRefresh"))
+    )
+</div>
+
+@*@(Html.Kendo().Tooltip()
+                .For("#scheduler")
+                .Filter(".event-template")
+                //.ContentTemplateId("tooltipTemplate")
+                .Position(TooltipPosition.Top)
+
+    )*@
+<script id="tooltipTemplate" type="text/x-kendo-template">
+    <div class="template-wrapper">
+        <p>#=target.data('Title')#</p>
+    </div>
+</script>
+
 <script id="eventTemplate" type="text/x-kendo-template">
-    <div class='event-template #if(FreePlaces > 0 && start> new Date()){# enable-background #}else{# disable-background #}#' title='#: kendo.toString(start, 'HH:mm') # - #: kendo.toString(end, 'HH:mm') #'>
-                @*<span>#= start#</span>*@
-                <span class='title'>#= title#</span>
-                <div class='orders-info'>
-                    <div class='orders-info-item' title="Заявлено человек">
-                        <span class="k-icon  k-i-user"></span>
-                        <span class="badge badge-persons">#=Persons# </span>
-                    </div>
-                    <div class='orders-info-item' style="margin-left: 10px;" title="Свободных мест">
-                        <span class="k-icon  k-i-checkbox"></span>
-                        <span class="badge badge-freeplaces">#=FreePlaces# </span>
-                    </div>
-                </div>
+    <div class='event-template #if(FreePlaces > 0 && start> new Date()){# enable-background #}else{# disable-background #}#' title='#: kendo.toString(start, ' HH:mm') # - #: kendo.toString(end, 'HH:mm' ) #'>
+        @*<span>#= start#</span>*@
+        <div class='title'>#= title#</div>
+        <div class='orders-info'>
+            <div class='orders-info-item' title="Заявлено человек">
+                <span class="k-icon  k-i-user"></span>
+                <span class="badge badge-persons">#=Persons# </span>
+            </div>
+
+            <div class='orders-info-item' style="margin-left: 10px;" title="Свободных мест">
+                <span class="k-icon  k-i-checkbox"></span>
+                <span class="badge badge-freeplaces">#=FreePlaces# </span>
+            </div>
+            <div style="display:inline-block;float:right;">
+                <a class="action-orders"  target="_blank" title="Заявки" href="@Url.Action("GridView","Order")?Title=#= title#&Start=#= start#&Time "><span class="k-icon k-i-file-add" style="color:\\#fff;font-size: 20px;"></span></a>
+            </div>
+
+
+        </div>
     </div>
 </script>
 <script>
 
-    function onSchedulerEdit(e) {
-        var recurrenceEditor = e.container.find('#RecurrenceRule').data('kendoRecurrenceEditor');
-        console.log(recurrenceEditor);
-        recurrenceEditor.setOptions({
-            messages: {
-                daily: { interval: "дней", repeatEvery: "Повторять каждые:" },
-                end: { after: "После", occurrence: "входит", label: "Конец:", never: "Никогда", on: "В", mobileLabel: "Окончание" },
-                frequencies: { daily: "Ежедневно", monthly: "Ежемесячно", never: "Никогда", weekly: "Еженедельно", yearly: "Ежегодно" },
-                monthly: { day: "День", interval: "месяцы", repeatEvery: "Повторять каждый:", repeatOn: "Повторение:" },
-                offsetPositions: { first: "первый", fourth: "четвертый", last: "последний", second: "второй", third: "третий" },
-                weekly: { repeatEvery: "Повторять каждую:", repeatOn: "Повторение:", interval: "неделя" },
-                yearly: { of: "из", repeatEvery: "Повторять каждый:", repeatOn: "Повторение:", interval: "годы" },
-                weekdays: { day: "день", weekday: "будний", weekend: "выходной" }
-            }
-        });
-    }
-
-  function onDataBound(e) {
-        var view = this.view();
-        var events = this.dataSource.view();
-        var eventElement;
-        var event;
-
-        for (var idx = 0, length = events.length; idx < length; idx++) {
-            event = events[idx];
-            console.log(event);
-            if (event.start < new Date(2021, 10, 27)) {
-                // Get the event element.
-                eventElement = view.element.find("[data-uid=" + event.uid + "]");
-
-                // Set the background of the element.
-                eventElement.css("background-color", "red");
-            }
-        }
-    }
+   
     //Show Errors
     function error_handler(e) {
         if (e.errors) {
@@ -148,13 +146,14 @@
         /*border-width: 1px;*/
         font-size: 13px;
         line-height: 1;
-        
     }
+
     .badge-persons {
         border-color: #ff6358;
         color: #fff;
         background-color: #ff6358;
     }
+
     .badge-freeplaces {
         border-color: #3e80ed;
         color: #fff;
@@ -162,32 +161,38 @@
     }
 
     .orders-info {
-        position: absolute;
+        /*position: absolute;*/
         bottom: 0px;
-        margin: 0 8px 5px; 
+        margin: 0 8px 5px;
     }
+
     .orders-info-item {
         display: inline-block;
-        
     }
+
     .event-template {
         border-style: solid;
         border-width: 2px;
         border-radius: 3px;
         height: 100%;
+        /*display: inline-block;*/
+        color: #fff;
     }
+
     .disable-background {
         background: #747272;
         border-color: #747272;
     }
+
     .enable-background {
         background: #6BCC65;
         border-color: #6BCC65;
     }
+
     .event-template .title {
         padding: 0 8px 5px;
-        
     }
+
     .k-event {
         background: none;
         border: none;

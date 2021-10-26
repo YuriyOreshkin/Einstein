@@ -24,10 +24,12 @@ namespace Einstein.WebUI.Models
         }
 
 
-        private HashSet<Occurrence> LoadCalendar(DateTime datestart, DateTime dateend)
+        private HashSet<Occurrence> LoadCalendar(DateTime start, DateTime end)
         {
             var calendar = new Ical.Net.Calendar();
-            var events = entities.Events.Where(e =>  ( e.Start >= datestart || e.RecurrenceException != null)).ToList().Where(e=>e.FreePlaces>0).ToList();
+          
+            var events = entities.Events.Where(e => (e.Start >= start || e.RecurrenceException != null)).ToList().Where(e => e.FreePlaces > 0).ToList();
+
             foreach (var task in events)
             {
                 calendar.Events.Add(
@@ -37,15 +39,15 @@ namespace Einstein.WebUI.Models
                         IsAllDay= task.IsAllDay,
                         Name = task.Title,
                         //Description=EventID|FreePlaces
-                        Resources=new List<string>() { task.EventID.ToString(), task.FreePlaces.ToString()},
+                        Resources=new List<string>() { task.EventID.ToString(),  task.FreePlaces.ToString()  },
                         Description =task.Description,
                         RecurrenceRules = String.IsNullOrEmpty(task.RecurrenceRule) ? null: new List<RecurrencePattern> { new RecurrencePattern(task.RecurrenceRule) },
                         ExceptionDates = String.IsNullOrEmpty(task.RecurrenceException) ? null: new List<PeriodList> { ExceptionDates(task.RecurrenceException) }
                         //ExceptionRules = String.IsNullOrEmpty(task.RecurrenceException) ? null : new List<RecurrencePattern> { new RecurrencePattern(task.RecurrenceException) },
                     });
             }
-           
-            return calendar.GetOccurrences(new CalDateTime(datestart), new CalDateTime(dateend));
+
+            return calendar.GetOccurrences(new CalDateTime(start), new CalDateTime(end));
         }
 
         private PeriodList ExceptionDates(string RecurrenceException)
@@ -72,7 +74,7 @@ namespace Einstein.WebUI.Models
             var result = new List<AvailableEventsViewModel>();
             var start = DateTime.Now;
             var end = DateTime.Now.AddMonths(2);
-            
+           
             var avev = LoadCalendar(start, end);
 
             foreach (Occurrence task in avev)
@@ -94,9 +96,8 @@ namespace Einstein.WebUI.Models
                 {
                     view.Dates = GetAvailableDates(@event,task.Period, view.Dates);
                 }
-                
             }
-
+            
             return result;
         }
 
@@ -172,13 +173,10 @@ namespace Einstein.WebUI.Models
 
         public IList<EventViewModel> GetAll()
         {
-            IList<EventViewModel> result = HttpContext.Current.Session["Events"] as IList<EventViewModel>;
+            IList<EventViewModel> result =new List<EventViewModel>();
 
-            if (result == null)
-            {
-                result = entities.Events.ToList().Select(task => ConvertToViewModel(task)).ToList();
-                
-            }
+           
+            result = entities.Events.ToList().Select(task => ConvertToViewModel(task)).ToList();
 
             return result;
         }

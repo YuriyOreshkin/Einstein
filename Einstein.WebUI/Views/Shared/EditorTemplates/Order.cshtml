@@ -4,7 +4,8 @@
 </script>
 <div style="margin: 0 15px">
     <div class="k-form-field">
-        @Html.HiddenFor(m=>m.eventid)
+        <div>@Html.HiddenFor(m => m.id)</div>
+        <div>@Html.HiddenFor(m => m.eventid)</div>
         <label class="k-label k-form-label" for="eventid">Мероприятие:</label>
         <span class="k-form-field-wrap">
             @(Html.Kendo().DropDownListFor(m => m.eventname)
@@ -13,7 +14,7 @@
                 .DataValueField("Title")
                 .ValuePrimitive(true)
                 .AutoBind(false)
-                .DataSource(source => source.Read(read => read.Action("DropDownListReadNames", "SchedulerService"))) //.Data("getParameters")
+                .DataSource(source => source.Read(read => read.Action("DropDownListReadNames", "SchedulerService")))//.Data("getParameters")))
                 .Events(ev => ev.Select("onDropDownListEventsNamesChange"))
             )
         </span>

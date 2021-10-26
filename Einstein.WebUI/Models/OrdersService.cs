@@ -127,13 +127,14 @@ namespace Einstein.WebUI.Models
                 modelState.AddModelError("errors", "Хотя бы один из контактов (почта или телефон) должен быть заполнен.");
                 result = false;
             }
-            if (!entities.Events.Any(e=>e.EventID == orderview.eventid))
+            EVENT eVENT = entities.Events.FirstOrDefault(e => e.EventID == orderview.eventid);
+            if (eVENT  == null )
             {
                 modelState.AddModelError("errors", "Мероприятие '" + orderview.eventname + "' на дату " + orderview.dateevent.ToShortDateString() + " и время " + orderview.timeevent + " не обнаружено.");
                 result = false;
             }
 
-            if (orderview.persons > orderview.freeplaces)
+            if (eVENT != null && orderview.persons > eVENT.FreePlaces)
             {
                 modelState.AddModelError("errors", "Количество человек("+orderview.persons+") превышает количество свободных мест ("+orderview.freeplaces+")");
                 return false;

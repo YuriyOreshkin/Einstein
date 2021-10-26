@@ -1,4 +1,5 @@
-﻿using Einstein.WebUI.Models;
+﻿using Einstein.Domain.Services;
+using Einstein.WebUI.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,16 +10,30 @@ namespace Einstein.WebUI.Controllers
 {
     public class OrderController : Controller
     {
-        
+        private EventsService service;
+        public OrderController(IRepository _repository)
+        {
+            service = new EventsService(_repository);
+        }
+
         public ActionResult Index()
         {
             return View(new OrderViewModel());
         }
 
         
-        public ActionResult GridView()
+        public ActionResult GridView(long? eventid, long? recurrenceId)
         {
-            return View();
+            
+            if (eventid.HasValue)
+            {
+                EventViewModel  @event =service.GetAll().FirstOrDefault(e => e.TaskID == eventid);
+                if (@event != null)
+                {
+                    return View(@event);
+                }
+            }
+            return View(new EventViewModel());
         }
     }
 }

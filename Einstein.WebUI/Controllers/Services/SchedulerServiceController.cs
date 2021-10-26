@@ -21,6 +21,7 @@ namespace Einstein.WebUI.Controllers.Services
 
         public virtual JsonResult Read([DataSourceRequest] DataSourceRequest request)
         {
+
             return Json(eventsService.GetAll().ToDataSourceResult(request));
         }
 
