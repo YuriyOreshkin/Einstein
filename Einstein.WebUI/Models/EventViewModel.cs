@@ -12,7 +12,7 @@ namespace Einstein.WebUI.Models
     public class EventViewModel: ISchedulerEvent
     {
         public long TaskID { get; set; }
-        [Required]
+        [Required(ErrorMessage ="Требуется поле {0}")]
         [DisplayName("Заголовок")]
         public string Title { get; set; }
         [DisplayName("Описание")]
@@ -37,7 +37,7 @@ namespace Einstein.WebUI.Models
         public string StartTimezone { get; set; }
 
         private DateTime end;
-        [Required]
+        [Required(ErrorMessage = "Требуется поле {0}")]
         [DisplayName("Окончание")]
         public DateTime End
         {
@@ -62,8 +62,8 @@ namespace Einstein.WebUI.Models
         public bool IsAllDay { get; set; }
 
         [DisplayName("Мах кол-во человек")]
-        [Required]
-        [Range(1, int.MaxValue)]
+        [Required(ErrorMessage = "Требуется поле {0}")]
+        [Range(1, int.MaxValue,ErrorMessage = "Значение поля {0} должно быть в диапазоне {1} and {2}")]
         public int MaxPersons { get; set; }
 
         public int Persons { get; set; }

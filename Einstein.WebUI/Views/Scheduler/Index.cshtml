@@ -8,6 +8,7 @@
 <div class="inner-section">
     @(Html.Kendo().Scheduler<Einstein.WebUI.Models.EventViewModel>()
                                         .Name("scheduler")
+                                        .HtmlAttributes(new { style = "height:calc(100vh - 40px);" })
                                         .Toolbar(t => t.Pdf())
                                         .StartTime(new DateTime(2020, 1, 1, 7, 00, 00))
                                         .WorkDayStart(new DateTime(2020, 1, 1, 8, 00, 00))
@@ -26,8 +27,10 @@
                                         .Pdf(pdf => pdf.FileName("Расписание мероприятий.pdf").Title("Расписание мероприятий"))
                                         .EventTemplateId("eventTemplate")
                                         .Timezone("W-SU")
+                                        .Messages(m=>m.ResetSeries("Удалить весь ряд").Recurrence(r=>r.DeleteRecurring("Вы хотите удалить только в это событие или изменить весь ряд?")))
                                         //.Events(ev=>ev.("onDataBound"))
                                         //.Selectable(true)
+                                        .Mobile(MobileMode.Auto)
                                         .DataSource(d => d
                                             .Model(m =>
                                             {
@@ -47,28 +50,27 @@
                                         //        .IsEqualTo(1);
                                         //})
                                         )
-
                                          .Editable(editable =>
                                          {
                                              editable.TemplateName("Scheduler");
                                              editable.Move(false);
                                          })
-            //.Resources(resource =>
-            //{
-            //    resource.Add(m => m.Category)
-            //        .Title("Category")
-            //        .DataTextField("Text")
-            //        .DataValueField("Value")
-            //        .DataColorField("Color")
-            //        .BindTo(new[] {
-            //    new { Text = "Personal", Value = 1, Color = "#6BCC65" } ,
-            //    new { Text = "Work", Value = 2, Color = "#1E8EDF" } ,
-            //    new { Text = "Development", Value = 3, Color = "#E155D9" } ,
-            //    new { Text = "Design", Value = 4, Color = "#DD1C3C" } ,
-            //    new { Text = "Marketing", Value = 5, Color = "#FFC600" }
-            //        });
-            //})
-            //.Events(e => e.Edit("onSchedulerEdit"))
+    //.Resources(resource =>
+    //{
+    //    resource.Add(m => m.Category)
+    //        .Title("Category")
+    //        .DataTextField("Text")
+    //        .DataValueField("Value")
+    //        .DataColorField("Color")
+    //        .BindTo(new[] {
+    //    new { Text = "Personal", Value = 1, Color = "#6BCC65" } ,
+    //    new { Text = "Work", Value = 2, Color = "#1E8EDF" } ,
+    //    new { Text = "Development", Value = 3, Color = "#E155D9" } ,
+    //    new { Text = "Design", Value = 4, Color = "#DD1C3C" } ,
+    //    new { Text = "Marketing", Value = 5, Color = "#FFC600" }
+    //        });
+    //})
+    //.Events(e => e.Edit("onSchedulerEdit"))
     )
 
 </div>
@@ -119,7 +121,10 @@
     </div>
 </script>
 <script>
-
+    //$(document).ready(function () {
+        
+    //    $(".k-scheduler-tools .k-pdf").text("Экспорт в PDF");
+    //});
    
     //Show Errors
     function error_handler(e) {
@@ -196,5 +201,14 @@
     .k-event {
         background: none;
         border: none;
+    }
+
+    /* Hide toolbar, navigation and footer during export */
+    .k-pdf-export .k-scheduler-toolbar,
+    .k-pdf-export .k-scheduler-navigation .k-nav-today,
+    .k-pdf-export .k-scheduler-navigation .k-nav-prev,
+    .k-pdf-export .k-scheduler-navigation .k-nav-next,
+    .k-pdf-export .k-scheduler-footer {
+        display: none;
     }
 </style>

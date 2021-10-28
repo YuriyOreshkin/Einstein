@@ -31,6 +31,7 @@ namespace Einstein.WebUI
                       "~/Scripts/kendo/" + kendoversion + "/kendo.all.min.js",
                       "~/Scripts/kendo/" + kendoversion + "/kendo.aspnetmvc.min.js",
                       "~/Scripts/kendo/" + kendoversion + "/kendo.timezones.min.js",
+                      //"~/Scripts/kendo/" + kendoversion + "/kendo.mobile.min.js",
                       "~/Scripts/kendo/" + kendoversion + "/cultures/kendo.culture.ru-RU.min.js",
                       "~/Scripts/kendo/" + kendoversion + "/messages/kendo.messages.ru-RU.min.js"));
 
@@ -41,6 +42,7 @@ namespace Einstein.WebUI
                        "~/Content/kendo/" + kendoversion + "/kendo.common.min.css",
                        "~/Content/kendo/" + kendoversion + "/kendo.dataviz.min.css",
                         "~/Content/kendo/" + kendoversion + "/kendo.silver.min.css",
+                         "~/Content/kendo/" + kendoversion + "/kendo.mobile.common.min.css",
                  "~/Content/kendo/" + kendoversion + "/kendo.dataviz.silver.min.css"));
         }
     }

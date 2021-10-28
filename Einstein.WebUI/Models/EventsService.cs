@@ -28,7 +28,7 @@ namespace Einstein.WebUI.Models
         {
             var calendar = new Ical.Net.Calendar();
           
-            var events = entities.Events.Where(e => (e.Start >= start || e.RecurrenceException != null)).ToList().Where(e => e.FreePlaces > 0).ToList();
+            var events = entities.Events.Where(e => (e.Start >= start || e.RecurrenceRule != null)).ToList().Where(e => e.FreePlaces > 0).ToList();
 
             foreach (var task in events)
             {

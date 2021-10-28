@@ -172,12 +172,17 @@
     <Content Include="Content\kendo\2019.3.1023\fonts\DejaVu\LICENSE.txt" />
     <Content Include="Content\kendo\2019.3.1023\fonts\glyphs\KendoUIGlyphs.svg" />
     <Content Include="Content\kendo\2019.3.1023\fonts\glyphs\WebComponentsIcons.svg" />
+    <Content Include="Content\kendo\2019.3.1023\images\back.png" />
+    <Content Include="Content\kendo\2019.3.1023\images\kendoui.svg" />
+    <Content Include="Content\kendo\2019.3.1023\images\wp8_icons.png" />
+    <Content Include="Content\kendo\2019.3.1023\images\wp8_inverseicons.png" />
     <Content Include="Content\kendo\2019.3.1023\kendo.common.min.css" />
     <Content Include="Content\kendo\2019.3.1023\kendo.common.min.css.map" />
     <Content Include="Content\kendo\2019.3.1023\kendo.dataviz.min.css" />
     <Content Include="Content\kendo\2019.3.1023\kendo.dataviz.min.css.map" />
     <Content Include="Content\kendo\2019.3.1023\kendo.dataviz.silver.min.css" />
     <Content Include="Content\kendo\2019.3.1023\kendo.dataviz.silver.min.css.map" />
+    <Content Include="Content\kendo\2019.3.1023\kendo.mobile.common.min.css" />
     <Content Include="Content\kendo\2019.3.1023\kendo.silver.min.css" />
     <Content Include="Content\kendo\2019.3.1023\kendo.silver.min.css.map" />
     <Content Include="Content\kendo\2019.3.1023\Silver\editor.png" />
@@ -226,6 +231,7 @@
     <Content Include="Content\kendo\2019.3.1023\textures\transparency.png" />
     <Content Include="Content\kendo\2019.3.1023\textures\transtexture.png" />
     <Content Include="Content\Site.css" />
+    <Content Include="favicon.png" />
     <Content Include="Global.asax" />
     <Content Include="Content\bootstrap.min.css.map" />
     <Content Include="Content\bootstrap.css.map" />
@@ -252,6 +258,9 @@
     <Content Include="Content\kendo\2019.3.1023\fonts\glyphs\WebComponentsIcons.eot" />
     <Content Include="Content\kendo\2019.3.1023\fonts\glyphs\WebComponentsIcons.ttf" />
     <Content Include="Content\kendo\2019.3.1023\fonts\glyphs\WebComponentsIcons.woff" />
+    <Content Include="Content\kendo\2019.3.1023\kendo.mobile.common.min.css.map" />
+    <Content Include="Content\kendo\2019.3.1023\images\kendoui.ttf" />
+    <Content Include="Content\kendo\2019.3.1023\images\kendoui.woff" />
     <None Include="packages.config" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
@@ -261,6 +270,7 @@
     <Content Include="Scripts\bootstrap.js.map" />
     <Content Include="Scripts\bootstrap.bundle.min.js.map" />
     <Content Include="Scripts\bootstrap.bundle.js.map" />
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
@@ -274,6 +284,7 @@
     <Content Include="Scripts\kendo\2019.3.1023\cultures\kendo.culture.ru-RU.min.js.map" />
     <Content Include="Scripts\kendo\2019.3.1023\kendo.all.min.js" />
     <Content Include="Scripts\kendo\2019.3.1023\kendo.aspnetmvc.min.js" />
+    <Content Include="Scripts\kendo\2019.3.1023\kendo.mobile.min.js" />
     <Content Include="Scripts\kendo\2019.3.1023\kendo.timezones.min.js" />
     <Content Include="Scripts\kendo\2019.3.1023\messages\kendo.messages.ru-RU.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
@@ -321,6 +332,7 @@
     <Content Include="Views\Scheduler\Index.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Scheduler.cshtml" />
     <Content Include="Scripts\kendo\2019.3.1023\kendo.timezones.min.js.map" />
+    <Content Include="Scripts\kendo\2019.3.1023\kendo.mobile.min.js.map" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

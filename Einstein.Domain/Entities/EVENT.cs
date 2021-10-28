@@ -28,7 +28,9 @@ namespace Einstein.Domain.Entities
         public string EndTimezone { get; set; }
         public int MaxPersons { get; set; }
         [NotMapped]
-        public int FreePlaces { get {
+        public int FreePlaces
+        { get
+            {
 
                 return MaxPersons - Orders.Sum(s => s.PERSONS);
             } }

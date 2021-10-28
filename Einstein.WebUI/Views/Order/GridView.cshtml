@@ -5,77 +5,107 @@
 @Scripts.Render("~/Scripts/OrderEvents.js")
 @*<h2>Заявки на посещение мероприятий</h2>*@
 
-@(Html.Kendo().Grid<Einstein.WebUI.Models.OrderViewModel>()
-                                                                .Name("gridOrders")
-                                                                .HtmlAttributes(new { @class = "data-view" })
-                                                                .ToolBar(toolbar =>
-                                                                {
-
-                                                                    toolbar.Create();
-                                                                    toolbar.Excel();
-                                                                })
-                                                                .Columns(columns =>
-                                                                {
-                                                                    columns.Bound(p => p.dateorder).Format("{0:dd.MM.yyyy HH:mm}").Width(140).ClientFooterTemplate("Всего:");
-                                                                    columns.Bound(p => p.dateevent).Format("{0:dd.MM.yyyy}").Width(140);
-                                                                    columns.Bound(p => p.eventname).ClientFooterTemplate("#=count#").ClientGroupHeaderColumnTemplate(" #= count#");
-                                                                    columns.Bound(p => p.timeevent).Width(100);
-                                                                    columns.Bound(p => p.persons).Width(100).ClientGroupHeaderColumnTemplate("#=sum#").ClientFooterTemplate("#=sum#");
-                                                                    columns.Bound(p => p.email).Width(250);
-                                                                    columns.Bound(p => p.phonenumber).Width(200);
-                                                                    columns.Command(commands =>
-                                                                    {
-                                                                        commands.Edit();
-                                                                        commands.Destroy();
-                                                                    }).Width(300);
-                                                                })
-                                                                .Events(ev => ev.Edit("onGridOrdersEdit"))
-                                                                .Sortable()
-                                                                .Editable(edit => edit.Mode(GridEditMode.PopUp).TemplateName("Order"))
-                                                                .Resizable(r => r.Columns(true))
-                                                                .Groupable()
-                                                                //.Scrollable()
-                                                                .Filterable()
-                                                                .DataSource(dataSource => dataSource
-                                                                    .Ajax()
-                                                                     .Aggregates(aggregates =>
-                                                                     {
-                                                                         aggregates.Add(p => p.eventname).Count();
-                                                                         aggregates.Add(p => p.persons).Sum();
-                                                                     })
-                                                                    .Sort(s => s.Add(f => f.dateorder).Descending())
-                                                                    .Filter(f => {
-                                                                        if (Model.TaskID != 0 || Model.RecurrenceID != null)
+    @(Html.Kendo().Grid<Einstein.WebUI.Models.OrderViewModel>()
+                                                                        .Name("gridOrders")
+                                                                        .HtmlAttributes(new { @class = "data-view", style="height:calc(100vh - 40px);"})
+                                                                        .ToolBar(toolbar =>
                                                                         {
-                                                                            f.Add(ev => ev.eventname).IsEqualTo(Model.Title);
-                                                                            f.Add(ev => ev.dateevent).IsEqualTo(Model.Start.Date);
-                                                                            f.Add(ev => ev.timeevent).IsEqualTo(Model.Start.ToString("HH:mm") + " - " + Model.End.ToString("HH:mm"));
-                                                                        }
+
+                                                                            toolbar.Create();
+                                                                            toolbar.Excel();
+                                                                        })
+                                                                        .Columns(columns =>
+                                                                        {
+                                                                            columns.Bound(p => p.dateorder).Format("{0:dd.MM.yyyy HH:mm}").Width(140).ClientFooterTemplate("Всего:");
+                                                                            columns.Bound(p => p.dateevent).Format("{0:dd.MM.yyyy}").Width(200);
+                                                                            columns.Bound(p => p.eventname).ClientFooterTemplate("#=count#").ClientGroupHeaderColumnTemplate(" #= count#");
+                                                                            columns.Bound(p => p.timeevent).Width(200);
+                                                                            columns.Bound(p => p.persons).Width(150).ClientGroupHeaderColumnTemplate("#=sum#").ClientFooterTemplate("#=sum#");
+                                                                            columns.Bound(p => p.email).Width(250);
+                                                                            columns.Bound(p => p.phonenumber).Width(200);
+                                                                            columns.Command(commands =>
+                                                                            {
+                                                                                commands.Edit();
+                                                                                commands.Destroy();
+                                                                            }).Width(300);
+                                                                        })
+                                                                        .Events(ev => ev.Edit("onGridOrdersEdit"))
+                                                                        .Sortable()
+                                                                        .Scrollable()
+                                                                        .Editable(edit => edit.Mode(GridEditMode.PopUp).TemplateName("Order"))
+                                                                        .Resizable(r => r.Columns(true))
+                                                                        .Groupable()
+                                                                        .Mobile(MobileMode.Auto)
+                                                                        .Filterable()
+                                                                        .DataSource(dataSource => dataSource
+                                                                            .Ajax()
+                                                                             .Aggregates(aggregates =>
+                                                                             {
+                                                                                 aggregates.Add(p => p.eventname).Count();
+                                                                                 aggregates.Add(p => p.persons).Sum();
+                                                                             })
+                                                                            .Sort(s => s.Add(f => f.dateorder).Descending())
+                                                                            .Filter(f =>
+                                                                            {
+                                                                                if (Model.TaskID != 0 || Model.RecurrenceID != null)
+                                                                                {
+                                                                                    f.Add(ev => ev.eventname).IsEqualTo(Model.Title);
+                                                                                    f.Add(ev => ev.dateevent).IsEqualTo(Model.Start.Date);
+                                                                                    f.Add(ev => ev.timeevent).IsEqualTo(Model.Start.ToString("HH:mm") + " - " + Model.End.ToString("HH:mm"));
+                                                                                }
+                                                                            })
+                                                                    .ServerOperation(false)
+                                                                    .Model(model =>
+                                                                    {
+                                                                        model.Id(p => p.id);
+                                                                        model.Field(p => p.eventname).DefaultValue(Model.Title);
+                                                                        model.Field(p => p.dateevent).DefaultValue(Model.Start.Date);
+                                                                        model.Field(p => p.eventid).DefaultValue(Model.TaskID);
+                                                                        model.Field(p => p.freeplaces).DefaultValue(Model.FreePlaces);
+                                                                        model.Field(p => p.timeevent).DefaultValue(Model.Start.ToString("HH:mm") + " - " + Model.End.ToString("HH:mm"));
+
                                                                     })
-                                                            .ServerOperation(false)
-                                                            .Model(model =>
-                                                            {
-                                                                model.Id(p => p.id);
-                                                                model.Field(p => p.eventname).DefaultValue(Model.Title);
-                                                                model.Field(p => p.dateevent).DefaultValue(Model.Start.Date);
-                                                                model.Field(p => p.eventid).DefaultValue(Model.TaskID);
-                                                                model.Field(p=>p.freeplaces).DefaultValue(Model.FreePlaces);
-                                                                model.Field(p => p.timeevent).DefaultValue(Model.Start.ToString("HH:mm") + " - " + Model.End.ToString("HH:mm"));
+                                                                    //.PageSize(50)
+                                                                    .Read(read => read.Action("ReadGrid", "OrderService"))
+                                                                    .Create(update => update.Action("CreateForGrid", "OrderService"))
+                                                                    .Update(update => update.Action("UpdateForGrid", "OrderService"))
+                                                                    .Destroy(update => update.Action("DestroyForGrid", "OrderService"))
+                                                                    .Events(events => events.Error("error_handler"))
 
-                                                            })
-                                                            //.PageSize(50)
-                                                            .Read(read => read.Action("ReadGrid", "OrderService"))
-                                                            .Create(update => update.Action("CreateForGrid", "OrderService"))
-                                                            .Update(update => update.Action("UpdateForGrid", "OrderService"))
-                                                            .Destroy(update => update.Action("DestroyForGrid", "OrderService"))
-                                                            .Events(events => events.Error("error_handler"))
+                                                        )
 
-                                                )
-)
+    )
 
 
 <script>
+    var winHeight;
+    var content;
+     $(document).ready(function () {
+         
+         winHeight = $(window).height();
+         content = $(".k-grid-content");
+         //Footer on Top
+         $(".k-grid-footer").insertAfter(".k-grid-header");
+     });
 
+    function resizeGrid(height)
+    {
+        content.css("height", height);
+    }
+
+    $(window).resize(function () {
+        var height = this.innerHeight;
+        
+        var contentHeight = parseInt(content.css("height"));
+        var windelta = winHeight - height;
+        winHeight = height;
+
+        resizeGrid(contentHeight - windelta);
+        console.log(contentHeight);
+
+    });
+
+   
 
     function onGridOrdersEdit(e)
     {
