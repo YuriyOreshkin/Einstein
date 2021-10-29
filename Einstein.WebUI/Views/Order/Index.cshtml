@@ -3,6 +3,7 @@
     ViewBag.Title = "Заявка";
 }
 @Scripts.Render("~/Scripts/OrderEvents.js")
+
 <div @*style="height:82vh;"*@>
     <div class="k-form-container" @*style="margin-left: 25%; width:50%;"*@ style="margin-left:auto;margin-right:auto;max-width:600px;">
         <form id="order">
@@ -25,29 +26,29 @@
 
         var dropdownlist = $("#eventname").data("kendoDropDownList");
         dataSource = dropdownlist.dataSource;
-        
+
         dataSource.bind("requestEnd", dataSource_requestEnd);
         dataSource.read();
-       
+
     });
 
     function dataSource_requestEnd(e) {
         var response = e.response;
         var type = e.type;
-       
+
         if (response.length > 0) {
-           
+
             onDropDownListEventsNamesChange({ dataItem: response[0] })
-            
+
         }
         else {
 
         };
     }
-   
-   
-   
-    
+
+
+
+
     function  ShowMessage(e)
     {
         if (e.Errors) {
@@ -77,7 +78,7 @@
          if (validator.validate()) {
             $.ajax({
                 type: "POST",
-                url: "@Url.Action("CreateForGrid", "OrderService") ", 
+                url: "@Url.Action("CreateOrder", "OrderService") ",
                 datatype: 'json',
                 data: $('#order').serialize(),
                 success: function (data) {
@@ -86,7 +87,7 @@
                     dataSource.read();
                     },
                 error: function (xhr, ajaxOptions, thrownError) {
-                    
+
                     showError(xhr.status + " " + thrownError);
                     }
             });

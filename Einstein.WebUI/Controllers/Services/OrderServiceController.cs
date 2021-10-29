@@ -3,6 +3,7 @@ using Einstein.Domain.Services;
 using Einstein.WebUI.Models;
 using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
+using Einstein.WebUI.Hubs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,8 +36,9 @@ namespace Einstein.WebUI.Controllers.Services
             {
                 try
                 {
-                    ordersService.Insert(order, ModelState);
                     
+                    var context = Microsoft.AspNet.SignalR.GlobalHost.ConnectionManager.GetHubContext<OrdersHub>();
+
                 }
                 catch (Exception ex)
                 {
@@ -46,6 +48,29 @@ namespace Einstein.WebUI.Controllers.Services
 
             return Json(new[] { order }.ToDataSourceResult(request, ModelState));
 
+        }
+
+        [HttpPost]
+        public ActionResult CreateOrder(OrderViewModel order)
+        {
+            
+            if (ModelState.IsValid)
+            {
+                try
+                {
+
+                    ordersService.Insert(order, ModelState);
+                    var context = Microsoft.AspNet.SignalR.GlobalHost.ConnectionManager.GetHubContext<OrdersHub>();
+
+                    context.Clients.All.displayAddOrder("Новая заявка");
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("error", "Не удалось внести заявку.");
+                }
+            }
+
+            return Json(new { Errors  = ModelState.IsValid ? null : ModelState.SerializeErrors() } );
         }
 
         [HttpPost]

@@ -29,44 +29,44 @@
            })
     )
 <body>
-    
+
     @RenderBody()
 
-    <div id="notification"></div>
-
+    @(Html.Kendo().Notification()
+               .Name("notification")
+               .Stacking(NotificationStackingSettings.Down)
+               .Position(pos => pos.Top(30))
+               .AutoHideAfter(0)
+               .Button(true)
+    )
+    
 </body>
    
 </html>
 <script>
-    function showSuccess(message) {
+   
 
-        var notification = $("#notification").kendoNotification({
-            autoHideAfter: 4000,
-            position: {
-                top: 30
-            },
-            stacking: "down",
-            button: true
-        }).data("kendoNotification");
+    function showSuccess(message)
+    {
+        var notification = $("#notification").data("kendoNotification");
+        notification.setOptions({
+
+            autoHideAfter: 4000
+        });
 
         notification.show(message, "success");
     }
 
-    function showError(message) {
-
-        var notification = $("#notification").kendoNotification({
-            position: {
-                pinned: true,
-                top: 30,
-                right: 30
-            },
-            autoHideAfter: 0,
-            stacking: "down",
-            button: true
-        }).data("kendoNotification");
-
+    function showError(message)
+    {
+        var notification = $("#notification").data("kendoNotification");
         notification.show(message, "error");
-       
+
+    }
+
+    function showInfo(message) {
+        var notification = $("#notification").data("kendoNotification");
+        notification.show(message, "info");
 
     }
 </script>
