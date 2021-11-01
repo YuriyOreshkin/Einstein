@@ -33,10 +33,10 @@
 </style>
 
 
-<div class="k-edit-label task-edit-label">
+<div class="k-edit-label">
     @(Html.LabelFor(model => model.Title))
 </div>
-<div data-container-for="title" class="k-edit-field task-edit-box">
+<div data-container-for="title" class="k-edit-field">
     @Html.TextBoxFor(model => model.Title, new { @class = "k-textbox", data_bind = "value:title", style = "width:100%;" })
 </div>
 
