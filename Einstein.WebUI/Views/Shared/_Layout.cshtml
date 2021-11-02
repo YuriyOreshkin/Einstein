@@ -66,6 +66,10 @@
 
     function showInfo(message) {
         var notification = $("#notification").data("kendoNotification");
+        notification.setOptions({
+
+            autoHideAfter: 4000
+        });
         notification.show(message, "info");
 
     }

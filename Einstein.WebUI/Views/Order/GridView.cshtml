@@ -88,9 +88,9 @@
 
         notificationhub.client.displayAddOrder = function (message) {
 
-            showError(message);
+            showInfo(message);
             var value = getValueCountNewOrders() + 1;
-            console.log(value);
+            
             setValueCountNewOrders(value);
 
         };

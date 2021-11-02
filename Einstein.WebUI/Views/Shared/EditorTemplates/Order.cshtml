@@ -22,14 +22,16 @@
     <div class="k-form-field">
         <label class="k-label k-form-label" for="date">Дата посещения:</label>
         <div class="k-form-field-wrap">
+            
             @(Html.Kendo().DatePickerFor(m => m.dateevent)
                  .HtmlAttributes(new { style = "width:100%;" })
                  .Enable(false)
                  .Events(ev => ev.Change("onDatePickerDateChange"))
                  )
         </div>
-        <span class="k-invalid-msg" data-for="date"></span>
+        <span class="k-invalid-msg" data-for="dateevent"></span>
     </div>
+        
     <div class="k-form-field">
         <label class="k-label k-form-label" for="time">Время посещения:</label>
         <div class="k-form-field-wrap">
@@ -45,7 +47,7 @@
                 .Events(ev => ev.Select("onDropDownListTimesChange"))
             )
         </div>
-        <span class="k-invalid-msg" data-for="time"></span>
+        <span class="k-invalid-msg" data-for="timeevent"></span>
     </div>
     <div class="k-form-field">
         @Html.HiddenFor(m=>m.freeplaces)
