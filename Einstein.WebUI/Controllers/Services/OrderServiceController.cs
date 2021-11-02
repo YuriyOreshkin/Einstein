@@ -62,7 +62,7 @@ namespace Einstein.WebUI.Controllers.Services
                     ordersService.Insert(order, ModelState);
                     var context = Microsoft.AspNet.SignalR.GlobalHost.ConnectionManager.GetHubContext<OrdersHub>();
 
-                    context.Clients.All.displayAddOrder("Новая заявка");
+                    context.Clients.All.displayAddOrder("Новая заявка от " +order.email+ " по мероприятию "+order.eventname +" на дату "+ order.dateevent.ToShortDateString() + " и время " + order.timeevent + order.eventname );
                 }
                 catch (Exception ex)
                 {

@@ -77,7 +77,7 @@ namespace Einstein.WebUI.Models
                         Start = new DateTime(order.dateevent.Year, order.dateevent.Month, order.dateevent.Day, evententity.Start.TimeOfDay.Hours, evententity.Start.TimeOfDay.Minutes, evententity.Start.TimeOfDay.Milliseconds),
                         End = new DateTime(order.dateevent.Year, order.dateevent.Month, order.dateevent.Day, evententity.End.TimeOfDay.Hours, evententity.End.TimeOfDay.Minutes, evententity.End.TimeOfDay.Milliseconds),
                         IsAllDay = evententity.IsAllDay,
-                        RecurrenceID = Convert.ToInt32(evententity.EventID),
+                        //RecurrenceID = Convert.ToInt32(evententity.EventID),
                         MaxPersons = evententity.MaxPersons,
                         StartTimezone = evententity.StartTimezone,
                         EndTimezone = evententity.EndTimezone

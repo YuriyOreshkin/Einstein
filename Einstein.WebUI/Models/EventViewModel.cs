@@ -61,7 +61,7 @@ namespace Einstein.WebUI.Models
         [DisplayName("Весь день")]
         public bool IsAllDay { get; set; }
 
-        [DisplayName("Мах кол-во человек")]
+        [DisplayName("Максимальное кол-во посетителей")]
         [Required(ErrorMessage = "Требуется поле {0}")]
         [Range(1, int.MaxValue,ErrorMessage = "Значение поля {0} должно быть в диапазоне {1} and {2}")]
         public int MaxPersons { get; set; }
