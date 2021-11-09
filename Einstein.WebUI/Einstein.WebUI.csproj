@@ -159,16 +159,21 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\ImageBrowserController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Controllers\SchedulerController.cs" />
+    <Compile Include="Controllers\Services\MailSettingsServiceController.cs" />
     <Compile Include="Controllers\Services\OrderServiceController.cs" />
     <Compile Include="Controllers\Services\SchedulerServiceController.cs" />
+    <Compile Include="Controllers\Services\TemplateServiceController.cs" />
     <Compile Include="Hubs\OrdersHub.cs" />
     <Compile Include="IoC\NinjectControllerFactory.cs" />
     <Compile Include="IoC\NinjectIoC.cs" />
     <Compile Include="Models\AvailableTimesViewModel.cs" />
     <Compile Include="Models\AvailableDatesViewModel.cs" />
     <Compile Include="Models\AvailableEventsViewModel.cs" />
+    <Compile Include="Models\MailSettingsViewModel.cs" />
     <Compile Include="Models\OrdersService.cs" />
     <Compile Include="Models\EventsService.cs" />
     <Compile Include="Models\EventViewModel.cs" />
@@ -355,8 +360,14 @@
     <Content Include="Views\Shared\EditorTemplates\Scheduler.cshtml" />
     <Content Include="Scripts\kendo\2019.3.1023\kendo.timezones.min.js.map" />
     <Content Include="Scripts\kendo\2019.3.1023\kendo.mobile.min.js.map" />
+    <Content Include="Views\MailSettingsService\Settings.cshtml" />
+    <Content Include="Views\Admin\Index.cshtml" />
+    <Content Include="Views\TemplateService\Editor.cshtml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Content\Shared\" />
+    <Folder Include="Views\ImageBrowser\" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\jquery-3.3.1.slim.min.map" />
   </ItemGroup>

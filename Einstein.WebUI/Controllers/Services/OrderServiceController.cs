@@ -17,9 +17,9 @@ namespace Einstein.WebUI.Controllers.Services
         
 
         private OrdersService ordersService;
-        public OrderServiceController(IRepository _repository)
+        public OrderServiceController(IRepository _repository,IMailSender sender)
         {
-            ordersService = new OrdersService(_repository);
+            ordersService = new OrdersService(_repository,sender);
         }
 
 
@@ -36,8 +36,8 @@ namespace Einstein.WebUI.Controllers.Services
             {
                 try
                 {
-                    
-                    var context = Microsoft.AspNet.SignalR.GlobalHost.ConnectionManager.GetHubContext<OrdersHub>();
+
+                    ordersService.Insert(order, ModelState);
 
                 }
                 catch (Exception ex)

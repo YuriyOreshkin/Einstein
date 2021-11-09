@@ -25,3 +25,29 @@ h2 {
     text-align: center;
     margin: 10px 0;
 }
+
+legend {
+    border-bottom: 1px solid #e5e5e5;
+    margin-bottom: 20px;
+}
+
+.k-form-fieldset {
+    margin: 32px 0 0;
+    padding: 0 0;
+    border-width: 0;
+    box-sizing: border-box;
+}
+
+.k-form-field-wrap {
+    width: 100%;
+}
+
+.k-form-field {
+    margin-bottom: 10px;
+}
+
+.form-actions {
+    float: right;
+    margin-top: 10px;
+    margin-right: 15px;
+}

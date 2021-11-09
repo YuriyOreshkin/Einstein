@@ -1,5 +1,6 @@
 ﻿using Einstein.Domain.Services;
 using Ninject;
+using System.Web;
 
 namespace Einstein.WebUI.IoC
 {
@@ -15,7 +16,9 @@ namespace Einstein.WebUI.IoC
         private static IKernel AddBindings(IKernel ninjectKernel)
         {
             ninjectKernel.Bind<IRepository>().To<EFRepository>();
-           
+            ninjectKernel.Bind<IMailServiceConfig>().To<XMLMailServiceConfig>().InSingletonScope().WithConstructorArgument("_filename", HttpContext.Current.Server.MapPath("~/App_Data/MailSettings.xml"));
+            ninjectKernel.Bind<ITemplateService>().To<FileTemplateService>().InSingletonScope().WithConstructorArgument("_filename", HttpContext.Current.Server.MapPath("~/App_Data/OrderTemplate.html"));
+            ninjectKernel.Bind<IMailSender>().To<EMailSender>().InSingletonScope();
             return ninjectKernel;
         }
     }

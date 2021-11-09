@@ -1,0 +1,19 @@
+﻿
+@{
+    ViewBag.Title = "Настройки";
+}
+
+@(Html.Kendo().TabStrip()
+                        //.HtmlAttributes(new { style = " margin-top: 10px;" })
+                        .Name("AdminTabStrip")
+                        .TabPosition(TabStripTabPosition.Top)
+                        .Items(items =>
+                        {
+                            items.Add().Text("Настройки").Selected(true).LoadContentFrom("Settings", "MailSettingsService");
+
+
+                            items.Add().Text("Шаблон").LoadContentFrom("Editor", "TemplateService");
+                        })
+)
+
+
