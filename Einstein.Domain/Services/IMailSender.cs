@@ -9,6 +9,6 @@ namespace Einstein.Domain.Services
 {
     public interface IMailSender
     {
-        void SendMail(ORDER order);
+        void SendOrder(object order);
     }
 }

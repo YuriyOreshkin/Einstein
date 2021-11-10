@@ -182,13 +182,16 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\CategoryViewModel.cs" />
+    <Compile Include="Models\TemplateViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\MailSettings.xml" />
     <Content Include="App_Data\Orders.mdf" />
     <Content Include="App_Data\Orders_log.ldf">
       <DependentUpon>Orders.mdf</DependentUpon>
     </Content>
+    <Content Include="App_Data\OrderTemplate.html" />
     <Content Include="Content\bootstrap-grid.css" />
     <Content Include="Content\bootstrap-grid.min.css" />
     <Content Include="Content\bootstrap-reboot.css" />
@@ -363,6 +366,7 @@
     <Content Include="Views\MailSettingsService\Settings.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />
     <Content Include="Views\TemplateService\Editor.cshtml" />
+    <Content Include="Views\TemplateService\AvailableParameters.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\Shared\" />

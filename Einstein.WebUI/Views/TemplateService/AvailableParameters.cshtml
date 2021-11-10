@@ -1,0 +1,22 @@
+﻿@model Dictionary<string, string>
+<table id="template-parameters">
+    <tr>
+        <td><strong>Параметр</strong></td>
+        <td><strong>Описание</strong></td>
+    </tr>
+
+    @foreach (KeyValuePair<string, string> parameter in Model)
+    {
+        <tr>
+            <td>@parameter.Key</td>
+            <td>@parameter.Value</td>
+        </tr>
+    }
+</table>
+<style>
+    #template-parameters tr td {
+        border: 1px solid;
+        text-align: center;
+        padding: 5px 10px;
+    }
+</style>

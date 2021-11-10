@@ -19,18 +19,25 @@ namespace Einstein.WebUI.Controllers.Services
 
         public ActionResult Settings()
         {
-            var settings = mailconfig.ReadSettings();
-
-            MailSettingsViewModel view = new MailSettingsViewModel
+            try
             {
-                enable = settings.ENABLE,
-                host = settings.HOST,
-                port = settings.PORT,
-                user = settings.USER,
-                password = settings.PASSWORD
-            };
+                var settings = mailconfig.ReadSettings();
 
-            return PartialView(view);
+                MailSettingsViewModel view = new MailSettingsViewModel
+                {
+                    enable = settings.ENABLE,
+                    host = settings.HOST,
+                    port = settings.PORT,
+                    user = settings.USER,
+                    password = settings.PASSWORD
+                };
+
+                return PartialView(view);
+            }
+            catch (Exception ex)
+            {
+                return Content("Ошибка: "+ ex.Message);
+            }
         }
 
 

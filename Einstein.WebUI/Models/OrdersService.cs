@@ -60,9 +60,11 @@ namespace Einstein.WebUI.Models
                 orderview.eventid = GetOrderEventId(orderview);
                 var entity = orderview.ToEntity();
                 entities.AddOrder(entity);
-                sender.SendMail(entity);
+                
                 orderview.id = entity.ID;
                 orderview.freeplaces = entities.Events.First(e => e.EventID == orderview.eventid).FreePlaces;
+
+                sender.SendOrder(orderview);
 
             }
         }

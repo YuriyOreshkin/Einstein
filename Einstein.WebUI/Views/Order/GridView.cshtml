@@ -20,9 +20,9 @@
     })
     .Columns(columns =>
     {
-        columns.Bound(p => p.dateorder).Format("{0:dd.MM.yyyy HH:mm}").Width(140).ClientFooterTemplate("Всего:").Groupable(false);
+        columns.Bound(p => p.dateorder).Format("{0:dd.MM.yyyy HH:mm}").Width(150).ClientFooterTemplate("Всего:").Groupable(false);
         columns.Bound(p => p.dateevent).Format("{0:dd.MM.yyyy}").Width(200).ClientGroupHeaderTemplate("Дата мероприятия: #= kendo.toString(kendo.parseDate(value), 'dd.MM.yyyy') #");
-        columns.Bound(p => p.eventname).Filterable(ftb => ftb.Multi(true)).ClientFooterTemplate("<span>#=count#</span><span id='new-orders-count' class='new-count'>0</span>").ClientGroupHeaderColumnTemplate("#= count#");
+        columns.Bound(p => p.eventname).MinResizableWidth(200).Filterable(ftb => ftb.Multi(true)).ClientFooterTemplate("<span>#=count#</span><span id='new-orders-count' class='new-count'>0</span>").ClientGroupHeaderColumnTemplate("#= count#");
         columns.Bound(p => p.timeevent).Filterable(ftb => ftb.Multi(true)).Width(200);
         columns.Bound(p => p.persons).Width(150).ClientGroupHeaderColumnTemplate("#=sum#").ClientFooterTemplate("#=sum#").Groupable(false);
         columns.Bound(p => p.email).Width(250).Groupable(false);
@@ -58,6 +58,7 @@
             f.Add(ev => ev.dateevent).IsEqualTo(Model.Start.Date);
             f.Add(ev => ev.timeevent).IsEqualTo(Model.Start.ToString("HH:mm") + " - " + Model.End.ToString("HH:mm"));
         }
+       
     })
     .ServerOperation(false)
     .Model(model =>

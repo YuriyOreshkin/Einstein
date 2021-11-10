@@ -20,8 +20,7 @@ namespace Einstein.Domain.Services
         }
 
 
-
-        public void SendMail(ORDER order)
+        private void SendEMail(string to, string subject, string body)
         {
             MAILSERVICESETTINGS settings = config.ReadSettings();
             if (settings.ENABLE)
@@ -32,23 +31,33 @@ namespace Einstein.Domain.Services
                 smtp.Credentials = new NetworkCredential(settings.USER, settings.PASSWORD);
                 smtp.EnableSsl = true;
 
-
                 // отправитель - устанавливаем адрес и отображаемое в письме имя
-                MailAddress from = new MailAddress(settings.USER);
+                //MailAddress from = new MailAddress(settings.USER);
+                string from = settings.USER;
                 // кому отправляем
-                MailAddress to = new MailAddress(order.EMAIL);
+                // MailAddress toadd = new MailAddress(to);
                 // создаем объект сообщения
                 MailMessage mail = new MailMessage(from, to);
                 // тема письма
-                mail.Subject = "Тест";
+                mail.Subject = subject;
                 // текст письма
-                mail.Body = template.FullTemplate(order);
+                mail.Body = body;
                 // письмо представляет код html
                 mail.IsBodyHtml = true;
 
 
-                smtp.Send(mail);
+                //smtp.Send(mail);
             }
+
+        }
+
+        public void SendOrder(object order)
+        {
+            var property= order.GetType().GetProperties().FirstOrDefault(p => p.Name == "email");
+            var to = property != null ? property.GetValue(order).ToString() : "";
+            var body = template.GetTemplateBody(order);
+            var subject = template.GetTemplateSubject(order);
+            SendEMail(to, subject, body);
 
         }
     }

@@ -9,8 +9,12 @@ namespace Einstein.Domain.Services
 {
     public interface ITemplateService
     {
-        string GetTemplateText();
-        void SaveTemplate(string text);
-        string FullTemplate(ORDER order);
+        string GetTemplateBody();
+        string GetTemplateSubject();
+        void SaveTemplate(string subject, string text);
+        string GetTemplateBody(object order);
+        string GetTemplateSubject(object order);
+        Dictionary<string, string> AvailableParameters(Type type);
+
     }
 }

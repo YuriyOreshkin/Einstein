@@ -1,6 +1,7 @@
 ﻿using Einstein.Domain.Entities;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -11,7 +12,7 @@ namespace Einstein.Domain.Services
     public class FileTemplateService : ITemplateService
     {
         private string filename;
-
+        private  string _anchor = "order";
         public FileTemplateService(string _filename)
         {
             filename = _filename;
@@ -47,7 +48,14 @@ namespace Einstein.Domain.Services
                     {
                         if (property.GetValue(obj) != null)
                         {
-                            rules.Add(anchor + "." + property.Name, property.GetValue(obj).ToString());
+                            if (property.PropertyType == typeof(DateTime))
+                            {
+                                rules.Add(anchor + "." + property.Name,((DateTime)property.GetValue(obj)).ToString("dd.MM.yyyy"));
+                            }
+                            else
+                            {
+                                rules.Add(anchor + "." + property.Name, property.GetValue(obj).ToString());
+                            }
                         }
                         else
                         {
@@ -66,20 +74,20 @@ namespace Einstein.Domain.Services
 
 
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="order"></param>
-    /// <returns></returns>
-        public string FullTemplate(ORDER order)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="order"></param>
+        /// <returns></returns>
+        private string FullTemplate(object order, string text)
         {
 
             Dictionary<string, string> rules = new Dictionary<string, string>();
             //var objj = typeof(PriorityViewModel).GetProperty("priority").GetValue(notification);
-            GetLookups(typeof(ORDER).GetProperties(), order, "order", ref rules);
+            GetLookups(order.GetType().GetProperties(), order, _anchor, ref rules);
 
 
-            string result = GetTemplateText();
+            string result = text;
             foreach (KeyValuePair<string, string> rule in rules)
             {
                 Regex regex = new Regex("{" + rule.Key + "}", RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace);
@@ -93,9 +101,9 @@ namespace Einstein.Domain.Services
         /// <summary>
         /// Save data to file
         /// </summary>
-        public void SaveTemplate(string text)
+        public void SaveTemplate(string subject, string text)
          {
-             string html = HttpUtility.HtmlDecode(text);
+             string html ="<subject>"+subject+"</subject>" +"<body>" + HttpUtility.HtmlDecode(text) + "</body>";
 
              using (StreamWriter file = new StreamWriter(filename, false))
              {
@@ -103,6 +111,76 @@ namespace Einstein.Domain.Services
              }
          }
 
-        
+        private string TextInTag(string tag,string text)
+        {
+            string pattern = "(<"+tag+">)(.*)(</"+tag+">)";
+            Regex regex = new Regex(pattern);
+
+            var match = regex.Match(text);
+
+            return match.Groups[2].Value;
+        }
+
+        public string GetTemplateBody()
+        {
+            var text = GetTemplateText();
+            var body = TextInTag("body", text);
+            return body;
+
+        }
+
+        public string GetTemplateSubject()
+        {
+            var text = GetTemplateText();
+            var subject = TextInTag("subject", text);
+
+            return subject;
+        }
+
+        public string GetTemplateBody(object order)
+        {
+            var body = GetTemplateBody();
+            body = FullTemplate(order, body);
+
+            return body;
+        }
+
+        public string GetTemplateSubject(object order)
+        {
+            var subject = GetTemplateSubject();
+            subject = FullTemplate(order, subject);
+
+            return subject;
+        }
+
+
+        public Dictionary<string, string> AvailableParameters(Type type)
+        {
+            var parameters = new Dictionary<string, string>();
+            AvailableParameters(type, _anchor, ref parameters);
+
+            return parameters;
+        }
+
+        private void AvailableParameters(Type type,string anchor, ref Dictionary<string, string> result)
+        {
+            
+            foreach (PropertyInfo property in type.GetProperties())
+            {
+
+                if (property.PropertyType.Namespace.Contains("System"))
+                {
+
+                    var attr = property.GetCustomAttribute(typeof(DisplayNameAttribute),false);
+                        result.Add("{"+ anchor+"." +property.Name+"}", attr != null ? ((DisplayNameAttribute)attr).DisplayName :"");
+
+                }
+                else
+                {
+
+                      AvailableParameters(property.PropertyType, anchor+"."+property.Name, ref result);
+                }
+            }
+        }
     }
 }

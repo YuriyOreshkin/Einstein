@@ -1,4 +1,5 @@
 ﻿using Einstein.Domain.Services;
+using Einstein.WebUI.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,19 +18,27 @@ namespace Einstein.WebUI.Controllers.Services
 
         public ActionResult Editor()
         {
-            string text = service.GetTemplateText();
+            var model = new TemplateViewModel() { subject=service.GetTemplateSubject(),  body=service.GetTemplateBody() };
 
-            return PartialView("Editor", text);
+            return PartialView("Editor", model);
 
         }
 
+        public ActionResult AvailableParameters()
+        {
 
-        public JsonResult SaveTemplate(string data)
+            var parameters = service.AvailableParameters(typeof(OrderViewModel));
+
+            return PartialView(parameters);
+        }
+
+        public JsonResult SaveTemplate(string subject, string body)
         {
             //Save
             try
             {
-                 service.SaveTemplate(data);
+
+                 service.SaveTemplate(subject, body);
             }
             catch (Exception exception)
             {

@@ -3,9 +3,11 @@
     ViewBag.Title = "Настройки";
 }
 
+
 @(Html.Kendo().TabStrip()
-                        //.HtmlAttributes(new { style = " margin-top: 10px;" })
+                        .HtmlAttributes(new { style = " height: calc(100vh - 40px);" })
                         .Name("AdminTabStrip")
+
                         .TabPosition(TabStripTabPosition.Top)
                         .Items(items =>
                         {
@@ -14,6 +16,17 @@
 
                             items.Add().Text("Шаблон").LoadContentFrom("Editor", "TemplateService");
                         })
+                        .Events(ev=>ev.ContentLoad("onError"))
 )
 
-
+<script>
+    function onError(e) {
+        var content = $(e.contentElement).text();
+        var error = content.indexOf("Ошибка:") > -1
+        
+        if (error) {
+           
+            showError(content);
+        }
+    }
+</script>
