@@ -12,19 +12,46 @@
             },
             maximumvalidation: function (input, params) {
 
-                if (input.is("[name='persons']") && input.val() != "") {
+                if ((input.is("[name='persons']") || input.is("[name='persons14']")) && input.val() != "") {
 
                     var numerictextbox = input.data("kendoNumericTextBox");
                     var val = numerictextbox.value();
-                    var max = numerictextbox.max();
-                    input.attr("data-maximumvalidation-msg", "Количество посетителей должно быть в диапазоне от 1 до " + max);
+                    var max = $(input).data("max");//numerictextbox.max();
+                    var msg = "Количество всего посетителей";
+                    if (input.is("[name='persons14']"))
+                    {
+                        msg = "Количество детей до 14 лет";
+                    }
+                    input.attr("data-maximumvalidation-msg", msg+" должно быть в диапазоне от 1 до " + max);
 
-                    return  (val>=1 && val <= max);
+                    return (val >= 1 && val <= max);
+                }
+
+                return true
+            },
+            maxpersonsvalidation: function (input, params) {
+
+                if (input.is("[name='persons14']") && input.val() != "") {
+
+                    var numerictextbox = input.data("kendoNumericTextBox");
+                    var val = numerictextbox.value();
+                    var max = $("#persons").val();
+                 
+                    return ( val < max);
                 }
 
                 return true
             }
+
+        },
+        messages: {
+            maxpersonsvalidation: function (input) {
+                var max = $("#persons").val();
+
+                return kendo.format("Количетво детей должно быть меньше общего количества ({0}) !", max);
+            }
         }
+        
     });
 })(jQuery, kendo);
 
@@ -50,18 +77,20 @@ function getParameters(data)
     }
 
 }
-function SetFreePlaces(num) {
-    
-    var numerictextbox = $("#persons").data("kendoNumericTextBox");
-    if (num > 0) {
 
+function SetMaxNumerictextbox(element, num)
+{
+    var numerictextbox = element.data("kendoNumericTextBox");
+    if (num > 0) {
+       
         var val = numerictextbox.value();
         if (val > num) {
             numerictextbox.value(1);
             numerictextbox.trigger("change");
         }
         numerictextbox.enable(true);
-        numerictextbox.max(num);
+        element.attr("data-max",num)
+       //numerictextbox.max(num);
 
 
     }
@@ -70,19 +99,38 @@ function SetFreePlaces(num) {
         numerictextbox.value(1);
         numerictextbox.enable(false);
     }
+}
+
+
+function SetFreePlaces(num,num14) {
+    
+    var element = $("#persons");
+    SetMaxNumerictextbox(element, num);
+    element = $("#persons14");
+    SetMaxNumerictextbox(element, num14);
+    
+
     //for view
     $("#freeplaces-view").text(num);
+    //for view
+    $("#freeplaces14-view").text(num14);
 
-    $("#freeplaces").val(num);
-    $("#freeplaces").change();
+    SetElementValue($("#freeplaces"), num);
+    SetElementValue($("#freeplaces14"), num14);
+   
 
    
+}
+function SetElementValue(element,val)
+{
+    element.val(val);
+    element.change();
 }
 
 function SetEventId(id)
 {
-    $("#eventid").val(id);
-    $("#eventid").change();
+    SetElementValue($("#eventid"), id);
+
 }
 
 function SetTimes(times) {
@@ -208,11 +256,11 @@ function onDropDownListTimesChange(e) {
     var item = e.dataItem;
  
     if (item) {
-        SetFreePlaces(item.FreePlaces);
+        SetFreePlaces(item.FreePlaces, item.FreePlaces14);
         SetEventId(item.EventId);
     }
     else {
-        SetFreePlaces(0);
+        SetFreePlaces(0,0);
         SetEventId(0);
     }
 }

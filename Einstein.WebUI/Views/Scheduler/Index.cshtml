@@ -65,12 +65,12 @@
         <div class='orders-info'>
             <div class='orders-info-item' title="Заявлено человек">
                 <span class="k-icon  k-i-user"></span>
-                <span class="badge badge-persons">#=Persons# </span>
+                <span class="badge badge-persons">#=Persons# | #=Persons14#</span>
             </div>
 
             <div class='orders-info-item' style="margin-left: 10px;" title="Свободных мест">
                 <span class="k-icon  k-i-checkbox"></span>
-                <span class="badge badge-freeplaces">#=FreePlaces# </span>
+                <span class="badge badge-freeplaces">#=FreePlaces# | #=FreePlaces14#</span>
             </div>
             <div style="display:inline-block;float:right;">
                 <a class="action-orders"  target="_blank" title="Заявки" href="#if(TaskID > 0) {  #@Url.Action("GridView","Order")?eventid=#=TaskID# #}else {#@Url.Action("GridViewByDate","Order")?recurrenceId=#=recurrenceId#&start=#: kendo.toString(start, 'dd.MM.yyyy HH:mm' )# #}#"><span class="k-icon k-i-list-ordered" style="color:\\#fff;font-size: 20px;"></span></a>
@@ -88,6 +88,8 @@
             $(window).resize();
         }
     });
+
+    
 
     function onSchedulerEdit()
     {

@@ -39,7 +39,7 @@ namespace Einstein.WebUI.Models
                         IsAllDay= task.IsAllDay,
                         Name = task.Title,
                         //Description=EventID|FreePlaces
-                        Resources=new List<string>() { task.EventID.ToString(),  task.FreePlaces.ToString()  },
+                        Resources=new List<string>() { task.EventID.ToString(),  task.FreePlaces.ToString() , task.FreePlaces14.ToString()  },
                         Description =task.Description,
                         RecurrenceRules = String.IsNullOrEmpty(task.RecurrenceRule) ? null: new List<RecurrencePattern> { new RecurrencePattern(task.RecurrenceRule) },
                         ExceptionDates = String.IsNullOrEmpty(task.RecurrenceException) ? null: new List<PeriodList> { ExceptionDates(task.RecurrenceException) }
@@ -139,7 +139,8 @@ namespace Einstein.WebUI.Models
                     Start = period.StartTime.Value,
                     End = period.EndTime.Value,
                     FreePlaces=int.Parse(@event.Resources[1]),
-                    EventId=long.Parse(@event.Resources[0])
+                    FreePlaces14= int.Parse(@event.Resources[2]),
+                     EventId =long.Parse(@event.Resources[0])
                 };
 
                 times.Add(time);
@@ -148,26 +149,28 @@ namespace Einstein.WebUI.Models
             return times;
         }
 
-        public EventViewModel ConvertToViewModel(EVENT task)
+        public EventViewModel ConvertToViewModel(EVENT task, EventViewModel view)
         {
-           return new EventViewModel
-            {
-                TaskID = task.EventID,
-                Title = task.Title,
-                Start = DateTime.SpecifyKind(task.Start, DateTimeKind.Local),
-                End = DateTime.SpecifyKind(task.End, DateTimeKind.Local),
-                StartTimezone = task.StartTimezone,
-                EndTimezone = task.EndTimezone,
-                Description = task.Description,
-                IsAllDay = task.IsAllDay,
-                RecurrenceRule = task.RecurrenceRule,
-                RecurrenceException = task.RecurrenceException,
-                RecurrenceID = task.RecurrenceID,
-                MaxPersons = task.MaxPersons,
-                FreePlaces =task.FreePlaces,
-                Persons=task.Persons
 
-            };
+            view.TaskID = task.EventID;
+            view.Title = task.Title;
+            view.Start = DateTime.SpecifyKind(task.Start, DateTimeKind.Local);
+            view.End = DateTime.SpecifyKind(task.End, DateTimeKind.Local);
+            view.StartTimezone = task.StartTimezone;
+            view.EndTimezone = task.EndTimezone;
+            view.Description = task.Description;
+            view.IsAllDay = task.IsAllDay;
+            view.RecurrenceRule = task.RecurrenceRule;
+            view.RecurrenceException = task.RecurrenceException;
+            view.RecurrenceID = task.RecurrenceID;
+            view.MaxPersons = task.MaxPersons;
+            view.MaxPersons14 = task.MaxPersons14;
+            view.FreePlaces = task.FreePlaces;
+            view.FreePlaces14 = task.FreePlaces14;
+            view.Persons = task.Persons;
+            view.Persons14 = task.Persons14;
+
+            return view;
     }
 
 
@@ -176,7 +179,7 @@ namespace Einstein.WebUI.Models
             IList<EventViewModel> result =new List<EventViewModel>();
 
            
-            result = entities.Events.ToList().Select(task => ConvertToViewModel(task)).ToList();
+            result = entities.Events.ToList().Select(task => ConvertToViewModel(task, new EventViewModel())).ToList();
 
             return result;
         }
@@ -194,9 +197,7 @@ namespace Einstein.WebUI.Models
                     var entity = appointment.ToEntity(new EVENT());
                     
                     entities.AddEvent(entity);
-                    appointment.TaskID = entity.EventID;
-                    appointment.Persons = entity.Persons;
-                appointment.FreePlaces = entity.FreePlaces;
+                    appointment = ConvertToViewModel(entity,appointment);
                 
             }
         }
@@ -213,9 +214,8 @@ namespace Einstein.WebUI.Models
                     var entity = entities.Events.FirstOrDefault(e=>e.EventID == appointment.TaskID);
                     entity= appointment.ToEntity(entity); 
                     entities.UpdateEvent(entity);
-                
-                appointment.Persons = entity.Persons;
-                appointment.FreePlaces = entity.FreePlaces;
+
+                appointment = ConvertToViewModel(entity,appointment);
             }
         }
 
@@ -264,10 +264,22 @@ namespace Einstein.WebUI.Models
                 result= false;
             }
 
+            if (appointment.MaxPersons14 >= appointment.MaxPersons)
+            {
+                modelState.AddModelError("errors", "Максимальное количество детей до 14 должно быть меньше максимального количества всего посетителей.");
+                result= false;
+            }
+
             if (appointment.Persons > appointment.MaxPersons)
             {
-                modelState.AddModelError("errors", "Максимальное количество мест не должно быть меньше заявленых.");
-                result= false;
+                modelState.AddModelError("errors", String.Format("Максимальное количество мест не должно быть меньше заявленых {0}.", appointment.Persons));
+                result = false;
+            }
+
+            if (appointment.Persons14 > appointment.MaxPersons14)
+            {
+                modelState.AddModelError("errors", String.Format("Максимальное количество мест для детей до 14 не должно быть меньше заявленых {0}.", appointment.Persons14));
+                result = false;
             }
 
             return result;

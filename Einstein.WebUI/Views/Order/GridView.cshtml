@@ -24,7 +24,15 @@
         columns.Bound(p => p.dateevent).Format("{0:dd.MM.yyyy}").Width(200).ClientGroupHeaderTemplate("Дата мероприятия: #= kendo.toString(kendo.parseDate(value), 'dd.MM.yyyy') #");
         columns.Bound(p => p.eventname).MinResizableWidth(200).Filterable(ftb => ftb.Multi(true)).ClientFooterTemplate("<span>#=count#</span><span id='new-orders-count' class='new-count'>0</span>").ClientGroupHeaderColumnTemplate("#= count#");
         columns.Bound(p => p.timeevent).Filterable(ftb => ftb.Multi(true)).Width(200);
-        columns.Bound(p => p.persons).Width(150).ClientGroupHeaderColumnTemplate("#=sum#").ClientFooterTemplate("#=sum#").Groupable(false);
+        columns.Group(gr => gr
+        .Title("Посетителей")
+            .Columns(cl =>
+            {
+
+                cl.Bound(p => p.persons).Title("Всего").Width(100).ClientGroupHeaderColumnTemplate("#=sum#").ClientFooterTemplate("#=sum#").Groupable(false);
+                cl.Bound(p => p.persons14).Title("до 14").Width(100).ClientGroupHeaderColumnTemplate("#=sum#").ClientFooterTemplate("#=sum#").Groupable(false);
+            })
+            );
         columns.Bound(p => p.email).Width(250).Groupable(false);
         columns.Bound(p => p.phonenumber).Width(200).Groupable(false);
         columns.Command(commands =>
@@ -33,6 +41,7 @@
             commands.Destroy();
         }).Width(300);
     })
+   
     .Excel(excel =>excel.FileName("Список заявок.xlsx").ForceProxy(true).ProxyURL(Url.Action("Excel_Export_Save", "OrderService")))
     .Events(ev => ev.Edit("onGridOrdersEdit").ExcelExport("onExcelExport"))
     .Sortable()
@@ -48,6 +57,7 @@
     {
         aggregates.Add(p => p.eventname).Count();
         aggregates.Add(p => p.persons).Sum();
+        aggregates.Add(p => p.persons14).Sum();
     })
     .Sort(s => s.Add(f => f.dateorder).Descending())
     .Filter(f =>
@@ -58,7 +68,7 @@
             f.Add(ev => ev.dateevent).IsEqualTo(Model.Start.Date);
             f.Add(ev => ev.timeevent).IsEqualTo(Model.Start.ToString("HH:mm") + " - " + Model.End.ToString("HH:mm"));
         }
-       
+
     })
     .ServerOperation(false)
     .Model(model =>
@@ -116,7 +126,6 @@
 
         function setSGridHeight(height) {
             var widget = $("#gridOrders").data("kendoGrid");
-            console.log(height);
             widget.element.height(height);
             widget.resize(true);
         }
@@ -148,21 +157,22 @@
             }
         }
 
+
+
         function onGridOrdersEdit(e) {
 
-            var numeric = e.container.find("input[name=persons]").data("kendoNumericTextBox");
+            
             if (!e.model.isNew()) {
 
                 e.model.freeplaces = e.model.freeplaces + e.model.persons;
-                numeric.enable(true);
-                numeric.max(e.model.freeplaces);
-
-
+                e.model.freeplaces14 = e.model.freeplaces14 + e.model.persons14;
             }
-            numeric.enable(true);
-            numeric.max(e.model.freeplaces);
+            var numeric = e.container.find("input[name=persons]");
+            SetMaxNumerictextbox(numeric, e.model.freeplaces);
+            numeric = e.container.find("input[name=persons14]");
+            SetMaxNumerictextbox(numeric, e.model.freeplaces14)
             $("#freeplaces-view").text(e.model.freeplaces);
-
+            $("#freeplaces14-view").text(e.model.freeplaces14);
         }
 
         //Show Errors
@@ -205,6 +215,9 @@
 
     </script>
     <style>
+        .k-header .k-link {
+            text-align: center;
+        }
 
         .new-count {
             display: none;

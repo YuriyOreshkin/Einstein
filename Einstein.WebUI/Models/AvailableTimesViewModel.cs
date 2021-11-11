@@ -10,6 +10,7 @@ namespace Einstein.WebUI.Models
         public DateTime Start { get; set; }
         public DateTime End { get; set; }
         public int FreePlaces { get; set; }
+        public int FreePlaces14 { get; set; }
         public long EventId { get; set; }
         public string Value { get
             {

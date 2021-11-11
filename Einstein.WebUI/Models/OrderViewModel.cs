@@ -33,11 +33,19 @@ namespace Einstein.WebUI.Models
 
         [DisplayName("Количество человек")]
         [Required(ErrorMessage = "Требуется поле {0}")]
-        [Range(1,short.MaxValue, ErrorMessage = "Значение поля {0} должно быть в диапазоне {1} and {2}")]
+        //[Range(1,short.MaxValue, ErrorMessage = "Значение поля {0} должно быть в диапазоне от {1} до {2}")]
         public short persons { get; set; }
 
+        [DisplayName("Количество детей до 14")]
+        [Required(ErrorMessage = "Требуется поле {0}")]
+        //[Range(1, short.MaxValue, ErrorMessage = "Значение поля {0} должно быть в диапазоне от {1} до {2}")]
+        public short persons14 { get; set; }
 
+        [DisplayName("Свободные места")]
         public int freeplaces { get; set; }
+
+        [DisplayName("Свободные места до 14")]
+        public int freeplaces14 { get; set; }
 
         [DisplayName("Номер телефона")]
         [Required(ErrorMessage = "Требуется поле {0}")]
@@ -55,6 +63,7 @@ namespace Einstein.WebUI.Models
                 DATE =dateorder,
                 EMAIL=email,
                 PERSONS= persons,
+                PERSONS14 =persons14,
                 PHONE=phonenumber,
                 EVENTID=eventid
             };

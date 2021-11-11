@@ -27,13 +27,15 @@ namespace Einstein.Domain.Entities
         public string StartTimezone { get; set; }
         public string EndTimezone { get; set; }
         public int MaxPersons { get; set; }
+        public int MaxPersons14 { get; set; }
         [NotMapped]
         public int FreePlaces
         { get
             {
 
                 return MaxPersons - Orders.Sum(s => s.PERSONS);
-            } }
+            }
+        }
 
         [NotMapped]
         public int Persons
@@ -41,6 +43,25 @@ namespace Einstein.Domain.Entities
             get
             {
                 return  Orders.Sum(s => s.PERSONS);
+            }
+        }
+
+        [NotMapped]
+        public int FreePlaces14
+        {
+            get
+            {
+
+                return MaxPersons14 - Orders.Sum(s => s.PERSONS14);
+            }
+        }
+
+        [NotMapped]
+        public int Persons14
+        {
+            get
+            {
+                return Orders.Sum(s => s.PERSONS14);
             }
         }
         public virtual ICollection<ORDER> Orders { get; set; }

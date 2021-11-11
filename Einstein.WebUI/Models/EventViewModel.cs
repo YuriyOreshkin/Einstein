@@ -63,11 +63,17 @@ namespace Einstein.WebUI.Models
 
         [DisplayName("Максимальное кол-во посетителей")]
         [Required(ErrorMessage = "Требуется поле {0}")]
-        [Range(1, int.MaxValue,ErrorMessage = "Значение поля {0} должно быть в диапазоне {1} and {2}")]
+        [Range(1, int.MaxValue,ErrorMessage = "Значение поля {0} должно быть в диапазоне от {1} до {2}")]
         public int MaxPersons { get; set; }
+        [DisplayName("Максимальное кол-во детей до 14")]
+        [Required(ErrorMessage = "Требуется поле {0}")]
+        [Range(1, int.MaxValue, ErrorMessage = "Значение поля {0} должно быть в диапазоне от {1} до {2}")]
+        public int MaxPersons14 { get; set; }
 
         public int Persons { get; set; }
         public int FreePlaces { get; set; }
+        public int Persons14 { get; set; }
+        public int FreePlaces14 { get; set; }
 
         private bool isAllDay;
         bool ISchedulerEvent.IsAllDay
@@ -99,6 +105,7 @@ namespace Einstein.WebUI.Models
             @event.RecurrenceID = RecurrenceID;
             @event.IsAllDay = IsAllDay;
             @event.MaxPersons = MaxPersons;
+            @event.MaxPersons14 = MaxPersons14;
             return @event;
 
         }

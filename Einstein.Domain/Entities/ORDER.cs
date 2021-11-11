@@ -12,8 +12,10 @@ namespace Einstein.Domain.Entities
         public DateTime DATE { get; set; }
         public long EVENTID { get; set; }
         public short PERSONS { get; set; }
+        public short PERSONS14 { get; set; }
         public string PHONE { get; set; }
         public string EMAIL { get; set; }
+        public bool INFORM { get; set; }
 
         public virtual EVENT EVENT { get; set; }
     }

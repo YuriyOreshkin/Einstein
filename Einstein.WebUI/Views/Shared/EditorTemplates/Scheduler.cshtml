@@ -50,18 +50,18 @@
     <div data-container-for="end" class="k-edit-field task-edit-box">
 
         @(Html.Kendo().DateTimePickerFor(model => model.End).Interval(15)
-                                                                                                                    .HtmlAttributes(generateDatePickerAttributes(
-                                                                                                                        "endDateTime",
-                                                                                                                        "end",
-                                                                                                                        "value:end,invisible:isAllDay",
-                                                                                                                        new Dictionary<string, object>() { { "data-dateCompare-msg", "Дата окончания должная быть больше или равна дате начала" } })))
+                                                                                                                            .HtmlAttributes(generateDatePickerAttributes(
+                                                                                                                                "endDateTime",
+                                                                                                                                "end",
+                                                                                                                                "value:end,invisible:isAllDay",
+                                                                                                                                new Dictionary<string, object>() { { "data-dateCompare-msg", "Дата окончания должная быть больше или равна дате начала" } })))
 
         @(Html.Kendo().DatePickerFor(model => model.End)
-                                                                                                                    .HtmlAttributes(generateDatePickerAttributes(
-                                                                                                                        "endDate",
-                                                                                                                        "end",
-                                                                                                                        "value:end,visible:isAllDay",
-                                                                                                                        new Dictionary<string, object>() { { "data-dateCompare-msg", "Дата окончания должная быть больше или равна дате начала" } })))
+                                                                                                                            .HtmlAttributes(generateDatePickerAttributes(
+                                                                                                                                "endDate",
+                                                                                                                                "end",
+                                                                                                                                "value:end,visible:isAllDay",
+                                                                                                                                new Dictionary<string, object>() { { "data-dateCompare-msg", "Дата окончания должная быть больше или равна дате начала" } })))
 
         <span data-bind="text: endTimezone"></span>
         <span data-for="end" class="k-invalid-msg"></span>
@@ -79,16 +79,16 @@
     </div>
     <div data-container-for="recurrenceRule" class="k-edit-field task-edit-box">
         @(Html.Kendo().RecurrenceEditorFor(model => model.RecurrenceRule).Timezone("W-SU").Messages(mes =>
-                            {
-                                mes.Daily(d => d.Interval("дней").RepeatEvery("Повторять каждые:"));
-                                mes.End(end => end.After("После").Occurrence("входит").Label("Конец:").Never("Никогда").On("В").MobileLabel("Окончание"));
-                                mes.Frequencies(f => f.Daily("Ежедневно").Monthly("Ежемесячно").Never("Никогда").Weekly("Еженедельно").Yearly("Ежегодно"));
-                                mes.Monthly(m => m.Day("День").Interval("месяцы").RepeatEvery("Повторять каждый:").RepeatOn("Повторение:"));
-                                mes.OffsetPositions(off => off.First("первый").Fourth("четвертый").Last("последний").Second("второй").Third("третий"));
-                                mes.Weekly(w => w.RepeatEvery("Повторять каждую:").RepeatOn("Повторение:").Interval("неделя"));
-                                mes.Yearly(y => y.Of("из").RepeatEvery("Повторять каждый:").RepeatOn("Повторение:").Interval("годы"));
-                                mes.Weekdays(wd => wd.Day("день").Weekday("будний").Weekend("выходной"));
-                            }).HtmlAttributes(new { data_bind = "value:recurrenceRule" }))
+                                    {
+                                        mes.Daily(d => d.Interval("дней").RepeatEvery("Повторять каждые:"));
+                                        mes.End(end => end.After("После").Occurrence("входит").Label("Конец:").Never("Никогда").On("В").MobileLabel("Окончание"));
+                                        mes.Frequencies(f => f.Daily("Ежедневно").Monthly("Ежемесячно").Never("Никогда").Weekly("Еженедельно").Yearly("Ежегодно"));
+                                        mes.Monthly(m => m.Day("День").Interval("месяцы").RepeatEvery("Повторять каждый:").RepeatOn("Повторение:"));
+                                        mes.OffsetPositions(off => off.First("первый").Fourth("четвертый").Last("последний").Second("второй").Third("третий"));
+                                        mes.Weekly(w => w.RepeatEvery("Повторять каждую:").RepeatOn("Повторение:").Interval("неделя"));
+                                        mes.Yearly(y => y.Of("из").RepeatEvery("Повторять каждый:").RepeatOn("Повторение:").Interval("годы"));
+                                        mes.Weekdays(wd => wd.Day("день").Weekday("будний").Weekend("выходной"));
+                                    }).HtmlAttributes(new { data_bind = "value:recurrenceRule" }))
     </div>
 
     <div class="k-edit-label task-edit-label">
@@ -100,11 +100,13 @@
     <div class="k-edit-label task-edit-label" style="width:90%">
         @(Html.LabelFor(model => model.MaxPersons))
     </div>
-    <div data-container-for="description" class="k-edit-field task-edit-box" style="float:right;">
-        @Html.Kendo().NumericTextBoxFor(m => m.MaxPersons).Format("n0").Min(1).Decimals(0)
+    <div class="k-edit-label task-edit-label">
+        <label for="MaxPersons">Всего</label>
     </div>
-    <div >
-     
+    <div data-container-for="MaxPersons" class="k-edit-field task-edit-box">
+        @Html.Kendo().NumericTextBoxFor(m => m.MaxPersons).Format("n0").Min(1).Decimals(0).HtmlAttributes(new { style = "width: 140px;" })
+        <label for="MaxPersons14" style="margin:0 10px 0 20px;">Дети до 14</label>
+        @Html.Kendo().NumericTextBoxFor(m => m.MaxPersons14).Format("n0").Min(1).Decimals(0).HtmlAttributes(new { style = "width: 140px;" })
     </div>
 </div>
 <style>
