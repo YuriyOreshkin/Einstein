@@ -46,7 +46,7 @@
     .Events(ev => ev.Edit("onGridOrdersEdit").ExcelExport("onExcelExport"))
     .Sortable()
     .Scrollable()
-    .Editable(edit => edit.Mode(GridEditMode.PopUp).TemplateName("Order"))
+    .Editable(edit => edit.Mode(GridEditMode.PopUp).TemplateName("Order").Window(wnd=>wnd.Width(600)))
     .Resizable(r => r.Columns(true))
     .Groupable()
     .Mobile(MobileMode.Auto)
@@ -170,7 +170,8 @@
             var numeric = e.container.find("input[name=persons]");
             SetMaxNumerictextbox(numeric, e.model.freeplaces);
             numeric = e.container.find("input[name=persons14]");
-            SetMaxNumerictextbox(numeric, e.model.freeplaces14)
+            SetMaxNumerictextbox(numeric, e.model.freeplaces14);
+
             $("#freeplaces-view").text(e.model.freeplaces);
             $("#freeplaces14-view").text(e.model.freeplaces14);
         }
@@ -218,7 +219,9 @@
         .k-header .k-link {
             text-align: center;
         }
-
+        .k-edit-form-container {
+            width:100%;
+        }
         .new-count {
             display: none;
             padding: 1px 4px;

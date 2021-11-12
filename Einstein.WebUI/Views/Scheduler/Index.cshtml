@@ -36,6 +36,7 @@
                                                 m.Id(f => f.TaskID);
                                                 m.Field(f => f.Title).DefaultValue("");
                                                 m.Field(f => f.MaxPersons).DefaultValue(1);
+                                                m.Field(f => f.MaxPersons14).DefaultValue(1);
                                                 m.RecurrenceId(f => f.RecurrenceID);
                                             })
                                             .Read("Read", "SchedulerService")
@@ -81,6 +82,55 @@
     </div>
 </script>
 <script>
+
+    //Валидация данных
+    (function ($, kendo) {
+            $.extend(true, kendo.ui.validator, {
+                rules: { 
+                    maximumvalidation: function (input, params) {
+
+                        if ((input.is("[name='persons']") || input.is("[name='persons14']")) && input.val() != "") {
+
+                            var numerictextbox = input.data("kendoNumericTextBox");
+                            var val = numerictextbox.value();
+                            var max = $(input).data("max");//numerictextbox.max();
+                            var msg = "Количество всего посетителей";
+                            if (input.is("[name='persons14']")) {
+                                msg = "Количество детей до 14 лет";
+                            }
+                            input.attr("data-maximumvalidation-msg", msg + " должно быть в диапазоне от 1 до " + max);
+
+                            return (val >= 1 && val <= max);
+                        }
+
+                        return true
+                    },
+                    maxpersonsvalidation: function (input, params) {
+
+                        if (input.is("[name='MaxPersons14']") && input.val() != "") {
+
+                            var numerictextbox = input.data("kendoNumericTextBox");
+                            var val = numerictextbox.value();
+                            var max = $("#MaxPersons").val();
+
+                            return (val < max);
+                        }
+
+                        return true
+                    }
+
+                },
+                messages: {
+                    maxpersonsvalidation: function (input) {
+                        var max = $("#MaxPersons").val();
+
+                        return kendo.format("Количетво детей должно быть меньше общего количества ({0}) !", max);
+                    }
+                }
+
+            });
+    })(jQuery, kendo);
+
     $(document).ready(function () {
 
         if (!kendo.support.mobileOS)
