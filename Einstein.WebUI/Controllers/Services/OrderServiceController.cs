@@ -66,7 +66,7 @@ namespace Einstein.WebUI.Controllers.Services
                 
                 }
             
-            return Json(new { message = "OK" }, JsonRequestBehavior.AllowGet);
+            return Json(new { message = "OK", result = "Уведомление успешно отправлено!"}, JsonRequestBehavior.AllowGet);
         }
 
 

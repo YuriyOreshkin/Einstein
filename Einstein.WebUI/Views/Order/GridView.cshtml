@@ -129,6 +129,8 @@
                     if (data.message == "OK") {
                         dataItem.set("inform", true)
                         grid.dataSource.pushUpdate(dataItem);
+                        showSuccess(data.result);
+
                     }
                     else {
                         dataItem.set("inform", false)
