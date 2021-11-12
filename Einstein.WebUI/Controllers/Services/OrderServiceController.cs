@@ -50,6 +50,26 @@ namespace Einstein.WebUI.Controllers.Services
 
         }
 
+
+
+        [HttpPost]
+        public ActionResult SendNotification(OrderViewModel order)
+        {
+                try
+                {
+                    ordersService.SendNitification(order);
+                    
+                }
+                catch (Exception ex)
+                {
+                    return Json(new { message = "errors", result = "Не удалось отправить уведомление!<br>"+ ex.Message }, JsonRequestBehavior.AllowGet);
+                
+                }
+            
+            return Json(new { message = "OK" }, JsonRequestBehavior.AllowGet);
+        }
+
+
         [HttpPost]
         public ActionResult CreateOrder(OrderViewModel order)
         {

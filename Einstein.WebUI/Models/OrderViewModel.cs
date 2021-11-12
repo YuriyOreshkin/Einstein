@@ -33,13 +33,15 @@ namespace Einstein.WebUI.Models
 
         [DisplayName("Количество человек")]
         [Required(ErrorMessage = "Требуется поле {0}")]
-        //[Range(1,short.MaxValue, ErrorMessage = "Значение поля {0} должно быть в диапазоне от {1} до {2}")]
+        [Range(1,short.MaxValue, ErrorMessage = "Значение поля {0} должно быть в диапазоне от {1} до {2}")]
         public short persons { get; set; }
 
         [DisplayName("Количество детей до 14")]
         [Required(ErrorMessage = "Требуется поле {0}")]
-        //[Range(1, short.MaxValue, ErrorMessage = "Значение поля {0} должно быть в диапазоне от {1} до {2}")]
+        [Range(0, short.MaxValue, ErrorMessage = "Значение поля {0} должно быть в диапазоне от {1} до {2}")]
         public short persons14 { get; set; }
+
+      
 
         [DisplayName("Свободные места")]
         public int freeplaces { get; set; }
@@ -55,18 +57,23 @@ namespace Einstein.WebUI.Models
         [Required(ErrorMessage = "Требуется поле {0}")]
         public string email { get; set; }
 
-        public ORDER ToEntity()
+        [DisplayName("Уведомление отправлено")]
+        public bool inform { get; set; }
+
+
+        public ORDER ToEntity(ORDER order)
         {
-            return new ORDER
-            {
-                ID=id,
-                DATE =dateorder,
-                EMAIL=email,
-                PERSONS= persons,
-                PERSONS14 =persons14,
-                PHONE=phonenumber,
-                EVENTID=eventid
-            };
+
+            order.ID = id;
+            order.DATE = dateorder;
+            order.EMAIL = email;
+            order.PERSONS = persons;
+            order.PERSONS14 = persons14;
+            order.PHONE = phonenumber;
+            order.EVENTID = eventid;
+            order.INFORM = inform;
+
+            return order;
         }
     }
 }

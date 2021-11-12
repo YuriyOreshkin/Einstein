@@ -57,23 +57,22 @@
                 @Html.HiddenFor(m => m.freeplaces)
                 <label class="k-label k-form-label" for="persons" style="margin-right: 15px;">Всего</label>
                 @(Html.Kendo().NumericTextBoxFor(m => m.persons)
-                                                    .Format("n0")
-                                                    .Min(1)
-                                                    .Decimals(0)
-                                                    .Enable(false)
+                                                            .Format("n0")
+                                                            .Min(1)
+                                                            .Decimals(0)
+                                                            .Enable(false)
                 )
             </span>
             <span style="float:right;">
                 @Html.HiddenFor(m => m.freeplaces14)
                 <label class="k-label k-form-label" for="persons14" style="margin-right: 15px;">до 14 лет</label>
                 @(Html.Kendo().NumericTextBoxFor(m => m.persons14)
-                                                                  .Format("n0")
-                                                                  .Min(1)
-                                                                  .Decimals(0)
-                                                                  .Enable(false)
+                                                                          .Format("n0")
+                                                                          .Min(0)
+                                                                          .Decimals(0)
+                                                                          .Enable(false)
                 )
             </span>
-
         </div>
         <span class="important" style="text-align:justify;font-size: 13px;font-style: italic;">* ВАЖНО: Дети до 14 лет допускаются на экспозицию только в сопровождении взрослых!</span>
         <span class="k-invalid-msg" data-for="persons"></span>

@@ -33,7 +33,7 @@ namespace Einstein.Domain.Entities
         { get
             {
 
-                return MaxPersons - Orders.Sum(s => s.PERSONS);
+                return MaxPersons - Persons;
             }
         }
 
@@ -51,8 +51,22 @@ namespace Einstein.Domain.Entities
         {
             get
             {
+               
+                //if ((MaxPersons14 - Persons14) < FreePlaces)
+                //{
+                    return MaxPersons14 - Persons14;
+                //}
+                //else {
+                //    if (FreePlaces > 0)
+                //    {
 
-                return MaxPersons14 - Orders.Sum(s => s.PERSONS14);
+                //        return FreePlaces - 1;
+                //    }
+                //    else {
+
+                //        return FreePlaces;
+                //    }
+                //}
             }
         }
 

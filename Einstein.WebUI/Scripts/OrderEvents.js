@@ -16,27 +16,32 @@
 
                     var numerictextbox = input.data("kendoNumericTextBox");
                     var val = numerictextbox.value();
-                    var max = $(input).data("max");//numerictextbox.max();
-                    var msg = "Количество всего посетителей";
-                    if (input.is("[name='persons14']"))
-                    {
-                        msg = "Количество детей до 14 лет";
-                    }
-                    input.attr("data-maximumvalidation-msg", msg+" должно быть в диапазоне от 1 до " + max);
+                    var max = $(input).data("max");
+                    if (max) {
+                        var min = numerictextbox.min();
+                        var msg = "Количество всего посетителей";
+                        if (input.is("[name='persons14']")) {
+                            msg = "Количество детей до 14 лет";
+                        }
+                        input.attr("data-maximumvalidation-msg", msg + " должно быть в диапазоне от " + min + " до " + max);
 
-                    return (val >= 1 && val <= max);
+                        return (val >= min && val <= max);
+                    }
+                    return true;
                 }
 
                 return true
             },
             maxpersonsvalidation: function (input, params) {
 
-                if (input.is("[name='persons14']") && input.val() != "") {
+                if ((input.is("[name='persons']") || input.is("[name='persons14']")) && input.val() != "") {
 
-                    var numerictextbox = input.data("kendoNumericTextBox");
+                    var numerictextbox = $("#persons14").data("kendoNumericTextBox");
                     var val = numerictextbox.value();
-                    var max = $("#persons").val();
-                 
+                    var max = $("#persons").data("kendoNumericTextBox").value();
+                    //input.attr("data-maxpersonsvalidation-msg", "Количетво детей должно быть меньше общего количества "+ max+ " !");
+                    //console.log(val, max);
+                    
                     return ( val < max);
                 }
 
@@ -46,9 +51,12 @@
         },
         messages: {
             maxpersonsvalidation: function (input) {
-                var max = $("#persons").val();
-
-                return kendo.format("Количетво детей должно быть меньше общего количества ({0}) !", max);
+                if (input.is("[name='persons']")){
+                    console.log(input);
+                    var max = $("#persons").data("kendoNumericTextBox").value();
+                    //return input.attr("data-maxpersonsvalidation-msg");
+                    return kendo.format("Количетво детей должно быть меньше общего количества ({0}) !", max);
+                }
             }
         }
         
@@ -78,37 +86,67 @@ function getParameters(data)
 
 }
 
+function SetMinNumerictextbox(numerictextbox)
+{
+    var min = numerictextbox.min();
+    numerictextbox.value(min);
+    
+    numerictextbox.trigger("change");
+}
+
 function SetMaxNumerictextbox(element, num)
 {
+    
     var numerictextbox = element.data("kendoNumericTextBox");
     if (num > 0) {
        
         var val = numerictextbox.value();
+        
         if (val > num) {
-            numerictextbox.value(1);
-            numerictextbox.trigger("change");
+            SetMinNumerictextbox(numerictextbox);
         }
+        element.attr("data-max", num);
         numerictextbox.enable(true);
-        element.attr("data-max",num)
-       //numerictextbox.max(num);
 
+       //numerictextbox.max(num);
 
     }
     else {
 
-        numerictextbox.value(1);
+        SetMinNumerictextbox(numerictextbox);
         numerictextbox.enable(false);
     }
+
+  
 }
 
+function SetFreePlaces14(num, num14)
+{
 
-function SetFreePlaces(num,num14) {
+    if (num14 >= num) {
+
+        if (num > 0) {
+
+            return num - 1;
+        }
+        else {
+
+            return num;
+        }
+    }
+    return num14;
+}
+
+function SetFreePlaces(num, num14) {
+
     
+    num14= SetFreePlaces14(num, num14);
+
     var element = $("#persons");
     SetMaxNumerictextbox(element, num);
     element = $("#persons14");
     SetMaxNumerictextbox(element, num14);
-    
+
 
     //for view
     $("#freeplaces-view").text(num);
@@ -117,9 +155,8 @@ function SetFreePlaces(num,num14) {
 
     SetElementValue($("#freeplaces"), num);
     SetElementValue($("#freeplaces14"), num14);
-   
 
-   
+
 }
 function SetElementValue(element,val)
 {

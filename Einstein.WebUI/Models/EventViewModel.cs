@@ -106,6 +106,7 @@ namespace Einstein.WebUI.Models
             @event.IsAllDay = IsAllDay;
             @event.MaxPersons = MaxPersons;
             @event.MaxPersons14 = MaxPersons14;
+
             return @event;
 
         }

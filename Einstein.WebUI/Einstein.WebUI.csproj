@@ -187,6 +187,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\MailSettings.xml" />
+    <Content Include="App_Data\Orders.mdf" />
+    <Content Include="App_Data\Orders_log.ldf">
+      <DependentUpon>Orders.mdf</DependentUpon>
+    </Content>
     <Content Include="App_Data\OrderTemplate.html" />
     <Content Include="Content\bootstrap-grid.css" />
     <Content Include="Content\bootstrap-grid.min.css" />

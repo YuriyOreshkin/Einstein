@@ -10,32 +10,33 @@
 @*<h2>Заявки на посещение мероприятий</h2>*@
 
 @(Html.Kendo().Grid<Einstein.WebUI.Models.OrderViewModel>()
-    .Name("gridOrders")
-    .HtmlAttributes(new { @class = "data-view", style = "height:calc(100vh - 40px);" })
-    .ToolBar(toolbar =>
-    {
-
-        toolbar.Create();
-        toolbar.Excel();
-    })
-    .Columns(columns =>
-    {
-        columns.Bound(p => p.dateorder).Format("{0:dd.MM.yyyy HH:mm}").Width(150).ClientFooterTemplate("Всего:").Groupable(false);
-        columns.Bound(p => p.dateevent).Format("{0:dd.MM.yyyy}").Width(200).ClientGroupHeaderTemplate("Дата мероприятия: #= kendo.toString(kendo.parseDate(value), 'dd.MM.yyyy') #");
-        columns.Bound(p => p.eventname).MinResizableWidth(200).Filterable(ftb => ftb.Multi(true)).ClientFooterTemplate("<span>#=count#</span><span id='new-orders-count' class='new-count'>0</span>").ClientGroupHeaderColumnTemplate("#= count#");
-        columns.Bound(p => p.timeevent).Filterable(ftb => ftb.Multi(true)).Width(200);
-        columns.Group(gr => gr
-        .Title("Посетителей")
-            .Columns(cl =>
+            .Name("gridOrders")
+            .HtmlAttributes(new { @class = "data-view", style = "height:calc(100vh - 40px);" })
+            .ToolBar(toolbar =>
             {
 
-                cl.Bound(p => p.persons).Title("Всего").Width(100).ClientGroupHeaderColumnTemplate("#=sum#").ClientFooterTemplate("#=sum#").Groupable(false);
-                cl.Bound(p => p.persons14).Title("до 14").Width(100).ClientGroupHeaderColumnTemplate("#=sum#").ClientFooterTemplate("#=sum#").Groupable(false);
+                toolbar.Create();
+                toolbar.Excel();
             })
-            );
-        columns.Bound(p => p.email).Width(250).Groupable(false);
-        columns.Bound(p => p.phonenumber).Width(200).Groupable(false);
-        columns.Command(commands =>
+            .Columns(columns =>
+            {
+            columns.Bound(p => p.dateorder).Format("{0:dd.MM.yyyy HH:mm}").Width(150).ClientFooterTemplate("Всего:").Groupable(false);
+            columns.Bound(p => p.dateevent).Format("{0:dd.MM.yyyy}").Width(200).ClientGroupHeaderTemplate("Дата мероприятия: #= kendo.toString(kendo.parseDate(value), 'dd.MM.yyyy') #");
+            columns.Bound(p => p.eventname).MinResizableWidth(200).Filterable(ftb => ftb.Multi(true)).ClientFooterTemplate("<span>#=count#</span><span id='new-orders-count' class='new-count'>0</span>").ClientGroupHeaderColumnTemplate("#= count#");
+            columns.Bound(p => p.timeevent).Filterable(ftb => ftb.Multi(true)).Width(200);
+            columns.Group(gr => gr
+    .Title("Посетителей")
+        .Columns(cl =>
+        {
+
+            cl.Bound(p => p.persons).Title("Всего").Width(100).ClientGroupHeaderColumnTemplate("#=sum#").ClientFooterTemplate("#=sum#").Groupable(false);
+            cl.Bound(p => p.persons14).Title("до 14").Width(100).ClientGroupHeaderColumnTemplate("#=sum#").ClientFooterTemplate("#=sum#").Groupable(false);
+        })
+        );
+            columns.Bound(p => p.email).Width(250).Groupable(false);
+            columns.Bound(p => p.phonenumber).Width(200).Groupable(false);
+            columns.Bound(p => p.inform).Title("").Width(80).ClientTemplate("<div style='text-align: center;vertical-align: middle;'><a class='action-notification' title='Отправить уведомление' href='\\#'><span class='k-icon k-i-email' style='font-size:24px; #if(inform) {# color: \\#656565; # }else{# color: \\#d51923; #} #'></span></a></div>");
+            columns.Command(commands =>
         {
             commands.Edit();
             commands.Destroy();
@@ -78,6 +79,7 @@
         model.Field(p => p.dateevent).DefaultValue(Model.Start.Date);
         model.Field(p => p.eventid).DefaultValue(Model.TaskID);
         model.Field(p => p.freeplaces).DefaultValue(Model.FreePlaces);
+        model.Field(p => p.freeplaces14).DefaultValue(Model.FreePlaces14);
         model.Field(p => p.timeevent).DefaultValue(Model.Start.ToString("HH:mm") + " - " + Model.End.ToString("HH:mm"));
 
     })
@@ -111,13 +113,45 @@
 
         });
 
-        
+
+        $(document).on("click", ".action-notification", function (e) {
+            e.preventDefault();
+            var grid = $("#gridOrders").data("kendoGrid");
+            var dataItem = grid.dataItem($(e.currentTarget).closest("tr"));
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("SendNotification", "OrderService")",
+                datatype: 'json',
+                data:  JSON.parse(JSON.stringify(dataItem)),
+                success: function (data) {
+
+                    if (data.message == "OK") {
+                        dataItem.set("inform", true)
+                        grid.dataSource.pushUpdate(dataItem);
+                    }
+                    else {
+                        dataItem.set("inform", false)
+                        grid.dataSource.pushUpdate(dataItem);
+                        showError(data.result);
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+
+                     showError(xhr.status + " " + thrownError);
+                    }
+            });
+
+        });
+
         $(document).ready(function () {
            
             $(window).resize();
             //Footer on Top
             $(".k-grid-footer").insertAfter(".k-grid-header");
         });
+
+
 
         function resizeGrid(height) {
             content.css("height", height);
@@ -161,15 +195,19 @@
 
         function onGridOrdersEdit(e) {
 
-            
+           
             if (!e.model.isNew()) {
 
                 e.model.freeplaces = e.model.freeplaces + e.model.persons;
                 e.model.freeplaces14 = e.model.freeplaces14 + e.model.persons14;
+
+                e.model.freeplaces14 = SetFreePlaces14(e.model.freeplaces, e.model.freeplaces14);
+                
             }
             var numeric = e.container.find("input[name=persons]");
             SetMaxNumerictextbox(numeric, e.model.freeplaces);
             numeric = e.container.find("input[name=persons14]");
+            console.l
             SetMaxNumerictextbox(numeric, e.model.freeplaces14);
 
             $("#freeplaces-view").text(e.model.freeplaces);
