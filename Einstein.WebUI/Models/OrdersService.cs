@@ -54,9 +54,28 @@ namespace Einstein.WebUI.Models
         }
 
 
-        public void SendNitification(OrderViewModel orderview)
+        public void SendNotification(OrderViewModel orderview)
         {
-            sender.SendOrder(orderview);
+            var entity = entities.Orders.FirstOrDefault(o => o.ID == orderview.id);
+            try
+            {
+                sender.SendOrder(orderview);
+                orderview.inform = true;
+
+                entity.INFORM = true;
+                entities.UpdateOrder(entity);
+
+            }
+            catch (Exception ex)
+            {
+                entity.INFORM = false;
+                orderview.inform = false;
+            }
+            finally
+            {
+                
+                entities.UpdateOrder(entity);
+            }
         }
 
 
@@ -73,7 +92,7 @@ namespace Einstein.WebUI.Models
                 //orderview.freeplaces = entities.Events.First(e => e.EventID == orderview.eventid).FreePlaces;
                 orderview = ConvertToViewModel(entity, orderview);
 
-                //sender.SendOrder(orderview);
+               SendNotification(orderview);
 
             }
         }

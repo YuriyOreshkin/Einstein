@@ -34,35 +34,38 @@
             },
             maxpersonsvalidation: function (input, params) {
 
-                if ((input.is("[name='persons']") || input.is("[name='persons14']")) && input.val() != "") {
+                if (input.is("[name='persons14']") && input.val() != "") {
 
                     var numerictextbox = $("#persons14").data("kendoNumericTextBox");
                     var val = numerictextbox.value();
                     var max = $("#persons").data("kendoNumericTextBox").value();
-                    //input.attr("data-maxpersonsvalidation-msg", "Количетво детей должно быть меньше общего количества "+ max+ " !");
-                    //console.log(val, max);
                     
                     return ( val < max);
                 }
 
                 return true
             }
+            
 
         },
         messages: {
             maxpersonsvalidation: function (input) {
-                if (input.is("[name='persons']")){
-                    console.log(input);
-                    var max = $("#persons").data("kendoNumericTextBox").value();
-                    //return input.attr("data-maxpersonsvalidation-msg");
-                    return kendo.format("Количетво детей должно быть меньше общего количества ({0}) !", max);
-                }
+
+                var max = $("#persons").data("kendoNumericTextBox").value();
+                return kendo.format("Количетво детей должно быть меньше общего количества ({0}) !", max);
+
             }
         }
         
     });
 })(jQuery, kendo);
 
+
+function onPersonsChange(e)
+{
+    var numerictextbox = $("#persons14").data("kendoNumericTextBox");
+    numerictextbox.trigger("change");
+}
 
 function getParameters(data)
 {
@@ -247,8 +250,8 @@ function SetDates(dates) {
         datepicker.enable();
     }
     else {
-        
-        datepicker.disable();
+
+        datepicker.enable(false);
     }
 
 }
@@ -281,10 +284,16 @@ function AvailableEvents(dates) {
 
 
 function onDropDownListEventsNamesChange(e) {
+
    
     var event = e.dataItem;
+  
     if (event) {
         AvailableEvents(event.Dates)
+    }
+    else {
+        
+        AvailableEvents([]);
     }
 }
 
