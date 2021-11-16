@@ -42,7 +42,7 @@
 
 </script>
 
-<div style="margin-left:auto;margin-right:auto;max-width:60%;height:initial">
+<div style="margin-left:auto;margin-right:auto;max-width:60%;height:86vh;">
 
     @(Html.Kendo().EditorFor(m=>m.body)
                                                                                   .Name("template-editor")
@@ -86,7 +86,7 @@
 
                         // )
                         //.Messages(mes => mes.FontNameInherit("Arial Default").FontSizeInherit("7pt"))
-                        //.HtmlAttributes(new { style = "width:21.5cm;   height: 30.5cm;", aria_label = "editor" })
+                        .HtmlAttributes(new { style ="height: 100%;", aria_label = "editor" })
                         //.StyleSheets(css => css.Add(Url.Content("~/Content/editor.css")))
                         //.Value(Model.body)
 

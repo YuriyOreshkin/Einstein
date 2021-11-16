@@ -48,6 +48,7 @@
     .Sortable()
     .Scrollable()
     .Editable(edit => edit.Mode(GridEditMode.PopUp).TemplateName("Order").Window(wnd=>wnd.Width(600)))
+    .Pageable(pag => pag.Refresh(true).PageSizes(new[] { 10, 25, 50, 100 }).Input(true).ButtonCount(5))
     .Resizable(r => r.Columns(true))
     .Groupable()
     .Mobile(MobileMode.Auto)
