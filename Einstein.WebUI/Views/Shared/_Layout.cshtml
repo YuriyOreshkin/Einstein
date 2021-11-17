@@ -45,22 +45,50 @@
    
 </html>
 <script>
-   
 
-    function showSuccess(message)
+    function onShow(e) {
+        if (e.sender.getNotifications().length == 1) {
+            var element = e.element.parent(),
+                eWidth = element.width(),
+                eHeight = element.height(),
+                wWidth = $(window).width(),
+                wHeight = $(window).height(),
+                newTop, newLeft;
+
+            newLeft = Math.floor(wWidth / 2 - eWidth / 2);
+            newTop = Math.floor(wHeight / 2 - eHeight / 2);
+
+            e.element.parent().css({ top: newTop, left: newLeft });
+        }
+    }
+
+    function Centered(notification)
     {
+        notification.bind("show", onShow);
+    }
+
+    function showSuccess(message,center)
+    {
+        
         var notification = $("#notification").data("kendoNotification");
         notification.setOptions({
 
             autoHideAfter: 4000
         });
 
+        if (center)
+        {
+            Centered(notification);
+        }
         notification.show(message, "success");
     }
 
-    function showError(message)
+    function showError(message, center)
     {
         var notification = $("#notification").data("kendoNotification");
+        if (center) {
+            Centered(notification);
+        }
         notification.show(message, "error");
 
     }

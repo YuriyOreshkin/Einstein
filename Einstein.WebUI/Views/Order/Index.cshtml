@@ -51,6 +51,7 @@
 
     function  ShowMessage(e)
     {
+        
         if (e.Errors) {
             var message = "<strong>Ошибки:</strong>";
             message += "<ul>"
@@ -63,12 +64,12 @@
                 }
             });
             message += "</ul>"
-            showError(message);
+            showError(message, true);
 
         }
         else
         {
-            showSuccess("Заявка успешно создана!<p>С Вами свяжется оператор, чтобы уточнить данные.</p>")
+            showSuccess("Заявка успешно создана!<p>На указанную Вами электронную почту направлено уведомление о регитрации.</p>", true);
         }
     }
     function SendOrder(e) {
