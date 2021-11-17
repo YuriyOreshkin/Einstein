@@ -93,6 +93,7 @@
 
                             var numerictextbox = input.data("kendoNumericTextBox");
                             var val = numerictextbox.value();
+                            var min = numerictextbox.min();
                             var max = $(input).data("max");//numerictextbox.max();
                             var msg = "Количество всего посетителей";
                             if (input.is("[name='persons14']")) {
@@ -100,7 +101,7 @@
                             }
                             input.attr("data-maximumvalidation-msg", msg + " должно быть в диапазоне от 1 до " + max);
 
-                            return (val >= 1 && val <= max);
+                            return (val >= min && val <= max);
                         }
 
                         return true
@@ -138,6 +139,13 @@
             $(window).resize();
         }
     });
+
+
+    function onMaxPersonsChange(e)
+    {
+        var numerictextbox = $("#MaxPersons14").data("kendoNumericTextBox");
+        numerictextbox.trigger("change");
+    }
 
     function SetFreePlaces14(num, num14) {
 
