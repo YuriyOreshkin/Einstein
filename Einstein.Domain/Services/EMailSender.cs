@@ -28,6 +28,7 @@ namespace Einstein.Domain.Services
                 // адрес smtp-сервера и порт, с которого будем отправлять письмо
                 SmtpClient smtp = new SmtpClient(settings.HOST, settings.PORT);
                 // логин и пароль
+                smtp.UseDefaultCredentials = false;
                 smtp.Credentials = new NetworkCredential(settings.USER, settings.PASSWORD);
                 smtp.EnableSsl = true;
 
