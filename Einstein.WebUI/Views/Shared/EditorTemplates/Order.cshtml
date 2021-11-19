@@ -22,7 +22,7 @@
     <div class="k-form-field">
         <label class="k-label k-form-label" for="date">Дата посещения:</label>
         <div class="k-form-field-wrap">
-            
+
             @(Html.Kendo().DatePickerFor(m => m.dateevent)
                  .HtmlAttributes(new { style = "width:100%;" })
                  .Enable(false)
@@ -31,7 +31,7 @@
         </div>
         <span class="k-invalid-msg" data-for="dateevent"></span>
     </div>
-        
+
     <div class="k-form-field">
         <label class="k-label k-form-label" for="time">Время посещения:</label>
         <div class="k-form-field-wrap">
@@ -94,13 +94,21 @@
         <div class="k-form-field-wrap">
             @(Html.Kendo().MaskedTextBoxFor(m => m.phonenumber)
                 .Mask("+7(999) 000-0000")
-                //pattern = "\\([0-9]{3}\\) [0-9]{3}-[0-9]{4}", 
+                //pattern = "\\([0-9]{3}\\) [0-9]{3}-[0-9]{4}",
                 .HtmlAttributes(new { placeholder = "+7(999) 000-0000", type = "tel", data_validmask_msg ="Неверный формат телефона.", style = "width: 100%" })
                 .UnmaskOnPost(true)
                 )
         </div>
         <span class="k-invalid-msg" data-for="phonenumber"></span>
     </div>
+    <div id="field-prepay" class="k-form-field"  style="display:none;">
+        <label class="k-label k-form-label" for="prepay">Предоплата:</label>
+        <div class="k-form-field-wrap">
+            @Html.Kendo().CurrencyTextBoxFor(m => m.prepay).HtmlAttributes(new {style="width:100%"}).Min(0)
+        </div>
+        <span class="k-invalid-msg" data-for="prepay"></span>
+    </div>
+ 
 </div>
 <style>
     .important {

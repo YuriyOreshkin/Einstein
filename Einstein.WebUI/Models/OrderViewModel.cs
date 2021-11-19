@@ -60,6 +60,8 @@ namespace Einstein.WebUI.Models
         [DisplayName("Уведомление отправлено")]
         public bool inform { get; set; }
 
+        [DisplayName("Предоплата")]
+        public decimal prepay { get; set; }
         private string unMask(string _str)
         {
            return string.Join("", _str.Where(c => char.IsDigit(c) || c == '+'));
@@ -76,6 +78,7 @@ namespace Einstein.WebUI.Models
             order.PHONE = unMask(phonenumber);
             order.EVENTID = eventid;
             order.INFORM = inform;
+            order.PREPAY = prepay;
 
             return order;
         }

@@ -9,23 +9,29 @@
 
 @*<h2>Заявки на посещение мероприятий</h2>*@
 
-@(Html.Kendo().Grid<Einstein.WebUI.Models.OrderViewModel>()
-            .Name("gridOrders")
-            .HtmlAttributes(new { @class = "data-view", style = "height:calc(100vh - 40px);" })
-            .ToolBar(toolbar =>
-            {
+@(Html.Kendo().Grid<Einstein.WebUI.Models.OrderViewModel>
+    ()
+    .Name("gridOrders")
+    .HtmlAttributes(new { @class = "data-view", style = "height:calc(100vh - 40px);" })
+    .ToolBar(toolbar =>
+    {
 
-                toolbar.Create();
-                toolbar.Excel();
-            })
-            .Columns(columns =>
+        toolbar.Create();
+        toolbar.Excel();
+    })
+    .Columns(columns =>
+    {
+        columns.Bound(p => p.dateorder).Format("{0:dd.MM.yyyy HH:mm}").Width(150).ClientFooterTemplate("Всего:").Groupable(false);
+        columns.Group(gr => gr
+            .Title("Мероприятие")
+            .Columns(cl =>
             {
-                columns.Bound(p => p.dateorder).Format("{0:dd.MM.yyyy HH:mm}").Width(150).ClientFooterTemplate("Всего:").Groupable(false);
-                columns.Bound(p => p.dateevent).Format("{0:dd.MM.yyyy}").Width(200).ClientGroupHeaderTemplate("Дата мероприятия: #= kendo.toString(kendo.parseDate(value), 'dd.MM.yyyy') #");
-                columns.Bound(p => p.eventname).MinResizableWidth(200).Filterable(ftb => ftb.Multi(true)).ClientFooterTemplate("<span>#=count#</span><span id='new-orders-count' class='new-count'>0</span>").ClientGroupHeaderColumnTemplate("#= count#");
-                columns.Bound(p => p.timeevent).Filterable(ftb => ftb.Multi(true)).Width(200);
-                columns.Group(gr => gr
-        .Title("Посетителей")
+                cl.Bound(p => p.dateevent).Title("Дата").Format("{0:dd.MM.yyyy}").Width(150).ClientGroupHeaderTemplate("Дата мероприятия: #= kendo.toString(kendo.parseDate(value), 'dd.MM.yyyy') #");
+                cl.Bound(p => p.eventname).Title("Наименование").MinResizableWidth(200).Filterable(ftb => ftb.Multi(true)).ClientFooterTemplate("<span>#=count#</span><span id='new-orders-count' class='new-count'>0</span>").ClientGroupHeaderColumnTemplate("#= count#");
+                cl.Bound(p => p.timeevent).Title("Время").Filterable(ftb => ftb.Multi(true)).Width(150);
+            }));
+        columns.Group(gr => gr
+            .Title("Посетителей")
             .Columns(cl =>
             {
 
@@ -33,15 +39,16 @@
                 cl.Bound(p => p.persons14).Title("до 14").Width(100).ClientGroupHeaderColumnTemplate("#=sum#").ClientFooterTemplate("#=sum#").Groupable(false);
             })
             );
-                columns.Bound(p => p.email).Width(250).Groupable(false);
-                columns.Bound(p => p.phonenumber).ClientTemplate("<a href ='tel:#=phonenumber#' >#=MaskPhone(phonenumber)#</a>").Width(200).Groupable(false);
-                columns.Bound(p => p.inform).Title("").Width(80).ClientTemplate("<div style='text-align: center;vertical-align: middle;'><a class='action-notification' title='Отправить уведомление' href='\\#'><span class='k-icon k-i-email' style='font-size:24px; #if(inform) {# color: \\#656565; # }else{# color: \\#d51923; #} #'></span></a></div>");
-                columns.Command(commands =>
-                {
-                    commands.Edit();
-                    commands.Destroy();
-                }).Width(300);
-            })
+        columns.Bound(p => p.prepay).Width(150).Groupable(false).ClientGroupHeaderColumnTemplate("#=sum#").ClientFooterTemplate("#=sum#");
+        columns.Bound(p => p.email).Width(230).Groupable(false);
+        columns.Bound(p => p.phonenumber).ClientTemplate("<a href='tel:#=phonenumber#'>#=MaskPhone(phonenumber)#</a>").Width(190).Groupable(false);
+        columns.Bound(p => p.inform).Title("").Width(60).ClientTemplate("<div style='text-align: center;vertical-align: middle;'><a class='action-notification' title='Отправить уведомление' href='\\#'><span class='k-icon k-i-email' style='font-size:24px; #if(inform) {# color: \\#656565; # }else{# color: \\#d51923; #} #'></span></a></div>");
+        columns.Command(commands =>
+        {
+            commands.Edit();
+            commands.Destroy();
+        }).Width(250);
+    })
 
     .Excel(excel =>excel.FileName("Список заявок.xlsx").ForceProxy(true).ProxyURL(Url.Action("Excel_Export_Save", "OrderService")))
     .Events(ev => ev.Edit("onGridOrdersEdit").ExcelExport("onExcelExport"))
@@ -60,6 +67,7 @@
         aggregates.Add(p => p.eventname).Count();
         aggregates.Add(p => p.persons).Sum();
         aggregates.Add(p => p.persons14).Sum();
+        aggregates.Add(p => p.prepay).Sum();
     })
     .Sort(s => s.Add(f => f.dateorder).Descending())
     .Filter(f =>
@@ -149,7 +157,7 @@
         });
 
         $(document).ready(function () {
-           
+
             $(window).resize();
             //Footer on Top
             $(".k-grid-footer").insertAfter(".k-grid-header");
@@ -208,23 +216,28 @@
 
         function onGridOrdersEdit(e) {
 
-           
+
             if (!e.model.isNew()) {
 
                 e.model.freeplaces = e.model.freeplaces + e.model.persons;
                 e.model.freeplaces14 = e.model.freeplaces14 + e.model.persons14;
 
                 e.model.freeplaces14 = SetFreePlaces14(e.model.freeplaces, e.model.freeplaces14);
-                
+
             }
+
             var numeric = e.container.find("input[name=persons]");
             SetMaxNumerictextbox(numeric, e.model.freeplaces);
             numeric = e.container.find("input[name=persons14]");
             console.l
             SetMaxNumerictextbox(numeric, e.model.freeplaces14);
 
+
             $("#freeplaces-view").text(e.model.freeplaces);
             $("#freeplaces14-view").text(e.model.freeplaces14);
+
+            var prepay = e.container.find("#field-prepay");
+            prepay.show();
         }
 
         //Show Errors
@@ -270,9 +283,11 @@
         .k-header .k-link {
             text-align: center;
         }
+
         .k-edit-form-container {
-            width:100%;
+            width: 100%;
         }
+
         .new-count {
             display: none;
             padding: 1px 4px;

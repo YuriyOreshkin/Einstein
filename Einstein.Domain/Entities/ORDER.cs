@@ -17,6 +17,7 @@ namespace Einstein.Domain.Entities
         public string EMAIL { get; set; }
         public bool INFORM { get; set; }
 
+        public decimal PREPAY { get; set; }
         public virtual EVENT EVENT { get; set; }
     }
 }
