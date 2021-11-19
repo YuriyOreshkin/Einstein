@@ -60,6 +60,10 @@ namespace Einstein.WebUI.Models
         [DisplayName("Уведомление отправлено")]
         public bool inform { get; set; }
 
+        private string unMask(string _str)
+        {
+           return string.Join("", _str.Where(c => char.IsDigit(c) || c == '+'));
+        }
 
         public ORDER ToEntity(ORDER order)
         {
@@ -69,7 +73,7 @@ namespace Einstein.WebUI.Models
             order.EMAIL = email;
             order.PERSONS = persons;
             order.PERSONS14 = persons14;
-            order.PHONE = phonenumber;
+            order.PHONE = unMask(phonenumber);
             order.EVENTID = eventid;
             order.INFORM = inform;
 

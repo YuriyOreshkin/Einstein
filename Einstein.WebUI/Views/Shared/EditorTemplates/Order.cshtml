@@ -93,9 +93,10 @@
         <label class="k-label k-form-label" for="phonenumber">Номер телефона:</label>
         <div class="k-form-field-wrap">
             @(Html.Kendo().MaskedTextBoxFor(m => m.phonenumber)
-                .Mask("(999) 000-0000")
+                .Mask("+7(999) 000-0000")
                 //pattern = "\\([0-9]{3}\\) [0-9]{3}-[0-9]{4}", 
-                .HtmlAttributes(new { placeholder = "(999) 000-0000", type = "tel", data_validmask_msg ="Телефон должен содержать 10 цифр", style = "width: 100%" })
+                .HtmlAttributes(new { placeholder = "+7(999) 000-0000", type = "tel", data_validmask_msg ="Неверный формат телефона.", style = "width: 100%" })
+                .UnmaskOnPost(true)
                 )
         </div>
         <span class="k-invalid-msg" data-for="phonenumber"></span>

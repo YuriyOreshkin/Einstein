@@ -20,29 +20,29 @@
             })
             .Columns(columns =>
             {
-            columns.Bound(p => p.dateorder).Format("{0:dd.MM.yyyy HH:mm}").Width(150).ClientFooterTemplate("Всего:").Groupable(false);
-            columns.Bound(p => p.dateevent).Format("{0:dd.MM.yyyy}").Width(200).ClientGroupHeaderTemplate("Дата мероприятия: #= kendo.toString(kendo.parseDate(value), 'dd.MM.yyyy') #");
-            columns.Bound(p => p.eventname).MinResizableWidth(200).Filterable(ftb => ftb.Multi(true)).ClientFooterTemplate("<span>#=count#</span><span id='new-orders-count' class='new-count'>0</span>").ClientGroupHeaderColumnTemplate("#= count#");
-            columns.Bound(p => p.timeevent).Filterable(ftb => ftb.Multi(true)).Width(200);
-            columns.Group(gr => gr
-    .Title("Посетителей")
-        .Columns(cl =>
-        {
+                columns.Bound(p => p.dateorder).Format("{0:dd.MM.yyyy HH:mm}").Width(150).ClientFooterTemplate("Всего:").Groupable(false);
+                columns.Bound(p => p.dateevent).Format("{0:dd.MM.yyyy}").Width(200).ClientGroupHeaderTemplate("Дата мероприятия: #= kendo.toString(kendo.parseDate(value), 'dd.MM.yyyy') #");
+                columns.Bound(p => p.eventname).MinResizableWidth(200).Filterable(ftb => ftb.Multi(true)).ClientFooterTemplate("<span>#=count#</span><span id='new-orders-count' class='new-count'>0</span>").ClientGroupHeaderColumnTemplate("#= count#");
+                columns.Bound(p => p.timeevent).Filterable(ftb => ftb.Multi(true)).Width(200);
+                columns.Group(gr => gr
+        .Title("Посетителей")
+            .Columns(cl =>
+            {
 
-            cl.Bound(p => p.persons).Title("Всего").Width(100).ClientGroupHeaderColumnTemplate("#=sum#").ClientFooterTemplate("#=sum#").Groupable(false);
-            cl.Bound(p => p.persons14).Title("до 14").Width(100).ClientGroupHeaderColumnTemplate("#=sum#").ClientFooterTemplate("#=sum#").Groupable(false);
-        })
-        );
-            columns.Bound(p => p.email).Width(250).Groupable(false);
-            columns.Bound(p => p.phonenumber).Width(200).Groupable(false);
-            columns.Bound(p => p.inform).Title("").Width(80).ClientTemplate("<div style='text-align: center;vertical-align: middle;'><a class='action-notification' title='Отправить уведомление' href='\\#'><span class='k-icon k-i-email' style='font-size:24px; #if(inform) {# color: \\#656565; # }else{# color: \\#d51923; #} #'></span></a></div>");
-            columns.Command(commands =>
-        {
-            commands.Edit();
-            commands.Destroy();
-        }).Width(300);
-    })
-   
+                cl.Bound(p => p.persons).Title("Всего").Width(100).ClientGroupHeaderColumnTemplate("#=sum#").ClientFooterTemplate("#=sum#").Groupable(false);
+                cl.Bound(p => p.persons14).Title("до 14").Width(100).ClientGroupHeaderColumnTemplate("#=sum#").ClientFooterTemplate("#=sum#").Groupable(false);
+            })
+            );
+                columns.Bound(p => p.email).Width(250).Groupable(false);
+                columns.Bound(p => p.phonenumber).ClientTemplate("<a href ='tel:#=phonenumber#' >#=MaskPhone(phonenumber)#</a>").Width(200).Groupable(false);
+                columns.Bound(p => p.inform).Title("").Width(80).ClientTemplate("<div style='text-align: center;vertical-align: middle;'><a class='action-notification' title='Отправить уведомление' href='\\#'><span class='k-icon k-i-email' style='font-size:24px; #if(inform) {# color: \\#656565; # }else{# color: \\#d51923; #} #'></span></a></div>");
+                columns.Command(commands =>
+                {
+                    commands.Edit();
+                    commands.Destroy();
+                }).Width(300);
+            })
+
     .Excel(excel =>excel.FileName("Список заявок.xlsx").ForceProxy(true).ProxyURL(Url.Action("Excel_Export_Save", "OrderService")))
     .Events(ev => ev.Edit("onGridOrdersEdit").ExcelExport("onExcelExport"))
     .Sortable()
@@ -156,6 +156,15 @@
         });
 
 
+        function MaskPhone(phonenumber) {
+
+            var code = phonenumber.substring(0, 2);
+            var piece1 = phonenumber.substring(2, 5); //123
+            var piece2 = phonenumber.substring(5, 8); //456
+            var piece3 = phonenumber.substring(8); //7890
+
+            return kendo.format("{0}({1}) {2}-{3}",code, piece1, piece2, piece3);
+        }
 
         function resizeGrid(height) {
             content.css("height", height);

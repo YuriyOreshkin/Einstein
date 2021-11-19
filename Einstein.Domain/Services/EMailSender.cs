@@ -46,7 +46,6 @@ namespace Einstein.Domain.Services
                 // письмо представляет код html
                 mail.IsBodyHtml = true;
 
-
                 smtp.Send(mail);
             }
             else {
