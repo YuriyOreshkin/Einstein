@@ -31,7 +31,7 @@ namespace Einstein.Domain.Services
                 smtp.UseDefaultCredentials = false;
                 smtp.Credentials = new NetworkCredential(settings.USER, settings.PASSWORD);
                 smtp.EnableSsl = true;
-                
+
                 // отправитель - устанавливаем адрес и отображаемое в письме имя
                 //MailAddress from = new MailAddress(settings.USER);
                 string from = settings.USER;
@@ -45,11 +45,13 @@ namespace Einstein.Domain.Services
                 mail.Body = body;
                 // письмо представляет код html
                 mail.IsBodyHtml = true;
-                
-                
+
+
                 smtp.Send(mail);
             }
-
+            else {
+                throw new Exception("Сервис выключен!");
+            }
         }
 
 
