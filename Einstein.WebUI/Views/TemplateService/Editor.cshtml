@@ -42,7 +42,7 @@
 
 </script>
 
-<div style="margin-left:auto;margin-right:auto;max-width:60%;height:86vh;">
+<div style="margin-left:auto;margin-right:auto;max-width:80%;height:86vh;">
 
     @(Html.Kendo().EditorFor(m=>m.body)
                                                                                   .Name("template-editor")
@@ -66,7 +66,7 @@
                                                                                     .TableEditing()
                                                                                     .Separator()
                                                                                     .CustomTemplate(save => save.Template("" + Html.Kendo().Button().Name("temlate-parameters").HtmlAttributes( new { title= "Доступные параметры"}).Icon("question").Events(ev => ev.Click("TemplateParametersInfo")).ToClientTemplate()))
-                                                                                    .CustomTemplate(ct=>ct.Template("<div style='width:900px;'><label for='subject' style='vertical-align:middle;margin-right:10px;'>Тема: </label>" + Html.Kendo().TextBoxFor(m=>m.subject).HtmlAttributes(new { style= "width: 90%;" }).ToClientTemplate()+"</div>"))
+                                                                                    .CustomTemplate(ct=>ct.Template("<div style='width:600px;'><label for='subject' style='vertical-align:middle;margin-right:10px;'>Тема: </label>" + Html.Kendo().TextBoxFor(m=>m.subject).HtmlAttributes(new { style= "width: 90%;" }).ToClientTemplate()+"</div>"))
 
                         )
                         .ImageBrowser(imageBrowser => imageBrowser

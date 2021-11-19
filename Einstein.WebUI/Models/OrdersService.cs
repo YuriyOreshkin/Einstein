@@ -113,6 +113,7 @@ namespace Einstein.WebUI.Models
                         IsAllDay = evententity.IsAllDay,
                         //RecurrenceID = Convert.ToInt32(evententity.EventID),
                         MaxPersons = evententity.MaxPersons,
+                        MaxPersons14= evententity.MaxPersons14,
                         StartTimezone = evententity.StartTimezone,
                         EndTimezone = evententity.EndTimezone
                     };

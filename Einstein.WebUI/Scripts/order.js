@@ -61,8 +61,8 @@
 })(jQuery, kendo);
 
 
-function onPersonsChange(e)
-{
+function onPersonsChange(e) {
+
     var numerictextbox = $("#persons14").data("kendoNumericTextBox");
     numerictextbox.trigger("change");
 }
@@ -180,7 +180,7 @@ function SetTimes(times) {
 
     if (times.length > 0) {
         var dataSource = new kendo.data.DataSource({
-            data: times.sort()
+            data: times.sort((a, b) =>  parseInt(a.Value) - parseInt(b.Value) )
         });
         dropdowntimes.setDataSource(dataSource);
         //times.forEach(function (obj, index) {

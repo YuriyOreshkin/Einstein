@@ -28,9 +28,6 @@ namespace Einstein.WebUI.Controllers.Services
         public virtual JsonResult Destroy([DataSourceRequest] DataSourceRequest request, EventViewModel appointment)
         {
            
-            
-            if (ModelState.IsValid)
-            {
                 try
                 {
                     eventsService.Delete(appointment, ModelState);
@@ -39,7 +36,7 @@ namespace Einstein.WebUI.Controllers.Services
                 {
                     ModelState.AddModelError("error", "Не удалось удалить мероприятие.");
                 }
-            }
+            
 
             return Json(new[] { appointment }.ToDataSourceResult(request, ModelState));
         }

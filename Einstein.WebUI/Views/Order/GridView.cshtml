@@ -5,7 +5,7 @@
 <script src="@Url.Content("~/Scripts/jquery.signalR-2.4.1.min.js")"></script>
 <script src="@Url.Content("~/signalr/hubs")"></script>
 
-@Scripts.Render("~/Scripts/OrderEvents.js")
+@Scripts.Render("~/Scripts/order.js")
 
 @*<h2>Заявки на посещение мероприятий</h2>*@
 
@@ -72,6 +72,7 @@
         }
 
     })
+    .PageSize(50)
     .ServerOperation(false)
     .Model(model =>
     {
@@ -84,7 +85,7 @@
         model.Field(p => p.timeevent).DefaultValue(Model.Start.ToString("HH:mm") + " - " + Model.End.ToString("HH:mm"));
 
     })
-    //.PageSize(50)
+    .PageSize(50)
     .Read(read => read.Action("ReadGrid", "OrderService"))
     .Create(update => update.Action("CreateForGrid", "OrderService"))
     .Update(update => update.Action("UpdateForGrid", "OrderService"))

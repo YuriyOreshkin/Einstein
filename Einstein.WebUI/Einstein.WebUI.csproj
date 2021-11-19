@@ -187,10 +187,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\MailSettings.xml" />
-    <Content Include="App_Data\Orders.mdf" />
-    <Content Include="App_Data\Orders_log.ldf">
-      <DependentUpon>Orders.mdf</DependentUpon>
-    </Content>
     <Content Include="App_Data\OrderTemplate.html" />
     <Content Include="Content\bootstrap-grid.css" />
     <Content Include="Content\bootstrap-grid.min.css" />
@@ -300,6 +296,7 @@
     <Content Include="Scripts\bootstrap.bundle.min.js.map" />
     <Content Include="Scripts\bootstrap.bundle.js.map" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
+    <None Include="Properties\PublishProfiles\IISProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
@@ -318,7 +315,7 @@
     <Content Include="Scripts\kendo\2019.3.1023\kendo.timezones.min.js" />
     <Content Include="Scripts\kendo\2019.3.1023\messages\kendo.messages.ru-RU.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
-    <Content Include="Scripts\OrderEvents.js" />
+    <Content Include="Scripts\order.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\_references.js" />

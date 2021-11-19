@@ -51,29 +51,31 @@
     </div>
     <div class="k-form-field">
 
-        <label class="k-label k-form-label" for="persons">Количество посетителей (свободных мест всего <span class="important" id="freeplaces-view"></span> из них детских <span class="important" id="freeplaces14-view"></span> ):</label>
+        <label class="k-label k-form-label" for="persons">Количество посетителей:</label>
         <div class="k-form-field-wrap" style="margin-bottom: 6px;">
-            <span>
+            <div style="display: inline-block; width: 49%;">
                 @Html.HiddenFor(m => m.freeplaces)
-                <label class="k-label k-form-label" for="persons" style="margin-right: 15px;">Всего</label>
+                <label for="persons" style="margin-right: 50px;">Всего (не более <span class="important" id="freeplaces-view"></span>)</label>
                 @(Html.Kendo().NumericTextBoxFor(m => m.persons)
                                                             .Format("n0")
                                                             .Min(1)
                                                             .Decimals(0)
                                                             .Enable(false)
+                                                            .HtmlAttributes(new { style = "width:100%;" })
                                                             .Events(ev=>ev.Change("onPersonsChange"))
                 )
-            </span>
-            <span style="float:right;">
+            </div>
+            <div style="display: inline-block; float:right;  width: 49%;">
                 @Html.HiddenFor(m => m.freeplaces14)
-                <label class="k-label k-form-label" for="persons14" style="margin-right: 15px;">до 14 лет</label>
+                <label class="k-label k-form-label" for="persons14" style="margin-right: 45px;">до 14 лет (не более <span class="important" id="freeplaces14-view"></span>)</label>
                 @(Html.Kendo().NumericTextBoxFor(m => m.persons14)
                                                                           .Format("n0")
                                                                           .Min(0)
                                                                           .Decimals(0)
+                                                                          .HtmlAttributes(new { style = "width:100%;" })
                                                                           .Enable(false)
                 )
-            </span>
+            </div>
         </div>
         <span class="important" style="text-align:justify;font-size: 13px;font-style: italic;">* ВАЖНО: Дети до 14 лет допускаются на экспозицию только в сопровождении взрослых!</span>
         <span class="k-invalid-msg" data-for="persons"></span>

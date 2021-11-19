@@ -67,7 +67,7 @@ namespace Einstein.WebUI.Models
         public int MaxPersons { get; set; }
         [DisplayName("Максимальное кол-во детей до 14")]
         [Required(ErrorMessage = "Требуется поле {0}")]
-        [Range(1, int.MaxValue, ErrorMessage = "Значение поля {0} должно быть в диапазоне от {1} до {2}")]
+        [Range(0, int.MaxValue, ErrorMessage = "Значение поля {0} должно быть в диапазоне от {1} до {2}")]
         public int MaxPersons14 { get; set; }
 
         public int Persons { get; set; }
