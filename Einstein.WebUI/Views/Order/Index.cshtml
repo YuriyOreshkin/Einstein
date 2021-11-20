@@ -76,22 +76,24 @@
 
         var validator = $("#order").kendoValidator().data("kendoValidator");
 
-         if (validator.validate()) {
+        if (validator.validate()) {
+            kendo.ui.progress($(".form-actions"), true);
             $.ajax({
                 type: "POST",
                 url: "@Url.Action("CreateOrder", "OrderService") ",
                 datatype: 'json',
                 data: $('#order').serialize(),
                 success: function (data) {
-
+                    kendo.ui.progress($(".form-actions"), false);
                     ShowMessage(data);
                     dataSource.read();
                     },
                 error: function (xhr, ajaxOptions, thrownError) {
-
+                    kendo.ui.progress($(".form-actions"), false);
                     showError(xhr.status + " " + thrownError);
                     }
             });
+            
         }
     }
 </script>
