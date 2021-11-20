@@ -58,6 +58,7 @@
   <ItemGroup>
     <Compile Include="Entities\CATEGORY.cs" />
     <Compile Include="Entities\EVENT.cs" />
+    <Compile Include="Entities\USER.cs" />
     <Compile Include="Entities\MAILSERVICESETTINGS.cs" />
     <Compile Include="Entities\ORDER.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -68,6 +69,8 @@
     <Compile Include="Services\IRepository.cs" />
     <Compile Include="Services\ITemplateService.cs" />
     <Compile Include="Services\FileTemplateService.cs" />
+    <Compile Include="Services\IUsers.cs" />
+    <Compile Include="Services\SettingsUsers.cs" />
     <Compile Include="Services\XMLMailServiceConfig.cs" />
   </ItemGroup>
   <ItemGroup>

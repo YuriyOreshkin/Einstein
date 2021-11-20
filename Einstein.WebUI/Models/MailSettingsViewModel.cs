@@ -19,6 +19,7 @@ namespace Einstein.WebUI.Models
         public int port { get; set; }
         [Required]
         [DisplayName("Пользователь")]
+        [EmailAddress]
         public string user { get; set; }
         [Required]
         [DisplayName("Пароль")]

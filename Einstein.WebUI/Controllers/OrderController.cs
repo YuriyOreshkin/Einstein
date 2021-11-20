@@ -21,7 +21,7 @@ namespace Einstein.WebUI.Controllers
             return View(new OrderViewModel());
         }
 
-        
+        [Authorize]
         public ActionResult GridView(long? eventid)
         {
             
@@ -36,6 +36,7 @@ namespace Einstein.WebUI.Controllers
             return View(new EventViewModel());
         }
 
+        [Authorize]
         public ActionResult GridViewByDate(int? recurrenceId,string start)
         {
 

@@ -19,16 +19,20 @@
         kendo.culture("ru-RU");
     </script>
 </head>
+ @if (User.Identity.IsAuthenticated) 
+{ 
        @(Html.Kendo().Menu()
            .Name("mainMenu")
            .Items(item=>
            {
-               item.Add().Text("Заявка").Action("Index", "Order");
-               item.Add().Text("Таблица").Action("GridView", "Order");
-               item.Add().Text("Календарь").Action("Index", "Scheduler");
-               item.Add().Text("Настройки").Action("Index", "Admin");
+           //item.Add().Text("Заявка").Action("Index", "Order");
+           item.Add().Encoded(false).Text("<span class=\"k-icon k-i-grid\"></span>Таблица").Action("GridView", "Order");
+           item.Add().Encoded(false).Text("<span class=\"k-icon k-i-calendar\"></span>Календарь").Action("Index", "Scheduler");
+           item.Add().Encoded(false).Text("<span class=\"k-icon k-i-gear\"></span>Настройки").Action("Settings", "Admin");
+           item.Add().Encoded(false).Text("<span class=\"k-icon k-i-logout\"></span>Выход").Action("LogOff", "Account").HtmlAttributes(new { style="float:right;"});
            })
     )
+}
 <body>
 
     @RenderBody()

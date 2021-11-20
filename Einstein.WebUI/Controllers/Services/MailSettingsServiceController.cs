@@ -9,6 +9,7 @@ using System.Web.Mvc;
 
 namespace Einstein.WebUI.Controllers.Services
 {
+    [Authorize]
     public class MailSettingsServiceController : Controller
     {
         private IMailServiceConfig mailconfig;

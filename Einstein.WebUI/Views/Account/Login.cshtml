@@ -1,0 +1,62 @@
+﻿@model  Einstein.WebUI.Models.LoginViewModel
+@{
+    ViewBag.Title = "Авторизация";
+}
+
+
+<div style="margin-left:auto;margin-right:auto;max-width:300px;">
+    <section id="loginform">
+        @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+         
+        <fieldset class="k-form-fieldset k-widget">
+            <legend class="k-form-legend" style="padding-left:15px;">Авторизация</legend>
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div style="margin: 0 15px">
+                <div class="k-form-field">
+                    <label class="k-label k-form-label" for="user">Пользователь:</label>
+                    <div class="k-form-field-wrap">
+                        @Html.Kendo().TextBoxFor(m => m.user).HtmlAttributes(new { style = "width:100%;", type = "email" })
+
+                    </div>
+                </div>
+                <div class="k-form-field">
+                    <label class="k-label k-form-label" for="password">Пароль:</label>
+                    <div class="k-form-field-wrap">
+                        @Html.Kendo().TextBoxFor(m => m.password).HtmlAttributes(new { type = "password", style = "width:100%;" })
+
+                    </div>
+                </div>
+                <div class="k-form-field" style="margin-top : 15px;display :inline-block;">
+                    @Html.Kendo().CheckBoxFor(m => m.remember)
+                </div>
+
+
+                <div class="form-actions">
+                    <input type="submit" value="Войти" class="k-primary k-button k-button-icontext" />
+                </div>
+            </div>
+        </fieldset>
+        }
+    </section>
+</div>
+
+<script>
+
+
+    $(document).ready(function () {
+        var validator = $("#loginform").kendoValidator().data("kendoValidator");
+
+
+        $("#loginform").submit(function (event) {
+
+
+            if (validator.validate()) {
+
+            } else {
+                event.preventDefault();
+            }
+        });
+    });
+</script>

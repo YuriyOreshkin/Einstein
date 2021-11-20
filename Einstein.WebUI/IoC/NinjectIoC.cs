@@ -19,6 +19,7 @@ namespace Einstein.WebUI.IoC
             ninjectKernel.Bind<IMailServiceConfig>().To<XMLMailServiceConfig>().InSingletonScope().WithConstructorArgument("_filename", HttpContext.Current.Server.MapPath("~/App_Data/MailSettings.xml"));
             ninjectKernel.Bind<ITemplateService>().To<FileTemplateService>().InSingletonScope().WithConstructorArgument("_filename", HttpContext.Current.Server.MapPath("~/App_Data/OrderTemplate.html"));
             ninjectKernel.Bind<IMailSender>().To<EMailSender>().InSingletonScope();
+            ninjectKernel.Bind<IUsers>().To<SettingsUsers>().InSingletonScope();
             return ninjectKernel;
         }
     }
