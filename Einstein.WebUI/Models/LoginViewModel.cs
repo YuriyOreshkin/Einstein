@@ -9,12 +9,12 @@ namespace Einstein.WebUI.Models
 {
     public class LoginViewModel
     {
-        [Required]
+        [Required(ErrorMessage = "Требуется поле {0}")]
         [Display(Name = "Пользователь")]
         [EmailAddress]
         public string user { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Требуется поле {0}")]
         [DataType(DataType.Password)]
         [Display(Name = "Пароль")]
         public string password { get; set; }

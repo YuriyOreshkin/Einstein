@@ -50,7 +50,7 @@
         }).Width(250);
     })
 
-    .Excel(excel =>excel.FileName("Список заявок.xlsx").ForceProxy(true).ProxyURL(Url.Action("Excel_Export_Save", "OrderService")))
+    .Excel(excel =>excel.FileName("Список заявок.xlsx").AllPages(true).ForceProxy(true).ProxyURL(Url.Action("Excel_Export_Save", "OrderService")))
     .Events(ev => ev.Edit("onGridOrdersEdit").ExcelExport("onExcelExport"))
     .Sortable()
     .Scrollable()
@@ -81,7 +81,7 @@
 
     })
     .PageSize(50)
-    .ServerOperation(false)
+    //.ServerOperation(false)
     .Model(model =>
     {
         model.Id(p => p.id);
