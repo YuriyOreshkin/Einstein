@@ -3,9 +3,13 @@
     $.extend(true, kendo.ui.validator, {
         rules: { // custom rules
             validmask: function (input) {
-                if (input.is("[data-validmask-msg]") && input.val() != "") {
+                if (input.is("[name='phonenumber']") && input.val() != "") {
                     var maskedtextbox = input.data("kendoMaskedTextBox");
-                    return maskedtextbox.value().indexOf(maskedtextbox.options.promptChar) === -1;
+                    var mask = maskedtextbox.options.mask;
+                    var val = maskedtextbox.value();
+                    var re = /^\+7\(\d{3}\)\s\d{3}-\d{4}$/
+                    input.attr("data-validmask-msg", "Введите телефона в формате " + mask);
+                    return re.test(val);
                 }
 
                 return true;
