@@ -62,6 +62,9 @@ namespace Einstein.WebUI.Models
 
         [DisplayName("Предоплата")]
         public decimal prepay { get; set; }
+        [DisplayName("Примечание")]
+        [StringLength(250,ErrorMessage ="Максимальная длина строки 250 символов.")]
+        public string description { get; set; }
         private string unMask(string _str)
         {
            return string.Join("", _str.Where(c => char.IsDigit(c) || c == '+'));
@@ -79,6 +82,7 @@ namespace Einstein.WebUI.Models
             order.EVENTID = eventid;
             order.INFORM = inform;
             order.PREPAY = prepay;
+            order.DESCRIPTION = description;
 
             return order;
         }

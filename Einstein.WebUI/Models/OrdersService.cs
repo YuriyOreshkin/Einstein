@@ -41,6 +41,7 @@ namespace Einstein.WebUI.Models
             view.freeplaces14 = order.EVENT.FreePlaces14;
             view.inform = order.INFORM;
             view.prepay = order.PREPAY;
+            view.description = order.DESCRIPTION;
 
             return view;
 

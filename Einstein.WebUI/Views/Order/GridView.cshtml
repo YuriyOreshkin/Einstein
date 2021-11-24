@@ -9,8 +9,7 @@
 
 @*<h2>Заявки на посещение мероприятий</h2>*@
 
-@(Html.Kendo().Grid<Einstein.WebUI.Models.OrderViewModel>
-    ()
+@(Html.Kendo().Grid<Einstein.WebUI.Models.OrderViewModel>()
     .Name("gridOrders")
     .HtmlAttributes(new { @class = "data-view", style = "height:calc(100vh - 40px);" })
     .ToolBar(toolbar =>
@@ -26,8 +25,8 @@
             .Title("Мероприятие")
             .Columns(cl =>
             {
-                cl.Bound(p => p.dateevent).Title("Дата").Format("{0:dd.MM.yyyy}").Width(150).ClientGroupHeaderTemplate("Дата мероприятия: #= kendo.toString(kendo.parseDate(value), 'dd.MM.yyyy') #");
                 cl.Bound(p => p.eventname).Title("Наименование").MinResizableWidth(200).Filterable(ftb => ftb.Multi(true)).ClientFooterTemplate("<span>#=count#</span><span id='new-orders-count' class='new-count'>0</span>").ClientGroupHeaderColumnTemplate("#= count#");
+                cl.Bound(p => p.dateevent).Title("Дата").Format("{0:dd.MM.yyyy}").Width(150).ClientGroupHeaderTemplate("Дата мероприятия: #= kendo.toString(kendo.parseDate(value), 'dd.MM.yyyy') #");
                 cl.Bound(p => p.timeevent).Title("Время").Filterable(ftb => ftb.Multi(true)).Width(150);
             }));
         columns.Group(gr => gr
@@ -42,6 +41,7 @@
         columns.Bound(p => p.prepay).Width(150).Groupable(false).ClientGroupHeaderColumnTemplate("#=sum#").ClientFooterTemplate("#=sum#");
         columns.Bound(p => p.email).Width(230).Groupable(false);
         columns.Bound(p => p.phonenumber).ClientTemplate("<a href='tel:#=phonenumber#'>#=MaskPhone(phonenumber)#</a>").Width(190).Groupable(false);
+        columns.Bound(p => p.description).Title("").Width(60).ClientTemplate("<div #if(description) {# class='display-tooltip' title='#=description#' #}# style='text-align: center;vertical-align: middle;'><span class='k-icon k-i-comment' style='font-size:24px; #if(!description) {# color: \\#656565; # }else{# color: \\#d51923; #} #'></span></div>");
         columns.Bound(p => p.inform).Title("").Width(60).ClientTemplate("<div style='text-align: center;vertical-align: middle;'><a class='action-notification' title='Отправить уведомление' href='\\#'><span class='k-icon k-i-email' style='font-size:24px; #if(inform) {# color: \\#656565; # }else{# color: \\#d51923; #} #'></span></a></div>");
         columns.Command(commands =>
         {
@@ -54,7 +54,7 @@
     .Events(ev => ev.Edit("onGridOrdersEdit").ExcelExport("onExcelExport"))
     .Sortable()
     .Scrollable()
-    .Editable(edit => edit.Mode(GridEditMode.PopUp).TemplateName("Order").Window(wnd=>wnd.Width(600)))
+    .Editable(edit => edit.Mode(GridEditMode.PopUp).TemplateName("Order").Window(wnd=>wnd.Width(600).Events(ev=>ev.Open("onPopUpOpen"))))
     .Pageable(pag => pag.Refresh(true).PageSizes(new[] { 10, 25, 50, 100 }).Input(true).ButtonCount(5))
     .Resizable(r => r.Columns(true))
     .Groupable()
@@ -103,9 +103,13 @@
     )
 
     )
+@(Html.Kendo().Tooltip()
+        .For("#gridOrders")
+        .Filter(".display-tooltip")
+        .Position(TooltipPosition.Top)
+    )
 
-
-    <script>
+<script>
         $(function () {
 
             var notificationhub = $.connection.ordersHub;
@@ -196,23 +200,41 @@
         function onExcelExport(e) {
 
             var sheet = e.workbook.sheets[0];
-            var total = sheet.rows[sheet.rows.length - 1];
-            console.log(sheet);
-            if (total.type = "footer") {
-                for (var cellIndex = 0; cellIndex < total.cells.length; cellIndex++)
-                {
-                    var val = total.cells[cellIndex].value;
-                    if (val) {
-                        if (val.indexOf(">") > 0) {
-                            var count = val.substring(val.indexOf(">") + 1, val.indexOf("</"));
-                            total.cells[cellIndex].value = count;
+           
+            for (var i = 0; i < sheet.rows.length; i++) {
+                if (sheet.rows[i].type == "header") {
+                    var header = sheet.rows[i];
+                    for (var cellIndex = 0; cellIndex < header.cells.length; cellIndex++) {
+                        var val = header.cells[cellIndex].value;
+                        if (val == 'description') {
+                            header.cells[cellIndex].value = "Примечание";
+                        }
+                        if (val == 'inform') {
+                            header.cells[cellIndex].value = "?Уведомление";
+                            sheet.columns[10].width = 0
+                        }
+                    }
+                }
+                if (sheet.rows[i].type == "footer") {
+                    var total = sheet.rows[i];
+                    
+                    for (var cellIndex = 0; cellIndex < total.cells.length; cellIndex++) {
+                        var val = total.cells[cellIndex].value;
+                        if (val) {
+                            if (val.indexOf(">") > 0) {
+                                var count = val.substring(val.indexOf(">") + 1, val.indexOf("</"));
+                                total.cells[cellIndex].value = count;
+                            }
                         }
                     }
                 }
             }
         }
 
-
+        function onPopUpOpen(e)
+        {
+            this.wrapper.css({ top: 30 });
+        }
 
         function onGridOrdersEdit(e) {
 
@@ -236,8 +258,10 @@
             $("#freeplaces-view").text(e.model.freeplaces);
             $("#freeplaces14-view").text(e.model.freeplaces14);
 
-            var prepay = e.container.find("#field-prepay");
-            prepay.show();
+            $(".field-hidden").each(function () {
+                $(this).show();
+            });
+
         }
 
         //Show Errors
@@ -278,23 +302,23 @@
             }
         }
 
-    </script>
-    <style>
-        .k-header .k-link {
-            text-align: center;
-        }
+</script>
+<style>
+    .k-header .k-link {
+        text-align: center;
+    }
 
-        .k-edit-form-container {
-            width: 100%;
-        }
+    .k-edit-form-container {
+        width: 100%;
+    }
 
-        .new-count {
-            display: none;
-            padding: 1px 4px;
-            border: 1px solid #fafafa;
-            color: #fff;
-            background-color: #ff6358; /*#ff734c;*/
-            text-align: center;
-            margin-left: 5px;
-        }
-    </style>
+    .new-count {
+        display: none;
+        padding: 1px 4px;
+        border: 1px solid #fafafa;
+        color: #fff;
+        background-color: #ff6358; /*#ff734c;*/
+        text-align: center;
+        margin-left: 5px;
+    }
+</style>

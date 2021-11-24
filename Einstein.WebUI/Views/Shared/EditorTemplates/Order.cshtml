@@ -101,14 +101,20 @@
         </div>
         <span class="k-invalid-msg" data-for="phonenumber"></span>
     </div>
-    <div id="field-prepay" class="k-form-field"  style="display:none;">
+    <div class="k-form-field field-hidden" style="display:none;">
         <label class="k-label k-form-label" for="prepay">Предоплата:</label>
         <div class="k-form-field-wrap">
-            @Html.Kendo().CurrencyTextBoxFor(m => m.prepay).HtmlAttributes(new {style="width:100%"}).Min(0)
+            @Html.Kendo().CurrencyTextBoxFor(m => m.prepay).HtmlAttributes(new { style = "width:100%" }).Min(0)
         </div>
         <span class="k-invalid-msg" data-for="prepay"></span>
     </div>
- 
+    <div class="k-form-field field-hidden" style="display:none;">
+        <label class="k-label k-form-label" for="description">Примечание:</label>
+        <div class="k-form-field-wrap">
+            @Html.TextAreaFor(m => m.description,new { style = "width:100%", @class = "k-textbox" })
+        </div>
+        <span class="k-invalid-msg" data-for="description"></span>
+    </div>
 </div>
 <style>
     .important {
