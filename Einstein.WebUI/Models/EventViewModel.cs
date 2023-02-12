@@ -61,7 +61,7 @@ namespace Einstein.WebUI.Models
         [DisplayName("Весь день")]
         public bool IsAllDay { get; set; }
 
-        [DisplayName("Максимальное кол-во посетителей")]
+        [DisplayName("Вместимость")]
         [Required(ErrorMessage = "Требуется поле {0}")]
         [Range(1, int.MaxValue,ErrorMessage = "Значение поля {0} должно быть в диапазоне от {1} до {2}")]
         public int MaxPersons { get; set; }
@@ -74,6 +74,11 @@ namespace Einstein.WebUI.Models
         public int FreePlaces { get; set; }
         public int Persons14 { get; set; }
         public int FreePlaces14 { get; set; }
+
+        public decimal Total { get; set; }
+
+        [DisplayName("Цена")]
+        public decimal Price { get; set; }
 
         private bool isAllDay;
         bool ISchedulerEvent.IsAllDay
@@ -106,7 +111,8 @@ namespace Einstein.WebUI.Models
             @event.IsAllDay = IsAllDay;
             @event.MaxPersons = MaxPersons;
             @event.MaxPersons14 = MaxPersons14;
-
+            @event.Price = Price;
+          
             return @event;
 
         }

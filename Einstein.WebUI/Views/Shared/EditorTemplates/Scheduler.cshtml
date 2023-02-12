@@ -37,7 +37,6 @@
     <div data-container-for="start" class="k-edit-field task-edit-box">
 
         @(Html.Kendo().DateTimePickerFor(model => model.Start).Interval(15).HtmlAttributes(generateDatePickerAttributes("startDateTime", "start", "value:start,invisible:isAllDay")))
-
         @(Html.Kendo().DatePickerFor(model => model.Start).HtmlAttributes(generateDatePickerAttributes("startDate", "start", "value:start,visible:isAllDay")))
 
         <span data-bind="text: startTimezone"></span>
@@ -48,21 +47,8 @@
         @(Html.LabelFor(model => model.End))
     </div>
     <div data-container-for="end" class="k-edit-field task-edit-box">
-
-        @(Html.Kendo().DateTimePickerFor(model => model.End).Interval(15)
-                                                                                                                            .HtmlAttributes(generateDatePickerAttributes(
-                                                                                                                                "endDateTime",
-                                                                                                                                "end",
-                                                                                                                                "value:end,invisible:isAllDay",
-                                                                                                                                new Dictionary<string, object>() { { "data-dateCompare-msg", "Дата окончания должная быть больше или равна дате начала" } })))
-
-        @(Html.Kendo().DatePickerFor(model => model.End)
-                                                                                                                            .HtmlAttributes(generateDatePickerAttributes(
-                                                                                                                                "endDate",
-                                                                                                                                "end",
-                                                                                                                                "value:end,visible:isAllDay",
-                                                                                                                                new Dictionary<string, object>() { { "data-dateCompare-msg", "Дата окончания должная быть больше или равна дате начала" } })))
-
+        @(Html.Kendo().DateTimePickerFor(model => model.End).Interval(15).HtmlAttributes(generateDatePickerAttributes("endDateTime","end","value:end,invisible:isAllDay",new Dictionary<string, object>() { { "data-dateCompare-msg", "Дата окончания должная быть больше или равна дате начала" } })))
+        @(Html.Kendo().DatePickerFor(model => model.End).HtmlAttributes(generateDatePickerAttributes("endDate","end","value:end,visible:isAllDay",new Dictionary<string, object>() { { "data-dateCompare-msg", "Дата окончания должная быть больше или равна дате начала" } })))
         <span data-bind="text: endTimezone"></span>
         <span data-for="end" class="k-invalid-msg"></span>
     </div>
@@ -97,28 +83,35 @@
     <div data-container-for="description" class="k-edit-field task-edit-box">
         @(Html.TextAreaFor(model => model.Description, new { @class = "k-textbox", data_bind = "value:description" }))
     </div>
-    <div class="k-edit-label task-edit-label" style="width:90%">
+    <div class="k-edit-label task-edit-label">
         @(Html.LabelFor(model => model.MaxPersons))
     </div>
-   
     <div data-container-for="MaxPersons" class="k-edit-field task-edit-box">
-        
-            <div style="display: inline-block; width: 49%;">
-                <label for="MaxPersons">Всего</label>
-                @Html.Kendo().NumericTextBoxFor(m => m.MaxPersons).Format("n0").Events(ev => ev.Change("onMaxPersonsChange")).Min(Model.Persons > 0 ? Model.Persons : 1).Decimals(0).HtmlAttributes(new { style = "width: 100%;" })
-            </div>
-            <div style="display: inline-block; float:right;  width: 49%;">
-                <label for="MaxPersons14">Дети до 14</label>
-                @Html.Kendo().NumericTextBoxFor(m => m.MaxPersons14).Format("n0").Min(0).Decimals(0).HtmlAttributes(new { style = "width: 100%;" })
-            </div>
-            <span class="k-invalid-msg" data-for="MaxPersons14"></span>
-       
-</div>
-<style>
-    .task-edit-label {
-        text-align: left;
-        padding: 3px 0;
-    }
-</style>
+        @Html.Kendo().NumericTextBoxFor(m => m.MaxPersons).Format("n0").Events(ev => ev.Change("onMaxPersonsChange")).Min(Model.Persons > 0 ? Model.Persons : 1).Decimals(0).HtmlAttributes(new { style = "width: 100%;" })
+    </div>
+        @*<div data-container-for="MaxPersons" class="k-edit-field task-edit-box">
+                <div style="display: inline-block; width: 49%;">
+                    <label for="MaxPersons">Всего</label>
+                    @Html.Kendo().NumericTextBoxFor(m => m.MaxPersons).Format("n0").Events(ev => ev.Change("onMaxPersonsChange")).Min(Model.Persons > 0 ? Model.Persons : 1).Decimals(0).HtmlAttributes(new { style = "width: 100%;" })
+                </div>
+                <div style="display: inline-block; float:right;  width: 49%;">
+                    <label for="MaxPersons14">Дети до 14</label>
+                    @Html.Kendo().NumericTextBoxFor(m => m.MaxPersons14).Format("n0").Min(0).Decimals(0).HtmlAttributes(new { style = "width: 100%;" })
+                </div>
+                <span class="k-invalid-msg" data-for="MaxPersons14"></span>
+            </div>*@
+        <div class="k-edit-label task-edit-label">
+            @(Html.LabelFor(model => model.Price))
+        </div>
+        <div data-container-for="Price" class="k-edit-field task-edit-box">
+            @Html.Kendo().CurrencyTextBoxFor(m => m.Price).Min(0).HtmlAttributes(new { style = "width: 100%;" })
+        </div>
+
+        <style>
+            .task-edit-label {
+                text-align: left;
+                padding: 3px 0;
+            }
+        </style>
 
 

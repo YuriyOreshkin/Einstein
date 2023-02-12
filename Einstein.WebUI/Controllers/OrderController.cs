@@ -11,14 +11,32 @@ namespace Einstein.WebUI.Controllers
     public class OrderController : Controller
     {
         private EventsService service;
-        public OrderController(IRepository _repository)
+        private ITermsService terms;
+        IPaymentServiceConfig payment;
+        public OrderController(IRepository _repository,ITermsService _terms,IPaymentServiceConfig _payment)
         {
             service = new EventsService(_repository);
+            terms = _terms;
+            payment = _payment;
         }
 
         public ActionResult Index()
         {
+            var settings = payment.ReadSettings();
+            ViewBag.Pay = settings != null ? settings.ENABLE : false;
             return View(new OrderViewModel());
+        }
+       
+        public ActionResult Terms()
+        {
+
+            return View("Terms", terms.GetTemplate() as Object);
+        }
+
+        public ActionResult ListView() 
+        {
+
+            return View();
         }
 
         [Authorize]

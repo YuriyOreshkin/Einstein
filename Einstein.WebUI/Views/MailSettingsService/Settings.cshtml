@@ -1,6 +1,6 @@
 ﻿@model Einstein.WebUI.Models.MailSettingsViewModel
 <script>
-    function saveSettings() {
+    function saveMailSettings() {
         var validator = $("#smtp-settings").kendoValidator().data("kendoValidator");
 
         if (validator.validate()) {
@@ -42,7 +42,7 @@
 
                                     <label class="k-label k-form-label" for="Enable">Сервис включен:</label>
                                     <span class="k-form-field-wrap">
-                                        @Html.Kendo().SwitchFor(m => m.enable).Messages(ms=>ms.Checked("Да").Unchecked("Нет")).Events(ev => ev.Change("saveSettings"))
+                                        @Html.Kendo().SwitchFor(m => m.enable).Messages(ms=>ms.Checked("Да").Unchecked("Нет")).Events(ev => ev.Change("saveMailSettings"))
                                     </span>
                                 </div>
                                 <div class="k-form-field">
@@ -73,7 +73,7 @@
                         </fieldset>
 
                         <div class="form-actions">
-                            @Html.Kendo().Button().Name("Save").Tag("div").HtmlAttributes(new { type = "button", @class = "k-primary" }).Icon("check").Content("Сохранить").Events(click => click.Click("saveSettings"))
+                            @Html.Kendo().Button().Name("SaveMailSettings").Tag("div").HtmlAttributes(new { type = "button", @class = "k-primary" }).Icon("check").Content("Сохранить").Events(click => click.Click("saveMailSettings"))
                         </div>
                     </form>
                 </div>

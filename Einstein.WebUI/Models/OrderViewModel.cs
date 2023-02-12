@@ -11,7 +11,7 @@ namespace Einstein.WebUI.Models
 {
     public class OrderViewModel
     {
-        [ScaffoldColumn(false)]
+        [DisplayName("№")]
         public long id { get; set; }
 
         [DisplayName("Мероприятие")]
@@ -59,16 +59,26 @@ namespace Einstein.WebUI.Models
 
         [DisplayName("Уведомление отправлено")]
         public bool inform { get; set; }
-
-        [DisplayName("Предоплата")]
+        [DisplayName("Цена билета")]
+        public decimal price { get; set; }
+        [DisplayName("Оплачено")]
         public decimal prepay { get; set; }
         [DisplayName("Примечание")]
         [StringLength(250,ErrorMessage ="Максимальная длина строки 250 символов.")]
         public string description { get; set; }
+        //[Required(ErrorMessage = "Необходимо прочитать условия и дать согласие!")]
+        [DisplayName("Сумма")]
+        public decimal amount { get 
+            {
+                return price * persons;
+            } 
+        }
         private string unMask(string _str)
         {
            return string.Join("", _str.Where(c => char.IsDigit(c) || c == '+'));
         }
+
+
 
         public ORDER ToEntity(ORDER order)
         {

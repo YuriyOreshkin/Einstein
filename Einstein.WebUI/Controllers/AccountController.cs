@@ -40,7 +40,7 @@ namespace Einstein.WebUI.Controllers
             try 
             {
                 users.ValidateUser(model.ToEntity());
-                FormsAuthentication.SetAuthCookie(model.user, model.remember);
+                FormsAuthentication.SetAuthCookie(model.login, model.remember);
                 if (Url.IsLocalUrl(returnUrl))
                 {
                     return Redirect(returnUrl);

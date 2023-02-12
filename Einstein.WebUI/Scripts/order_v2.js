@@ -16,17 +16,18 @@
             },
             maximumvalidation: function (input, params) {
 
-                if ((input.is("[name='persons']") || input.is("[name='persons14']")) && input.val() != "") {
+                if (input.is("[name='persons']")  && input.val() != "") {
 
                     var numerictextbox = input.data("kendoNumericTextBox");
                     var val = numerictextbox.value();
-                    var max = $(input).data("max");
+                    let max = $(input).attr("data-max");
+                    
                     if (max) {
                         var min = numerictextbox.min();
-                        var msg = "Количество всего посетителей";
-                        if (input.is("[name='persons14']")) {
-                            msg = "Количество детей до 14 лет";
-                        }
+                        var msg = "Количество посетителей";
+                        //if (input.is("[name='persons14']")) {
+                        //    msg = "Количество детей до 14 лет";
+                        //}
                         input.attr("data-maximumvalidation-msg", msg + " должно быть в диапазоне от " + min + " до " + max);
 
                         return (val >= min && val <= max);
@@ -67,8 +68,9 @@
 
 function onPersonsChange(e) {
 
-    var numerictextbox = $("#persons14").data("kendoNumericTextBox");
-    numerictextbox.trigger("change");
+    var num = this.value();
+    var price = $("#price").val();
+    SetAmount(num * price);
 }
 
 function getParameters(data)
@@ -103,7 +105,7 @@ function SetMinNumerictextbox(numerictextbox)
 
 function SetMaxNumerictextbox(element, num)
 {
-    
+   
     var numerictextbox = element.data("kendoNumericTextBox");
     if (num > 0) {
        
@@ -147,23 +149,44 @@ function SetFreePlaces14(num, num14)
 function SetFreePlaces(num, num14) {
 
     
-    num14= SetFreePlaces14(num, num14);
+    //num14= SetFreePlaces14(num, num14);
 
     var element = $("#persons");
     SetMaxNumerictextbox(element, num);
-    element = $("#persons14");
-    SetMaxNumerictextbox(element, num14);
+    //element = $("#persons14");
+    //SetMaxNumerictextbox(element, num14);
 
 
     //for view
     $("#freeplaces-view").text(num);
     //for view
-    $("#freeplaces14-view").text(num14);
+    //$("#freeplaces14-view").text(num14);
 
     SetElementValue($("#freeplaces"), num);
-    SetElementValue($("#freeplaces14"), num14);
+    //SetElementValue($("#freeplaces14"), num14);
+
+}
+
+function SetPrice(price)
+{
+    //for view
+    var cur = kendo.toString(kendo.parseInt(price), "c");
+    $("#price-view").text(cur);
+   
+
+    SetElementValue($("#price"), price);
+    var num = $("#persons").data("kendoNumericTextBox").value();
+    SetAmount(num * price);
+}
+
+function SetAmount(amount)
+{
+    //for view
+    var cur = kendo.toString(kendo.parseInt(amount), "c");
+    $("#amount-view").text(cur);
 
 
+    
 }
 function SetElementValue(element,val)
 {
@@ -307,10 +330,14 @@ function onDropDownListTimesChange(e) {
  
     if (item) {
         SetFreePlaces(item.FreePlaces, item.FreePlaces14);
+        SetPrice(item.Price);
+        
+        
         SetEventId(item.EventId);
     }
     else {
-        SetFreePlaces(0,0);
+        SetFreePlaces(0, 0);
+        SetPrice(0);
         SetEventId(0);
     }
 }

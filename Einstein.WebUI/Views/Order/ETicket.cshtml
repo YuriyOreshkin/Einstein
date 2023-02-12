@@ -1,0 +1,135 @@
+﻿@model Einstein.WebUI.Models.OrderViewModel
+@{
+    ViewBag.Title = "еБилет";
+}
+<script src="https://securepay.tinkoff.ru/html/payForm/js/tinkoff_v2.js"></script>
+
+<div class="k-form-container" style="margin-left: auto; margin-right: auto; max-width: 600px;">
+    <div class="content-wrapper" style="width: 600px; font-family: DejaVu Sans; padding: 0 20px;">
+        <div style="margin: 10px 0; font-size: 10px; line-height: normal; font-weight: bold; text-align: justify; border-bottom: 1px solid; border-top: 1px solid;padding: 5px 0; ">
+            "Академия Теслы" &nbsp;&nbsp;&nbsp;&nbsp;Адрес: Протопоповский переулок, дом 5. &nbsp;&nbsp;Телефон: +7(926) 930-12-22&nbsp;&nbsp;&nbsp;
+            почта: &nbsp;info@эйнштейн.дети Мы находимся в здании МГПУ, в Центре Проектного Творчества "СТАРТ-ПРО".
+        </div>
+        <div style="margin: 1em auto 4em;">
+            <h2 style="text-align:left;">@Model.eventname</h2>
+            <strong style="font-size: 13px;">@Model.dateevent.ToString("dddd, dd MMMM yyyy"), @Model.timeevent</strong>
+        </div>
+        <div style="font-size: 15px; border-bottom: 1px solid; padding: 15px 0;">
+            <span>Заказ № </span>
+            <span id="order-id">@Model.id</span>
+            <span>от @Model.dateorder.ToString("dd.MM.yyyy HH:mm")</span>
+            <div class="row">
+                <div class="col">
+                    <div class="order-info-label">Количество<span class="important">*</span></div><span>@Model.persons</span>
+                </div>
+                <div class="col">
+                    <div class="order-info-label">Цена</div><span>@Model.price.ToString("C")</span>
+                </div>
+                <div class="col">
+                    <div class="order-info-label">Сумма</div><span>@Model.amount.ToString("C")</span>
+                </div>
+                <div class="col-4">
+                    <div class="order-info-label">Оплачено<span class="important">**</span></div><div>@Model.prepay.ToString("C")</div>
+                    @if (Model.amount > Model.prepay)
+                    {
+                        <a id="pay-order" href="#">Оплатить @((Model.amount-Model.prepay).ToString("C"))</a>
+                    }
+                </div>
+
+            </div>
+        </div>
+        <div style=" font-size: 12px;margin: 10px 0;">
+            <span class="order-info-label">почта: </span><strong>@Model.email</strong>
+            <span class="order-info-label">телефон: </span><strong>@Model.phonenumber</strong>
+        </div>
+        <div class="important" style="padding: 0 0 5px 0;"> * Дети до 14 лет допускаются на экспозицию только в сопровождении взрослых! </div>
+        <div class="important"> ** Если вы оплатили заказ, а в билете оплата не отобразилась, возможно подтверждение еще не пришло в систему! Попробуйте обновить билет позже! </div>
+    </div>
+
+    <div style="float:right">
+        <a id="export-pdf" href="#">Скачать билет</a>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        // NOTE: Only required if the Kendo UI stylesheets are loaded
+        // from a different origin, e.g. kendo.cdn.telerik.com
+        kendo.pdf.defineFont({
+            "DejaVu Sans": "@Url.Content("~/Content/kendo/2019.3.1023/fonts/DejaVu/DejaVuSans.ttf")",
+            "DejaVu Sans|Bold": "@Url.Content("~/Content/kendo/2019.3.1023/fonts/DejaVu/DejaVuSans-Bold.ttf")",
+            "DejaVu Sans|Bold|Italic": "@Url.Content("~/Content/kendo/2019.3.1023/fonts/DejaVu/DejaVuSans-Oblique.ttf")",
+            "DejaVu Sans|Italic": "@Url.Content("~/Content/kendo/2019.3.1023/fonts/DejaVu/DejaVuSans-Oblique.ttf")"
+        });
+        $("#export-pdf").click(function () {
+            // Convert the DOM element to a drawing using kendo.drawing.drawDOM
+            kendo.drawing.drawDOM($(".content-wrapper"))
+                .then(function (group) {
+                    // Render the result as a PDF file
+                    return kendo.drawing.exportPDF(group, {
+                        paperSize: "A4",
+                        margin: { left: "0.1cm", top: "1cm", right: "0.3cm", bottom: "1cm" }
+                    });
+                })
+                .done(function (data) {
+                    // Save the PDF file
+                    console.log(data);
+                    kendo.saveAs({
+                        dataURI: data,
+                        fileName: "TeslaTicket.pdf",
+                        proxyURL: "@Url.Action("Pdf_Export_Save", "OrdersService")"
+                    });
+                });
+        });
+
+        $("#pay-order").click(function () {
+            var orderid = $('#order-id').text();
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("PayTicket", "OrderService") ",
+                datatype: 'json',
+                data: {orderid: orderid},
+                success: function (data) {
+                    if (data.Errors) {
+                        ShowMessage(data);
+                    }
+                    else {
+                        pay(data);
+                    }
+                    },
+                error: function (xhr, ajaxOptions, thrownError) {
+
+                    showError(xhr.status + " " + thrownError);
+                    }
+            });
+        });
+    });
+
+
+</script>
+<style>
+    .order-info-label {
+        color: #787878;
+        margin: 0;
+        font-size: 12px;
+        line-height: 16px;
+    }
+
+    #pay-order {
+        color: #d60041;
+        font-size: 13px;
+        vertical-align: middle;
+        text-transform: lowercase;
+        background-color: #fff;
+        text-align: center;
+    }
+
+    .important {
+        color: #d51923;
+        text-align: justify;
+        font-size: 11px;
+        line-height:11px;
+        font-style: italic;
+    }
+</style>

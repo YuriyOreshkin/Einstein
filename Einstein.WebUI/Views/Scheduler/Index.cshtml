@@ -2,10 +2,10 @@
 @{
     ViewBag.Title = "Календарь";
 }
-
+@Scripts.Render("~/Scripts/gridview.js")
 @*<h2>Календарь мероприятий</h2>*@
 
-<div  style = "height:calc(100vh - 40px);">
+<div style="height:calc(100vh - 40px);">
     @(Html.Kendo().Scheduler<Einstein.WebUI.Models.EventViewModel>()
                                         .Name("scheduler")
                                         .HtmlAttributes(new { style = "height: 100%" })
@@ -24,6 +24,7 @@
 
                                         })
                                         .Events(ev=>ev.Edit("onSchedulerEdit"))
+                                        .Editable(User.IsInRole("1"))
                                         .Pdf(pdf => pdf.FileName("Расписание мероприятий.pdf").Title("Расписание мероприятий"))
                                         .EventTemplateId("eventTemplate")
                                         .Timezone("W-SU")
@@ -64,17 +65,21 @@
         @*<span>#= start#</span>*@
         <div class='title'>#= title#</div>
         <div class='orders-info'>
-            <div class='orders-info-item' title="Заявлено человек">
+            <div class='orders-info-item' >
                 <span class="k-icon  k-i-user"></span>
-                <span class="badge badge-persons">#=Persons# | #=Persons14#</span>
+                @*<span class="badge badge-persons">#=Persons# | #=Persons14#</span>*@
+                <span class="badge badge-persons"title="Заявлено человек">#=Persons# </span>
+                <span class="badge badge-freeplaces" title="Свободных мест">#=FreePlaces#</span>
+
             </div>
 
-            <div class='orders-info-item' style="margin-left: 10px;" title="Свободных мест">
+            @*<div class='orders-info-item' style="margin-left: 10px;" title="Сумма">
                 <span class="k-icon  k-i-checkbox"></span>
                 <span class="badge badge-freeplaces">#=FreePlaces# | #=SetFreePlaces14(FreePlaces,FreePlaces14)#</span>
-            </div>
-            <div style="display:inline-block;float:right;">
-                <a class="action-orders"  target="_blank" title="Заявки" href="#if(TaskID > 0) {  #@Url.Action("GridView","Order")?eventid=#=TaskID# #}else {#@Url.Action("GridViewByDate","Order")?recurrenceId=#=recurrenceId#&start=#: kendo.toString(start, 'dd.MM.yyyy HH:mm' )# #}#"><span class="k-icon k-i-list-ordered" style="color:\\#fff;font-size: 20px;"></span></a>
+            </div>*@
+            <div style="position:absolute;bottom:0;right:0;margin: 5px;">
+                <span title="Сумма"><strong>#=kendo.toString(kendo.parseInt(Total), "c")#</strong></span>
+                <a class="action-orders k-button"  target="_blank" title="Заявки" href="#if(TaskID > 0) {  #@Url.Action("GridView","Order")?eventid=#=TaskID# #}else {#@Url.Action("GridViewByDate","Order")?recurrenceId=#=recurrenceId#&start=#: kendo.toString(start, 'dd.MM.yyyy HH:mm' )# #}#"><span class="k-icon k-i-cart" style="font-size: 20px;"></span></a>
             </div>
 
 
@@ -85,66 +90,62 @@
 
     //Валидация данных
     (function ($, kendo) {
-            $.extend(true, kendo.ui.validator, {
-                rules: { 
-                    maximumvalidation: function (input, params) {
+        $.extend(true, kendo.ui.validator, {
+            rules: {
+                maximumvalidation: function (input, params) {
 
-                        if ((input.is("[name='persons']") || input.is("[name='persons14']")) && input.val() != "") {
+                    if (input.is("[name='persons']") && input.val() != "") {
 
-                            var numerictextbox = input.data("kendoNumericTextBox");
-                            var val = numerictextbox.value();
-                            var min = numerictextbox.min();
-                            var max = $(input).data("max");//numerictextbox.max();
-                            var msg = "Количество всего посетителей";
-                            if (input.is("[name='persons14']")) {
-                                msg = "Количество детей до 14 лет";
-                            }
-                            input.attr("data-maximumvalidation-msg", msg + " должно быть в диапазоне от 1 до " + max);
+                        var numerictextbox = input.data("kendoNumericTextBox");
+                        var val = numerictextbox.value();
+                        var min = numerictextbox.min();
+                        var max = $(input).data("max");//numerictextbox.max();
+                        var msg = "Количество всего посетителей";
+                       
+                        input.attr("data-maximumvalidation-msg", msg + " должно быть в диапазоне от 1 до " + max);
 
-                            return (val >= min && val <= max);
-                        }
-
-                        return true
-                    },
-                    maxpersonsvalidation: function (input, params) {
-
-                        if (input.is("[name='MaxPersons14']") && input.val() != "") {
-
-                            var numerictextbox = input.data("kendoNumericTextBox");
-                            var val = numerictextbox.value();
-                            var max = $("#MaxPersons").val();
-
-                            return (val < max);
-                        }
-
-                        return true
+                        return (val >= min && val <= max);
                     }
 
+                    return true
                 },
-                messages: {
-                    maxpersonsvalidation: function (input) {
+                maxpersonsvalidation: function (input, params) {
+
+                    if (input.is("[name='MaxPersons14']") && input.val() != "") {
+
+                        var numerictextbox = input.data("kendoNumericTextBox");
+                        var val = numerictextbox.value();
                         var max = $("#MaxPersons").val();
 
-                        return kendo.format("Количетво детей должно быть меньше общего количества ({0}) !", max);
+                        return (val < max);
                     }
+
+                    return true
                 }
 
-            });
+            },
+            messages: {
+                maxpersonsvalidation: function (input) {
+                    var max = $("#MaxPersons").val();
+
+                    return kendo.format("Количетво детей должно быть меньше общего количества ({0}) !", max);
+                }
+            }
+
+        });
     })(jQuery, kendo);
 
     $(document).ready(function () {
 
-        if (!kendo.support.mobileOS)
-        {
+        if (!kendo.support.mobileOS) {
             $(window).resize();
         }
     });
 
 
-    function onMaxPersonsChange(e)
-    {
-        var numerictextbox = $("#MaxPersons14").data("kendoNumericTextBox");
-        numerictextbox.trigger("change");
+    function onMaxPersonsChange(e) {
+        //var numerictextbox = $("#MaxPersons14").data("kendoNumericTextBox");
+        //numerictextbox.trigger("change");
     }
 
     function SetFreePlaces14(num, num14) {
@@ -163,8 +164,8 @@
         return num14;
     }
 
-    function onSchedulerEdit()
-    {
+    function onSchedulerEdit(e) {
+       
         var scheduler = $("#scheduler-edit-form");
         if (kendo.support.mobileOS) {
 
@@ -173,41 +174,24 @@
         else {
             scheduler.css("height", "100%");
         }
-      
+
     }
 
-    function setSchedulerHeight(height)
-    {
+    function setSchedulerHeight(height) {
         var widget = $("#scheduler").data("kendoScheduler");
         widget.element.height(height);
         widget.resize(true);
     }
-        
+
 
     $(window).resize(function () {
 
         var height = $(window).outerHeight() - 40;
         setSchedulerHeight(height);
-  });
+    });
 
-    //Show Errors
-    function error_handler(e) {
-        if (e.errors) {
-            var message = "<strong>Ошибки:</strong>";
-            message += "<ul>"
-            $.each(e.errors, function (key, value) {
+    
 
-                if ('errors' in value) {
-                    $.each(value.errors, function () {
-                        message += "<li> " + this + " <br></li> ";
-                    });
-                }
-            });
-            message += "</ul> "
-            showError(message);
-            this.cancelChanges();
-        }
-    }
 </script>
 <style>
     .badge {
@@ -249,12 +233,12 @@
     }
 
     .disable-background {
-        background: #747272;
+        background: #747272e0; /*#747272*/
         border-color: #747272;
     }
 
     .enable-background {
-        background: #6BCC65;
+        background: #6bcc65d1; /*#6BCC65*/
         border-color: #6BCC65;
     }
 

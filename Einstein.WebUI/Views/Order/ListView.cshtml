@@ -1,0 +1,79 @@
+﻿
+@{
+    ViewBag.Title = "ListView";
+}
+
+<h2>ListView</h2>
+
+@Html.Partial("~/Views/Order/Search.cshtml")
+
+<div class="container">
+    @(Html.Kendo().ListView<Einstein.WebUI.Models.OrderViewModel>()
+    .Name("AvailableEventsListView")
+    .TagName("div")
+    .ClientTemplateId("available-event-template")
+    .Scrollable(ListViewScrollableMode.Endless)
+    .Editable()
+    .HtmlAttributes(new { style = "background: #edeef0; height:100%;" })
+    .Pageable()
+    .DataSource(dataSource => dataSource
+            .PageSize(50)
+            .Sort(sort=>sort.Add(p=>p.dateevent))
+            .Model(model => model.Id("id"))
+            .Read(read => read.Action("ReadAvailableEvents", "SchedulerService"))
+    )
+
+    )
+</div>
+<script type="text/x-kendo-tmpl" id="available-event-template">
+    <div class="available-event-view k-widget">
+        <dl>
+            <dt>Мероприятие</dt>
+            <dd>#:eventname#</dd>
+            <dt>Цена</dt>
+            <dd>#:kendo.toString(price, "c")#</dd>
+            <dt>Дата мероприятия</dt>
+            <dd>#:kendo.toString(dateevent, "dd.MM.yyyy" )#</dd>
+            <dt>Время посещения</dt>
+            <dd>#:timeevent#</dd>
+            <dt>Cвободных мест</dt>
+            <dd>#:freeplaces#</dd>
+
+        </dl>
+        <div class="command-buttons">
+              @(Html.Kendo().Button()
+                                            .Tag("a")
+                                            .Name("actionScanButton")
+                                            .Content("<span class='k-icon k-i-eye k-icon-24' style='margin-right: 2px;'></span><span style='color: \\#2a5885;'>Просмотреть</span>")
+                                            .HtmlAttributes(new { @class = "action-scanne" })
+                                            .ToClientTemplate()
+                                )
+        </div>
+    </div>
+</script>
+<script>
+    function LoadDataToList()
+    {
+        var dropdownlist = $("#eventname").data("kendoDropDownList");
+        var dataSource = dropdownlist.dataSource;
+        data = [];
+        dataSource.view().forEach(function (title, index) {
+            title.Dates.forEach(function (date, index) {
+                date.Times.forEach(function (time, index) {
+                    data.push({ eventid: time.EventId, eventname: title.Title, dateevent: date.Date, price: time.Price, timeevent: time.Value, freeplaces: time.FreePlaces });
+
+                });
+
+            });
+           
+        });
+
+        var listView = $("#AvailableEventsListView").data("kendoListView");
+        listView.dataSource.data(data);
+    }
+
+    function searchClick()
+    {
+        LoadDataToList();
+    }
+</script>

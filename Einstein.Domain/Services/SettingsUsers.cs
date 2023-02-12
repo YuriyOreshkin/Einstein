@@ -22,7 +22,7 @@ namespace Einstein.Domain.Services
             var setting = config.ReadSettings();
             if (setting != null)
             {
-                if (setting.USER == user.NAME)
+                if (setting.USER == user.LOGIN)
                 {
                     if (setting.PASSWORD != user.PASSWORD)
                     {

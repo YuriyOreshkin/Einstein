@@ -6,8 +6,12 @@ namespace Einstein.Domain.Entities
 {
     public class USER
     {
-        public string NAME { get; set; }
+        public int ID { get; set; }
+        public string LOGIN { get; set; }
         public string PASSWORD { get; set; }
 
+        public short ROLEID {get;set;}
+
+        public virtual ROLE ROLE{ get; set; }
     }
 }

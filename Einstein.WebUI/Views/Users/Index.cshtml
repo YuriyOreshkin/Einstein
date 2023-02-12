@@ -1,0 +1,48 @@
+﻿
+@{
+    ViewBag.Title = "Пользователи";
+}
+
+@Scripts.Render("~/Scripts/gridview.js")
+
+@(Html.Kendo().Grid<Einstein.WebUI.Models.UserViewModel>()
+    .Name("usersGridView")
+    .Columns(columns =>
+    {
+        columns.Bound(p => p.login);
+        columns.ForeignKey(p => p.roleid, (System.Collections.IEnumerable)ViewData["roles"], "Value", "Text").Width(300);
+        columns.Command(commands=> {  commands.Edit(); commands.Destroy(); });
+    })
+    .Editable(editable => editable.Mode(GridEditMode.PopUp))
+    .ToolBar(toolbar => toolbar.Create())
+    .Sortable()
+    .Scrollable()
+    .Filterable()
+    .DataSource(dataSource => dataSource
+                .Ajax()
+                .Model(model=> {
+                    model.Id(id => id.id);
+                    model.Field(p => p.roleid).DefaultValue(1);
+                })
+                .Events(events => events.Error("error_handler"))
+                .Read(read => read.Action("ReadForGrid", "UserService"))
+                .Create(update => update.Action("CreateForGrid", "UserService"))
+                .Update(update=>update.Action("UpdateForGrid", "UserService"))
+                .Destroy(update => update.Action("DestroyForGrid", "UserService"))
+    )
+)
+<script>
+    $(document).ready(function () {
+
+        $(window).resize();
+
+
+    });
+
+    $(window).resize(function () {
+
+        var height = $(window).outerHeight() - 40;
+        var grid = $("#usersGridView").data("kendoGrid");
+        setSGridHeight(grid, height);
+    });
+</script>

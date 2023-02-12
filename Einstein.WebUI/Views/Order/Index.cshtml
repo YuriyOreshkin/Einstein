@@ -2,7 +2,8 @@
 @{
     ViewBag.Title = "Заявка";
 }
-@Scripts.Render("~/Scripts/order.js")
+<script src="https://securepay.tinkoff.ru/html/payForm/js/tinkoff_v2.js"></script>
+@Scripts.Render("~/Scripts/order_v2.js")
 
 <div @*style="height:82vh;"*@>
     <div class="k-form-container" @*style="margin-left: 25%; width:50%;"*@ style="margin-left:auto;margin-right:auto;max-width:600px;">
@@ -11,10 +12,24 @@
                 <legend class="k-form-legend" style="padding-left:15px;">Заявка на посещение мероприятия</legend>
 
                 @Html.Partial("~/Views/Shared/EditorTemplates/Order.cshtml", Model)
-
+                <div style="margin: 5px 15px 0">
+                    <div class="k-form-field-wrap">
+                        <input class="k-checkbox" data-val="true" data-val-required="Необходимо прочитать условия и дать согласие!" id="terms" name="terms" type="checkbox" value="true">
+                        <label class="k-checkbox-label" for="terms">Я согласен с <a href="@Url.Action("Terms","Order")" target="_blank">условиями</a></label>
+                    </div>
+                    <span class="k-invalid-msg" data-for="terms"></span>
+                </div>
             </fieldset>
             <div class="form-actions">
-                @(Html.Kendo().Button().Name("Save").Tag("div").HtmlAttributes(new { type = "button", @class = "k-primary" }).Icon("flip-vertical").Content("Отправить").Events(ev => ev.Click("SendOrder")))
+                @if (ViewBag.Pay)
+                {
+                    @*@(Html.Kendo().Button().Name("Confirm").Tag("div").HtmlAttributes(new { type = "button", @class = "k-primary" }).Icon("cart").Content("Confirm").Events(ev => ev.Click("Confirm")))*@
+                    @(Html.Kendo().Button().Name("Buy").Tag("div").HtmlAttributes(new { type = "button", @class = "k-primary" }).Icon("cart").Content("Оплатить заказ").Events(ev => ev.Click("BuyTickets")))
+                }
+                else
+                {
+                    @(Html.Kendo().Button().Name("Save").Tag("div").HtmlAttributes(new { type = "button", @class = "k-primary" }).Icon("flip-vertical").Content("Отправить").Events(ev => ev.Click("SendOrder")))
+                }
             </div>
         </form>
     </div>
@@ -46,12 +61,12 @@
         };
     }
 
-    
+
 
 
     function  ShowMessage(e)
     {
-        
+
         if (e.Errors) {
             var message = "<strong>Ошибки:</strong>";
             message += "<ul>"
@@ -72,6 +87,69 @@
             showSuccess("Заявка успешно создана!<p>На указанную Вами электронную почту направлено уведомление о регитрации.</p>", true);
         }
     }
+
+    function Confirm(e)
+    {
+        $.ajax({
+            type: "POST",
+           
+            url: "http://localhost:52134/api/Payment/",
+            datatype: 'json',
+            data: {
+                "TerminalKey": "1617179765362",
+                "OrderId": "38",
+                "Success": true,
+                "Status": "CONFIRMED",
+                "PaymentId": "190629356201",
+                "ErrorCode": "0",
+                "Amount": 80000,
+                "CardId": 244272070,
+                "Pan": "220220******2438",
+                "ExpDate": "424"
+            },
+                success: function (data) {
+                    kendo.ui.progress($(".form-actions"), false);
+
+                    console.log("jr")
+                    },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    kendo.ui.progress($(".form-actions"), false);
+                    showError(xhr.status + " " + thrownError);
+                    }
+            });
+    }
+
+    function BuyTickets(e)
+    {
+       var validator = $("#order").kendoValidator().data("kendoValidator");
+
+        if (validator.validate()) {
+            kendo.ui.progress($(".form-actions"), true);
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("PayOrder", "OrderService") ",
+                datatype: 'json',
+                data: $('#order').serialize(),
+                success: function (data) {
+                    kendo.ui.progress($(".form-actions"), false);
+                    console.log(data);
+                    if (data.Errors) {
+                        ShowMessage(data);
+                    }
+                    else {
+                        dataSource.read();
+                        pay(data);
+                    }
+                    },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    kendo.ui.progress($(".form-actions"), false);
+                    showError(xhr.status + " " + thrownError);
+                    }
+            });
+        }
+
+    }
+
     function SendOrder(e) {
 
         var validator = $("#order").kendoValidator().data("kendoValidator");
@@ -85,6 +163,7 @@
                 data: $('#order').serialize(),
                 success: function (data) {
                     kendo.ui.progress($(".form-actions"), false);
+
                     ShowMessage(data);
                     dataSource.read();
                     },
@@ -93,7 +172,7 @@
                     showError(xhr.status + " " + thrownError);
                     }
             });
-            
+
         }
     }
 </script>

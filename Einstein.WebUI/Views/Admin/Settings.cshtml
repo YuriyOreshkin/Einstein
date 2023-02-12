@@ -11,10 +11,15 @@
                         .TabPosition(TabStripTabPosition.Top)
                         .Items(items =>
                         {
-                            items.Add().Text("Настройки").Selected(true).LoadContentFrom("Settings", "MailSettingsService");
+                            items.Add().Text("Настройки почты").Selected(true).LoadContentFrom("Settings", "MailSettingsService");
 
 
-                            items.Add().Text("Шаблон").LoadContentFrom("Editor", "TemplateService");
+                            items.Add().Text("Шаблон письма").LoadContentFrom("Editor", "TemplateService");
+
+                            items.Add().Text("Условия").LoadContentFrom("Editor", "TermsService");
+
+                            items.Add().Text("Платежи").LoadContentFrom("Settings", "PaymentSettingsService");
+
                         })
                         .Events(ev=>ev.ContentLoad("onError"))
 )

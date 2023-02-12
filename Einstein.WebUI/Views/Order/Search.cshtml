@@ -1,0 +1,82 @@
+﻿@Scripts.Render("~/Scripts/order_v2.js")
+<div class="container">
+    <div id="tx-searchbar-container">
+        <div class="row tx-searchbar text-body d-block d-md-flex flex-md-row">
+            <div class="col-md-5 d-none d-md-block">
+                <span class="k-label">Мероприятие</span>
+                <span>
+                    @(Html.Kendo().DropDownList()
+                .Name("eventname")
+                .HtmlAttributes(new { style = "width:100%;" })
+                .DataTextField("Title")
+                .DataValueField("Title")
+                .ValuePrimitive(true)
+                .AutoBind(false)
+                .DataSource(source => source.Read(read => read.Action("DropDownListReadNames", "SchedulerService")))
+                .Events(ev => ev.Select("onDropDownListEventsNamesChange"))
+            )
+                </span>
+            </div>
+            <div class="col-lg-2 col-md-3 d-none d-md-block">
+                <span class="k-label">Дата посещения</span>
+                <div>
+                    @(Html.Kendo().DatePicker()
+                 .Name("dateevent")
+                 .HtmlAttributes(new { style = "width:100%;" })
+                 .Enable(false)
+                 //.Events(ev => ev.Change("onDatePickerDateChange"))
+                 )
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-2 d-none d-md-block">
+                <span class="k-label">Посетителей</span>
+                <div>
+                    @(Html.Kendo().NumericTextBox()
+                    .Name("NumericTextBoxPersons")
+                    .Format("n0")
+                    .Min(1)
+                    .Decimals(0)
+                    .HtmlAttributes(new { style = "width:100%;" })
+                    //.Events(ev=>ev.Change("onPersonsChange"))
+                )
+
+                </div>
+            </div>
+            <div class="col-md-2 mt-4 mt-md-0">
+                @(Html.Kendo().Button()
+                        .Name("SearchButton")
+                        .HtmlAttributes(new { type = "button", style = "width:100%;", @class = "k-primary tx-search-button" })
+                        .Icon("search")
+                        .Content("Поиск")
+                        .Events(ev => ev.Click("searchClick"))
+                    )
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+
+        var dropdownlist = $("#eventname").data("kendoDropDownList");
+        var dataSource = dropdownlist.dataSource;
+
+        dataSource.bind("requestEnd", dataSource_requestEnd);
+        dataSource.read();
+
+    });
+
+    function dataSource_requestEnd(e) {
+        var response = e.response;
+        var type = e.type;
+
+        if (response.length > 0) {
+
+            onDropDownListEventsNamesChange({ dataItem: response[0] })
+
+        }
+        else {
+            onDropDownListEventsNamesChange({});
+        };
+    }
+</script>

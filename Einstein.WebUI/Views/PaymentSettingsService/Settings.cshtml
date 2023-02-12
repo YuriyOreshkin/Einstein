@@ -1,0 +1,79 @@
+﻿@model Einstein.WebUI.Models.PaymentSettingsViewModel
+<script>
+    function savePaymentSettings() {
+        var validator = $("#payment-settings").kendoValidator().data("kendoValidator");
+
+        if (validator.validate()) {
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("SaveSettings", "PaymentSettingsService") ",
+                datatype: 'json',
+                data: $('#payment-settings').serialize(),
+                success: function (data) {
+
+                    if (data.message == "OK") {
+
+                        showSuccess("Настройки были успешно сохранены!")
+
+                    }
+                    else {
+
+                        showError(data.errors);
+
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+
+                    showError(thrownError + "-" + xhr.status);
+                }
+            });
+
+        }
+
+    }
+</script>
+
+<div class="k-form-container" style="margin-left:auto;margin-right:auto;max-width:600px;height:83vh;">
+    <form id="payment-settings">
+        <fieldset class="k-form-fieldset k-widget">
+            <legend class="k-form-legend" style="padding-left:15px;">Настройки платежной системы</legend>
+            <div style="margin: 0 15px">
+                <div class="k-form-field">
+
+                    <label class="k-label k-form-label" for="Enable">Сервис оплаты включен:</label>
+                    <span class="k-form-field-wrap">
+                        @Html.Kendo().SwitchFor(m => m.enablepass).Messages(ms => ms.Checked("Да").Unchecked("Нет")).Events(ev => ev.Change("savePaymentSettings"))
+                    </span>
+                </div>
+                <div class="k-form-field">
+                    @Html.LabelFor(m => m.terminalid)
+                    <div class="k-form-field-wrap">
+                        @Html.Kendo().TextBoxFor(m => m.terminalid).HtmlAttributes(new { style = "width:100%;" })
+                    </div>
+                </div>
+                <div class="k-form-field">
+                    @Html.LabelFor(m => m.language)
+                    <div class="k-form-field-wrap">
+                        @Html.Kendo().DropDownListFor(m => m.language).HtmlAttributes(new { style = "width:100%;" }).BindTo(new List<SelectListItem>() {
+              new SelectListItem() {
+                  Text = "ru",
+                  Value = "ru"
+              } })
+                    </div>
+                </div>
+                <div class="k-form-field" style="margin-top:20px;">
+
+                    <div class="k-form-field-wrap">
+                        @Html.Kendo().CheckBoxFor(m => m.frame).HtmlAttributes(new { style = "width:100%;" })
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+
+        <div class="form-actions">
+            @Html.Kendo().Button().Name("SavePaymentSettings").Tag("div").HtmlAttributes(new { type = "button", @class = "k-primary" }).Icon("check").Content("Сохранить").Events(click => click.Click("savePaymentSettings"))
+        </div>
+    </form>
+</div>
+
+

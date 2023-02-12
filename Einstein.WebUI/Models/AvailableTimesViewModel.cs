@@ -11,6 +11,8 @@ namespace Einstein.WebUI.Models
         public DateTime End { get; set; }
         public int FreePlaces { get; set; }
         public int FreePlaces14 { get; set; }
+
+        public decimal Price { get; set; }
         public long EventId { get; set; }
         public string Value { get
             {

@@ -39,7 +39,7 @@ namespace Einstein.WebUI.Models
                         IsAllDay= task.IsAllDay,
                         Name = task.Title,
                         //Description=EventID|FreePlaces
-                        Resources=new List<string>() { task.EventID.ToString(),  task.FreePlaces.ToString() , task.FreePlaces14.ToString()  },
+                        Resources=new List<string>() { task.EventID.ToString(),  task.FreePlaces.ToString() , task.FreePlaces14.ToString(), task.Price.ToString()  },
                         Description =task.Description,
                         RecurrenceRules = String.IsNullOrEmpty(task.RecurrenceRule) ? null: new List<RecurrencePattern> { new RecurrencePattern(task.RecurrenceRule) },
                         ExceptionDates = String.IsNullOrEmpty(task.RecurrenceException) ? null: new List<PeriodList> { ExceptionDates(task.RecurrenceException) }
@@ -69,11 +69,14 @@ namespace Einstein.WebUI.Models
             }
         }
 
-        public IEnumerable<AvailableEventsViewModel> GetAvailableEvents()
+
+
+
+        public IEnumerable<AvailableEventsViewModel> GetAvailableEvents(DateTime start, DateTime end)
         {
             var result = new List<AvailableEventsViewModel>();
-            var start = DateTime.Now;
-            var end = DateTime.Now.AddMonths(2);
+            //var start = DateTime.Now;
+           // var end = DateTime.Now.AddMonths(2);
            
             var avev = LoadCalendar(start, end);
 
@@ -140,7 +143,8 @@ namespace Einstein.WebUI.Models
                     End = period.EndTime.Value,
                     FreePlaces=int.Parse(@event.Resources[1]),
                     FreePlaces14= int.Parse(@event.Resources[2]),
-                     EventId =long.Parse(@event.Resources[0])
+                    EventId =long.Parse(@event.Resources[0]),
+                    Price=decimal.Parse(@event.Resources[3])
                 };
 
                 times.Add(time);
@@ -169,7 +173,8 @@ namespace Einstein.WebUI.Models
             view.FreePlaces14 = task.FreePlaces14;
             view.Persons = task.Persons;
             view.Persons14 = task.Persons14;
-
+            view.Price = task.Price;
+            view.Total = task.Total;
             return view;
     }
 
@@ -264,11 +269,7 @@ namespace Einstein.WebUI.Models
                 result= false;
             }
 
-            if (appointment.MaxPersons14 >= appointment.MaxPersons)
-            {
-                modelState.AddModelError("errors", "Максимальное количество детей до 14 должно быть меньше максимального количества всего посетителей.");
-                result= false;
-            }
+           
 
             if (appointment.Persons > appointment.MaxPersons)
             {

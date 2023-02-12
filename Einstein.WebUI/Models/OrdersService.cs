@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Newtonsoft.Json;
 
 namespace Einstein.WebUI.Models
 {
@@ -17,10 +18,12 @@ namespace Einstein.WebUI.Models
 
         private IRepository entities;
         private IMailSender sender;
-        public OrdersService(IRepository entities, IMailSender sender)
+        IPaymentServiceConfig payservice;
+        public OrdersService(IRepository entities, IMailSender sender,IPaymentServiceConfig payservice)
         {
             this.entities = entities;
             this.sender = sender;
+            this.payservice = payservice;
         }
 
 
@@ -39,9 +42,11 @@ namespace Einstein.WebUI.Models
             view.timeevent = order.EVENT.Start.ToString("HH:mm") + " - " + order.EVENT.End.ToString("HH:mm");
             view.freeplaces = order.EVENT.FreePlaces;
             view.freeplaces14 = order.EVENT.FreePlaces14;
+            view.price = order.EVENT.Price;
             view.inform = order.INFORM;
             view.prepay = order.PREPAY;
             view.description = order.DESCRIPTION;
+            
 
             return view;
 
@@ -59,27 +64,72 @@ namespace Einstein.WebUI.Models
         public void SendNotification(OrderViewModel orderview)
         {
             var entity = entities.Orders.FirstOrDefault(o => o.ID == orderview.id);
-            try
+            if (entity != null)
             {
-                sender.SendOrder(orderview);
-                orderview.inform = true;
+                try
+                {
+                    sender.SendOrder(orderview);
 
-                entity.INFORM = true;
-                entities.UpdateOrder(entity);
+                    orderview.inform = true;
+                    entity.INFORM = true;
 
-            }
-            catch (Exception ex)
-            {
-                entity.INFORM = false;
-                orderview.inform = false;
-            }
-            finally
-            {
-                
-                entities.UpdateOrder(entity);
+                }
+                catch (Exception ex)
+                {
+                    entity.INFORM = false;
+                    orderview.inform = false;
+                }
+                finally
+                {
+
+                    entities.UpdateOrder(entity);
+                }
             }
         }
 
+
+        public bool Confirm(PaymentNotificationViewModel payment)
+        {
+            var orderid = long.Parse(payment.OrderId);
+            var entity = entities.Orders.FirstOrDefault(o => o.ID ==orderid );
+
+            try
+            {
+                if (entity != null && int.Parse(payment.ErrorCode) == 0 && payment.Status == "CONFIRMED")
+                {
+                    if (!entities.Payments.Any(p => p.PAYMENTID == payment.PaymentId && p.STATUS== payment.Status))
+                    {
+                        entity.PREPAY = entity.PREPAY + payment.Amount / 100;
+                        entities.UpdateOrder(entity);
+                      
+                    }
+                }
+                entities.AddPayment(payment.ToEntity(new PAYMENT()));
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+
+            
+            return true;
+        }
+        public PaymentFormViewModel InitPayment(OrderViewModel order) 
+        {
+            var payment = payservice.ReadSettings();
+
+            return new PaymentFormViewModel
+            {
+                terminalkey = new ValuePaymentViewModel() { value = payment.TERMINALID },
+                order = new ValuePaymentViewModel() { value = order.id.ToString() },
+                frame = new ValuePaymentViewModel() { value = payment.FRAME.ToString() },
+                language = new ValuePaymentViewModel() { value =String.IsNullOrEmpty(payment.LANGUAGE) ? "ru" : payment.LANGUAGE },
+                email = new ValuePaymentViewModel() { value = order.email },
+                phone = new ValuePaymentViewModel() { value = order.phonenumber },
+                amount = new ValuePaymentViewModel() { value = (order.amount-order.prepay).ToString() },
+                description = new ValuePaymentViewModel() { value =order.eventname}
+            };
+        }
 
         public void Insert(OrderViewModel orderview, ModelStateDictionary modelState)
         {
@@ -94,8 +144,8 @@ namespace Einstein.WebUI.Models
                 //orderview.freeplaces = entities.Events.First(e => e.EventID == orderview.eventid).FreePlaces;
                 orderview = ConvertToViewModel(entity, orderview);
 
-               SendNotification(orderview);
-
+                //SendNotification(orderview);
+               
             }
         }
 
@@ -117,7 +167,8 @@ namespace Einstein.WebUI.Models
                         MaxPersons = evententity.MaxPersons,
                         MaxPersons14= evententity.MaxPersons14,
                         StartTimezone = evententity.StartTimezone,
-                        EndTimezone = evententity.EndTimezone
+                        EndTimezone = evententity.EndTimezone,
+                        Price=evententity.Price
                     };
                     entities.AddEvent(newevent);
                     var recException = newevent.Start.ToUniversalTime().ToString("yyyyMMddTHHmmssZ");
@@ -180,10 +231,15 @@ namespace Einstein.WebUI.Models
                 result = false;
             }
 
-            if (eVENT != null && orderview.persons > orderview.freeplaces)
+            if (eVENT != null)
             {
-                modelState.AddModelError("errors", "Количество человек("+orderview.persons+") превышает количество свободных мест ("+ orderview.freeplaces + ")");
-                return false;
+                var freeplaces =eVENT.MaxPersons -eVENT.Orders.Where(o => o.ID != orderview.id).Sum(s => s.PERSONS);
+                if (freeplaces < orderview.persons)
+                {
+                    modelState.AddModelError("errors", String.Format("К сожалению, свободных мест осталось только {0}", freeplaces));
+
+                    result = false;
+                }
             }
             return result;
         }

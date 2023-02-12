@@ -1,11 +1,12 @@
 ﻿@model Einstein.WebUI.Models.EventViewModel
 @{
-    ViewBag.Title = "Таблица";
+    ViewBag.Title = "Заявки";
 }
 <script src="@Url.Content("~/Scripts/jquery.signalR-2.4.1.min.js")"></script>
 <script src="@Url.Content("~/signalr/hubs")"></script>
 
-@Scripts.Render("~/Scripts/order.js")
+@Scripts.Render("~/Scripts/order_v2.js")
+@Scripts.Render("~/Scripts/gridview.js")
 
 @*<h2>Заявки на посещение мероприятий</h2>*@
 
@@ -14,47 +15,67 @@
     .HtmlAttributes(new { @class = "data-view", style = "height:calc(100vh - 40px);" })
     .ToolBar(toolbar =>
     {
-
-        toolbar.Create();
+        if (User.IsInRole("1"))
+        {
+            toolbar.Create();
+        }
         toolbar.Excel();
     })
     .Columns(columns =>
     {
-        columns.Bound(p => p.dateorder).Format("{0:dd.MM.yyyy HH:mm}").Width(150).ClientFooterTemplate("Всего:").Groupable(false);
+
+
         columns.Group(gr => gr
             .Title("Мероприятие")
             .Columns(cl =>
             {
-                cl.Bound(p => p.eventname).Title("Наименование").MinResizableWidth(200).Filterable(ftb => ftb.Multi(true)).ClientFooterTemplate("<span>#=count#</span><span id='new-orders-count' class='new-count'>0</span>").ClientGroupHeaderColumnTemplate("#= count#");
-                cl.Bound(p => p.dateevent).Title("Дата").Format("{0:dd.MM.yyyy}").Width(150).ClientGroupHeaderTemplate("Дата мероприятия: #= kendo.toString(kendo.parseDate(value), 'dd.MM.yyyy') #");
-                cl.Bound(p => p.timeevent).Title("Время").Filterable(ftb => ftb.Multi(true)).Width(150);
+                cl.Bound(p => p.eventname).Title("Наименование").MinResizableWidth(250).Filterable(ftb => ftb.Multi(true));
+                cl.Bound(p => p.dateevent).Title("Дата").Format("{0:dd.MM.yyyy}").Width(120).ClientGroupHeaderTemplate("Дата мероприятия: #= kendo.toString(kendo.parseDate(value), 'dd.MM.yyyy') #");
+                cl.Bound(p => p.timeevent).Title("Время").Filterable(ftb => ftb.Multi(true)).Width(120);
             }));
         columns.Group(gr => gr
-            .Title("Посетителей")
+            //.Title("Посетителей")
+            .Title("Заказ")
             .Columns(cl =>
             {
-
-                cl.Bound(p => p.persons).Title("Всего").Width(100).ClientGroupHeaderColumnTemplate("#=sum#").ClientFooterTemplate("#=sum#").Groupable(false);
-                cl.Bound(p => p.persons14).Title("до 14").Width(100).ClientGroupHeaderColumnTemplate("#=sum#").ClientFooterTemplate("#=sum#").Groupable(false);
+                cl.Bound(p => p.id).Title("№").Groupable(false).Width(120).ClientFooterTemplate("Всего:");
+                cl.Bound(p => p.dateorder).Title("Дата").Format("{0:dd.MM.yyyy HH:mm}").Width(150).Groupable(false).ClientFooterTemplate("<span>#=count#</span><span id='new-orders-count' class='new-count'>0</span>").ClientGroupHeaderColumnTemplate("#= count#");
+                cl.Bound(p => p.persons).Title("Кол-во").Width(100).ClientGroupHeaderColumnTemplate("#=sum#").ClientFooterTemplate("#=sum#").Groupable(false);
+                cl.Bound(p => p.amount).Title("Сумма").Width(150).Groupable(false).ClientGroupHeaderColumnTemplate(User.IsInRole("1") ? "#=sum#" : "").ClientFooterTemplate(User.IsInRole("1") ? "#=sum#" : "");
+                cl.Bound(p => p.prepay).Width(150).Groupable(false).ClientGroupHeaderColumnTemplate(User.IsInRole("1") ? "#=sum#" : "").ClientFooterTemplate(User.IsInRole("1") ? "#=sum#" : "");
+                //cl.Bound(p => p.persons14).Title("до 14").Width(100).ClientGroupHeaderColumnTemplate("#=sum#").ClientFooterTemplate("#=sum#").Groupable(false);
             })
             );
-        columns.Bound(p => p.prepay).Width(150).Groupable(false).ClientGroupHeaderColumnTemplate("#=sum#").ClientFooterTemplate("#=sum#");
+        //columns.Bound(p => p.prepay).Width(150).Groupable(false).ClientGroupHeaderColumnTemplate("#=sum#").ClientFooterTemplate("#=sum#");
         columns.Bound(p => p.email).Width(230).Groupable(false);
         columns.Bound(p => p.phonenumber).ClientTemplate("<a href='tel:#=phonenumber#'>#=MaskPhone(phonenumber)#</a>").Width(190).Groupable(false);
-        columns.Bound(p => p.description).Title("").Width(60).ClientTemplate("<div #if(description) {# class='display-tooltip' title='#=description#' #}# style='text-align: center;vertical-align: middle;'><span class='k-icon k-i-comment' style='font-size:24px; #if(!description) {# color: \\#656565; # }else{# color: \\#d51923; #} #'></span></div>");
-        columns.Bound(p => p.inform).Title("").Width(60).ClientTemplate("<div style='text-align: center;vertical-align: middle;'><a class='action-notification' title='Отправить уведомление' href='\\#'><span class='k-icon k-i-email' style='font-size:24px; #if(inform) {# color: \\#656565; # }else{# color: \\#d51923; #} #'></span></a></div>");
-        columns.Command(commands =>
+        columns.Bound(p => p.description).Title("").Width(60).ClientTemplate("<div #if(description) {# class='display-tooltip' title='#=description#' #}# style='text-align: center;vertical-align: middle;'><span class='k-icon k-i-comment' style='font-size:24px; #if(!description) {# color: \\#656565; # }else{# color: \\#d51923; #} #'></span></div>").Filterable(false);
+        if (User.IsInRole("1"))
         {
-            commands.Edit();
-            commands.Destroy();
-        }).Width(250);
+            columns.Bound(p => p.inform).Title("").Width(60).ClientTemplate("<div style='text-align: center;vertical-align: middle;'><a class='action-notification' title='Отправить уведомление' href='\\#'><span class='k-icon k-i-email' style='font-size:24px; #if(inform) {# color: \\#656565; # }else{# color: \\#d51923; #} #'></span></a></div>");
+        }
+        else
+        {
+            columns.Bound(p => p.inform).Title("").Width(60).ClientTemplate("<div style='text-align: center;vertical-align: middle;'><span class='k-icon k-i-email' style='font-size:24px; #if(inform) {# color: \\#656565; # }else{# color: \\#d51923; #} #'></span></div>");
+        }
+        if (User.IsInRole("1"))
+        {
+            columns.Command(commands =>
+            {
+
+                commands.Edit();
+                commands.Destroy();
+                //commands.Custom("Detail").Text("Просмотр").Click("showDetails");
+
+            }).Width(250);
+        }
     })
 
     .Excel(excel =>excel.FileName("Список заявок.xlsx").AllPages(true).ForceProxy(true).ProxyURL(Url.Action("Excel_Export_Save", "OrderService")))
     .Events(ev => ev.Edit("onGridOrdersEdit").ExcelExport("onExcelExport"))
     .Sortable()
     .Scrollable()
-    .Editable(edit => edit.Mode(GridEditMode.PopUp).TemplateName("Order").Window(wnd=>wnd.Width(600).Events(ev=>ev.Open("onPopUpOpen"))))
+    .Editable(edit =>edit.Mode(GridEditMode.PopUp).TemplateName("Order").Window(wnd => wnd.Width(600).Events(ev => ev.Open("onPopUpOpen"))))
     .Pageable(pag => pag.Refresh(true).PageSizes(new[] { 10, 25, 50, 100 }).Input(true).ButtonCount(5))
     .Resizable(r => r.Columns(true))
     .Groupable()
@@ -64,9 +85,9 @@
     .Ajax()
     .Aggregates(aggregates =>
     {
-        aggregates.Add(p => p.eventname).Count();
+        aggregates.Add(p => p.dateorder).Count();
         aggregates.Add(p => p.persons).Sum();
-        aggregates.Add(p => p.persons14).Sum();
+        aggregates.Add(p => p.amount).Sum();
         aggregates.Add(p => p.prepay).Sum();
     })
     .Sort(s => s.Add(f => f.dateorder).Descending())
@@ -80,7 +101,7 @@
         }
 
     })
-    .PageSize(50)
+    //.PageSize(50)
     //.ServerOperation(false)
     .Model(model =>
     {
@@ -167,6 +188,13 @@
             $(".k-grid-footer").insertAfter(".k-grid-header");
         });
 
+    $(window).resize(function () {
+
+        var height = $(window).outerHeight() - 40;
+        var grid = $("#gridOrders").data("kendoGrid");
+        setSGridHeight(grid,height);
+    });
+
 
         function MaskPhone(phonenumber) {
 
@@ -178,29 +206,28 @@
             return kendo.format("{0}({1}) {2}-{3}",code, piece1, piece2, piece3);
         }
 
-        function resizeGrid(height) {
-            content.css("height", height);
-        }
+        //function resizeGrid(height) {
+        //    content.css("height", height);
+        //}
 
 
-        function setSGridHeight(height) {
-            var widget = $("#gridOrders").data("kendoGrid");
-            widget.element.height(height);
-            widget.resize(true);
-        }
+    function showDetails(e) {
+        e.preventDefault();
+        var row = $(e.currentTarget).closest("tr");
+        
+        var grid = $("#gridOrders").data("kendoGrid");
+        grid.editRow(row);
+        $(".k-popup-edit-form").addClass("k-state-disabled");
+        
+    }
 
 
-        $(window).resize(function () {
-
-            var height = $(window).outerHeight()-40;
-            setSGridHeight(height);
-        });
 
 
         function onExcelExport(e) {
 
             var sheet = e.workbook.sheets[0];
-           
+
             for (var i = 0; i < sheet.rows.length; i++) {
                 if (sheet.rows[i].type == "header") {
                     var header = sheet.rows[i];
@@ -217,7 +244,7 @@
                 }
                 if (sheet.rows[i].type == "footer") {
                     var total = sheet.rows[i];
-                    
+
                     for (var cellIndex = 0; cellIndex < total.cells.length; cellIndex++) {
                         var val = total.cells[cellIndex].value;
                         if (val) {
@@ -233,6 +260,7 @@
 
         function onPopUpOpen(e)
         {
+
             this.wrapper.css({ top: 30 });
         }
 
@@ -242,46 +270,32 @@
             if (!e.model.isNew()) {
 
                 e.model.freeplaces = e.model.freeplaces + e.model.persons;
-                e.model.freeplaces14 = e.model.freeplaces14 + e.model.persons14;
+              /*  e.model.freeplaces14 = e.model.freeplaces14 + e.model.persons14;*/
 
-                e.model.freeplaces14 = SetFreePlaces14(e.model.freeplaces, e.model.freeplaces14);
+               /* e.model.freeplaces14 = SetFreePlaces14(e.model.freeplaces, e.model.freeplaces14);*/
 
             }
 
             var numeric = e.container.find("input[name=persons]");
             SetMaxNumerictextbox(numeric, e.model.freeplaces);
-            numeric = e.container.find("input[name=persons14]");
-            console.l
-            SetMaxNumerictextbox(numeric, e.model.freeplaces14);
+            SetPrice(e.model.price);
+            //numeric = e.container.find("input[name=persons14]");
+
+            //SetMaxNumerictextbox(numeric, e.model.freeplaces14);
 
 
             $("#freeplaces-view").text(e.model.freeplaces);
-            $("#freeplaces14-view").text(e.model.freeplaces14);
+           /* $("#freeplaces14-view").text(e.model.freeplaces14);*/
 
-            $(".field-hidden").each(function () {
+            $(".field-show").each(function () {
                 $(this).show();
             });
-
+            //$(".field-hide").each(function () {
+            //    $(this).hide();
+            //});
         }
 
-        //Show Errors
-        function error_handler(e) {
-            if (e.errors) {
-                var message = "<strong>Ошибки:</strong>";
-                message += "<ul>"
-                $.each(e.errors, function (key, value) {
 
-                    if ('errors' in value) {
-                        $.each(value.errors, function () {
-                            message += "<li>" + this + "<br></li>";
-                        });
-                    }
-                });
-                message += "</ul>"
-                showError(message);
-                this.cancelChanges();
-            }
-        }
 
         function getValueCountNewOrders() {
             var value = $("#new-orders-count").text();

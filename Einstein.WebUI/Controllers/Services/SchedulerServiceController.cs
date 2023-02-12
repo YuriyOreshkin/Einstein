@@ -24,6 +24,12 @@ namespace Einstein.WebUI.Controllers.Services
 
             return Json(eventsService.GetAll().ToDataSourceResult(request));
         }
+        public virtual JsonResult ReadAvailableEvents([DataSourceRequest] DataSourceRequest request)
+        {
+
+            return Json(eventsService.GetAll().ToDataSourceResult(request));
+        }
+
 
         public virtual JsonResult Destroy([DataSourceRequest] DataSourceRequest request, EventViewModel appointment)
         {
@@ -58,7 +64,7 @@ namespace Einstein.WebUI.Controllers.Services
 
             return Json(new[] { appointment }.ToDataSourceResult(request, ModelState));
         }
-
+       
         public virtual JsonResult Update([DataSourceRequest] DataSourceRequest request, EventViewModel appointment)
         {
             if (ModelState.IsValid)
@@ -80,7 +86,7 @@ namespace Einstein.WebUI.Controllers.Services
 
         public JsonResult DropDownListReadNames()
         {
-            var titles = eventsService.GetAvailableEvents();
+            var titles = eventsService.GetAvailableEvents(DateTime.Now,DateTime.Now.AddMonths(2));
             return Json(titles, JsonRequestBehavior.AllowGet);
         }
 

@@ -12,7 +12,7 @@ namespace Einstein.WebUI.Models
         [Required(ErrorMessage = "Требуется поле {0}")]
         [Display(Name = "Пользователь")]
         [EmailAddress]
-        public string user { get; set; }
+        public string login { get; set; }
 
         [Required(ErrorMessage = "Требуется поле {0}")]
         [DataType(DataType.Password)]
@@ -26,7 +26,7 @@ namespace Einstein.WebUI.Models
         {
             return new USER
             {
-                NAME = user,
+                LOGIN = login,
                 PASSWORD = password
             };
         }

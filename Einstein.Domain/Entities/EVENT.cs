@@ -28,6 +28,9 @@ namespace Einstein.Domain.Entities
         public string EndTimezone { get; set; }
         public int MaxPersons { get; set; }
         public int MaxPersons14 { get; set; }
+
+        public decimal Price { get; set; }
+
         [NotMapped]
         public int FreePlaces
         { get
@@ -76,6 +79,15 @@ namespace Einstein.Domain.Entities
             get
             {
                 return Orders.Sum(s => s.PERSONS14);
+            }
+        }
+
+        [NotMapped]
+        public decimal Total
+        {
+            get
+            {
+                return Orders.Sum(s => s.PREPAY);
             }
         }
         public virtual ICollection<ORDER> Orders { get; set; }

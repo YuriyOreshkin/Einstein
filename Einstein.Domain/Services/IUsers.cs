@@ -10,5 +10,7 @@ namespace Einstein.Domain.Services
     public interface IUsers
     {
         void ValidateUser(USER user);
+
+       
     }
 }

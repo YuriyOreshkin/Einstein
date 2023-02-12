@@ -17,13 +17,13 @@ namespace Einstein.Domain.Services
         {
         }
 
-       
-
         public virtual DbSet<EVENT> Events { get; set; }
         public virtual DbSet<ORDER> Orders { get; set; }
-        //public virtual DbSet<Mail> Mails { get; set; }
-        //public virtual DbSet<Person> People { get; set; }
-        //public virtual DbSet<Task> Tasks { get; set; }
+
+        public virtual DbSet<PAYMENT> Payments { get; set; }
+        
+        public virtual DbSet<USER> Users { get; set; }
+        public virtual DbSet<ROLE> Roles { get; set; }
     }
 
     public class EFRepository : IRepository, IDisposable
@@ -45,6 +45,27 @@ namespace Einstein.Domain.Services
                 return db.Orders;
             }
         }
+        public IQueryable<USER> Users
+        {
+            get
+            {
+                return db.Users;
+            }
+        }
+        public IQueryable<ROLE> Roles
+        {
+            get
+            {
+                return db.Roles;
+            }
+        }
+        public IQueryable<PAYMENT> Payments
+        {
+            get
+            {
+                return db.Payments;
+            }
+        }
 
         public void AddEvent(EVENT task)
         {
@@ -55,6 +76,22 @@ namespace Einstein.Domain.Services
         public void AddOrder(ORDER order)
         {
             db.Orders.Add(order);
+            db.SaveChanges();
+        }
+
+        public void AddPayment(PAYMENT payment)
+        {
+            var entity = db.Payments.FirstOrDefault(p => p.PAYMENTID == payment.PAYMENTID && p.STATUS == payment.STATUS);
+            if (entity == null)
+            {
+                db.Payments.Add(payment);
+            }
+            else
+            {
+                entity.DATE = payment.DATE;
+                db.Entry(entity).State = EntityState.Modified;
+            }
+
             db.SaveChanges();
         }
         public void DeleteEvent(EVENT task)
@@ -100,5 +137,22 @@ namespace Einstein.Domain.Services
             GC.SuppressFinalize(this);
         }
 
+        public void AddUser(USER user)
+        {
+            db.Users.Add(user);
+            db.SaveChanges();
+        }
+
+        public void UpdateUser(USER user)
+        {
+            db.Entry(user).State = EntityState.Modified;
+            db.SaveChanges();
+        }
+
+        public void DeleteUser(USER user)
+        {
+            db.Users.Remove(user);
+            db.SaveChanges();
+        }
     }
 }

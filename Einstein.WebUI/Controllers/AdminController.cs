@@ -10,7 +10,7 @@ namespace Einstein.WebUI.Controllers
         {
             return RedirectToAction("GridView", "Order");
         }
-
+        [Authorize(Roles = "1")]
         public ActionResult Settings()
         {
             return View();
