@@ -59,6 +59,7 @@
   <ItemGroup>
     <Compile Include="Entities\CATEGORY.cs" />
     <Compile Include="Entities\EVENT.cs" />
+    <Compile Include="Entities\MAILINGSERVICESETTINGS.cs" />
     <Compile Include="Entities\PAYMENT.cs" />
     <Compile Include="Entities\PAYMENTSETTINGS .cs" />
     <Compile Include="Entities\ROLE.cs" />
@@ -73,6 +74,7 @@
     <Compile Include="Services\ICryptoService.cs" />
     <Compile Include="Services\IExcel.cs" />
     <Compile Include="Services\IMailSender.cs" />
+    <Compile Include="Services\IMailingServiceConfig.cs" />
     <Compile Include="Services\IPaymentServiceConfig.cs" />
     <Compile Include="Services\IMailServiceConfig.cs" />
     <Compile Include="Services\IRepository.cs" />
@@ -82,6 +84,7 @@
     <Compile Include="Services\IUsers.cs" />
     <Compile Include="Services\RepositoryUsers.cs" />
     <Compile Include="Services\SettingsUsers.cs" />
+    <Compile Include="Services\XMLMailingServiceConfig.cs" />
     <Compile Include="Services\XMLPaymentServiceConfig.cs" />
     <Compile Include="Services\XMLMailServiceConfig.cs" />
   </ItemGroup>

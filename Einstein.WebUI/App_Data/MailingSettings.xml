@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<MAILINGSERVICESETTINGS xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <ENABLE>false</ENABLE>
+  <BEGINFROMTODAY>0</BEGINFROMTODAY>
+  <ENDFROMTODAY>1</ENDFROMTODAY>
+  <RECIPIENTS>somemail@yandex.ru;dfdfd</RECIPIENTS>
+</MAILINGSERVICESETTINGS>

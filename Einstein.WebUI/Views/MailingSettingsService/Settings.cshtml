@@ -1,0 +1,93 @@
+﻿@model Einstein.WebUI.Models.MailingSettingsViewModel
+<script>
+    function saveMailingSettings() {
+        var validator = $("#mailing-settings").kendoValidator().data("kendoValidator");
+
+        if (validator.validate()) {
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("SaveSettings", "MailingSettingsService") ",
+                datatype: 'json',
+                data: $('#mailing-settings').serialize(),
+                success: function (data) {
+
+                    if (data.message == "OK") {
+
+                        showSuccess("Настройки были успешно сохранены!")
+
+                    }
+                    else {
+
+                        showError(data.errors);
+
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+
+                    showError(thrownError + "-" + xhr.status);
+                }
+            });
+
+        }
+
+    }
+  
+    function addNew(value)
+    {
+        var widget = $("#recipients").getKendoMultiSelect();
+        var dataSource = widget.dataSource;
+        
+        dataSource.data().push(value);
+        widget.value(widget.value().concat([value]));
+        widget.close();
+    }
+</script>
+<script id="noDataTemplate" type="text/x-kendo-tmpl">
+    #var value= instance.input.val(); #
+    <div>
+      Хотите добавить нового получателя - '#: value #'?
+    </div>
+    </br>
+    <button class="k-button k-button-solid-base k-button-solid k-button-md k-rounded-md k-primary" onclick="addNew('#: value #')" ontouchend="addNew('#: value #')">Добавить</button>
+</script>
+
+                <div class="k-form-container" style="margin-left:auto;margin-right:auto;max-width:600px;height:83vh;">
+                    <form id="mailing-settings">
+                        <fieldset class="k-form-fieldset k-widget">
+                            <legend class="k-form-legend" style="padding-left:15px;">Рассылка списка заказов</legend>
+                            <div style="margin: 0 15px">
+                                <div class="k-form-field">
+
+                                    <label class="k-label k-form-label" for="Enable">Рассылка включена:</label>
+                                    <span class="k-form-field-wrap">
+                                        @Html.Kendo().SwitchFor(m => m.enablerss).Messages(ms => ms.Checked("Да").Unchecked("Нет")).Events(ev => ev.Change("saveMailingSettings"))
+                                    </span>
+                                </div>
+
+                                <div class="k-form-field">
+                                    <label class="k-label k-form-label" for="beginfromtoday">Начало периода:</label>
+                                    <div class="k-form-field-wrap">
+                                        @Html.Kendo().NumericTextBoxFor(m => m.beginfromtoday).Format("0").HtmlAttributes(new { style = "width:100%;" })
+                                    </div>
+                                </div>
+                                <div class="k-form-field">
+                                    <label class="k-label k-form-label" for="endfromtoday">Окончание периода:</label>
+                                    <div class="k-form-field-wrap">
+                                        @Html.Kendo().NumericTextBoxFor(m => m.endfromtoday).Format("0").HtmlAttributes(new { style = "width:100%;" })
+                                    </div>
+                                </div>
+                                <div class="k-form-field">
+                                    <label class="k-label k-form-label" for="recipients">Получатели:</label>
+                                    <div class="k-form-field-wrap">
+                                        @Html.Kendo().MultiSelectFor(m => m.recipients).AutoBind(false).DataSource(d=>d.Events(de=>de.Sync("onRecipientsSync"))).NoDataTemplateId("noDataTemplate").BindTo(Model.recipients).HtmlAttributes(new { style = "width:100%;" })
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <div class="form-actions">
+                            @Html.Kendo().Button().Name("SaveMailingSettings").Tag("div").HtmlAttributes(new { type = "button", @class = "k-primary" }).Icon("check").Content("Сохранить").Events(click => click.Click("saveMailingSettings"))
+                        </div>
+                    </form>
+                </div>
+

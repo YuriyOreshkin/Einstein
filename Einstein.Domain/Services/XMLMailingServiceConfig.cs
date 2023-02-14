@@ -7,54 +7,52 @@ using System.Xml.Serialization;
 
 namespace Einstein.Domain.Services
 {
-    public class XMLMailServiceConfig : IMailServiceConfig
+    public class XMLMailingServiceConfig : IMailingServiceConfig
     {
         private string filename;
-        private ICryptoService crypto;
+     
 
-        public XMLMailServiceConfig(string _filename, ICryptoService _crypto)
+        public XMLMailingServiceConfig(string _filename)
         {
-            crypto = _crypto;
+            
             filename = _filename;
         }
 
        
 
-        public void SaveSettings(MAILSERVICESETTINGS settings)
+        public void SaveSettings(MAILINGSERVICESETTINGS settings)
         {
-            XmlSerializer formatter = new XmlSerializer(typeof(MAILSERVICESETTINGS));
+            XmlSerializer formatter = new XmlSerializer(typeof(MAILINGSERVICESETTINGS));
             TextWriter writer = new StreamWriter(filename, false, Encoding.GetEncoding(1251));
-            settings.PASSWORD = crypto.EncryptPassword(settings.PASSWORD);
+          
             formatter.Serialize(writer, settings);
             
             writer.Close();
 
         }
 
-        public MAILSERVICESETTINGS ReadSettings()
+        public MAILINGSERVICESETTINGS ReadSettings()
         {
             if (File.Exists(filename))
             {
 
-                XmlSerializer formatter = new XmlSerializer(typeof(MAILSERVICESETTINGS));
+                XmlSerializer formatter = new XmlSerializer(typeof(MAILINGSERVICESETTINGS));
 
                 using (StreamReader fs = new StreamReader(filename, Encoding.GetEncoding(1251), false))
                 {
-                    MAILSERVICESETTINGS settings = (MAILSERVICESETTINGS)formatter.Deserialize(fs);
+                    MAILINGSERVICESETTINGS settings = (MAILINGSERVICESETTINGS)formatter.Deserialize(fs);
                     fs.Close();
-                    settings.PASSWORD = crypto.DecryptPassword(settings.PASSWORD);
                     return settings;
                 }
             }
             else
             {
-                MAILSERVICESETTINGS settings = new MAILSERVICESETTINGS
+                MAILINGSERVICESETTINGS settings = new MAILINGSERVICESETTINGS
                 {
                     ENABLE =false,
-                    HOST = " smtp.yandex.ru",
-                    PORT=25,
-                    USER="somemail@yandex.ru",
-                    PASSWORD= ""
+                    BEGINFROMTODAY = 0,
+                    ENDFROMTODAY=1,
+                    RECIPIENTS="somemail@yandex.ru",
 
                 };
 
