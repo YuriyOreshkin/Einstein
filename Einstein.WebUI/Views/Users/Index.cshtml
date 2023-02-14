@@ -14,6 +14,7 @@
         columns.Command(commands=> {  commands.Edit(); commands.Destroy(); });
     })
     .Editable(editable => editable.Mode(GridEditMode.PopUp))
+    .Events(ev => ev.Edit("onGridEdit"))
     .ToolBar(toolbar => toolbar.Create())
     .Sortable()
     .Scrollable()
@@ -45,4 +46,55 @@
         var grid = $("#usersGridView").data("kendoGrid");
         setSGridHeight(grid, height);
     });
+
+    function onGridEdit(e) {
+        if (!e.model.isNew()) {
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("DecryptPassword", "UserService") ",
+                datatype: 'json',
+                data: { cryptpass: e.model.password},
+                success: function (data) {
+
+                    var password = '';
+                    if (data.password) {
+
+                        password = data.password;
+                    }
+                    else if (data.error)
+                    {
+                        showError(data.error);
+                    }
+                    var input = e.container.find("input[name=password]");
+                    input.val(password);
+                    input.change();
+                   
+                    },
+                error: function (xhr, ajaxOptions, thrownError) {
+
+                    showError(xhr.status + " " + thrownError);
+                }
+            });
+
+        }
+
+        //var numeric = e.container.find("input[name=persons]");
+        //SetMaxNumerictextbox(numeric, e.model.freeplaces);
+        //SetPrice(e.model.price);
+        ////numeric = e.container.find("input[name=persons14]");
+
+        ////SetMaxNumerictextbox(numeric, e.model.freeplaces14);
+
+
+        //$("#freeplaces-view").text(e.model.freeplaces);
+        ///* $("#freeplaces14-view").text(e.model.freeplaces14);*/
+
+        //$(".field-show").each(function () {
+        //    $(this).show();
+        //});
+        ////$(".field-hide").each(function () {
+        ////    $(this).hide();
+        ////});
+    }
 </script>

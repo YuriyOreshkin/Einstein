@@ -24,7 +24,7 @@ namespace Einstein.Domain.Services
             var setting = repos.Users.FirstOrDefault(u=>u.LOGIN ==user.LOGIN);
             if (setting != null)
             {
-               
+              
                 if (crypto.DecryptPassword(setting.PASSWORD) != user.PASSWORD)
                 {
                     throw new Exception("Пароль не верный.");
@@ -32,7 +32,7 @@ namespace Einstein.Domain.Services
             }
             else
             {
-                throw new Exception("Пользлватель не найден.");
+                throw new Exception("Пользователь не найден.");
             }
            
         }

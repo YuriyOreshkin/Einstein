@@ -9,6 +9,7 @@ using Einstein.Domain.Entities;
 
 namespace Einstein.WebUI.Controllers.Services
 {
+    [Authorize(Roles = "1")]
     public class UserServiceController : Controller
     {
         private IRepository repos;
@@ -61,6 +62,7 @@ namespace Einstein.WebUI.Controllers.Services
                 {
                     repos.AddUser(entity);
                     user.id = entity.ID;
+                    user.password = crypto.EncryptPassword(user.password);
 
                 }
                 catch (Exception ex)
@@ -103,7 +105,7 @@ namespace Einstein.WebUI.Controllers.Services
                 try
                 {
                     repos.UpdateUser(entity);
-
+                    user.password = crypto.EncryptPassword(user.password);
                 }
                 catch (Exception ex)
                 {
@@ -145,6 +147,21 @@ namespace Einstein.WebUI.Controllers.Services
 
             return Json(new[] { user }.ToDataSourceResult(request, ModelState));
 
+        }
+
+        [HttpPost]
+        public ActionResult DecryptPassword(string cryptpass)
+        {
+            try
+            {
+                var password = crypto.DecryptPassword(cryptpass);
+                return Json(new { password = password });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { error = ex.Message });
+            }
+            
         }
 
     }

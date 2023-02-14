@@ -1,6 +1,7 @@
 ﻿using Einstein.Domain.Entities;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
@@ -20,7 +21,7 @@ namespace Einstein.Domain.Services
         }
 
 
-        private void SendEMail(string to, string subject, string body)
+        private void SendEMail(string to, string subject, string body,string attachment=null)
         {
             MAILSERVICESETTINGS settings = config.ReadSettings();
             if (settings.ENABLE)
@@ -45,6 +46,12 @@ namespace Einstein.Domain.Services
                 mail.Body = body;
                 // письмо представляет код html
                 mail.IsBodyHtml = true;
+
+                //прикрепляем вложения
+                if (!String.IsNullOrEmpty(attachment) & File.Exists(attachment))
+                {
+                    mail.Attachments.Add(new Attachment(attachment));
+                }
 
                 smtp.Send(mail);
             }
