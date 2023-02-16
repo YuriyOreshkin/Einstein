@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="windows-1251"?>
-<MAILSERVICESETTINGS xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <ENABLE>false</ENABLE>
-  <HOST>smtp.gmail.com</HOST>
-  <PORT>587</PORT>
-  <USER>koozya@rambler.ru</USER>
-  <PASSWORD></PASSWORD>
+<MAILSERVICESETTINGS xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <ENABLE>true</ENABLE>
+  <HOST>10.48.1.18</HOST>
+  <PORT>25</PORT>
+  <USER>sev_oss_askue@gazpromenergo.ru</USER>
+  <PASSWORD>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA31ubENd49kSY65A0PD5aZAQAAAACAAAAAAAQZgAAAAEAACAAAADOn6EgCdDuKqJVEvAIV/9QBEcougDNyWITruZqOzdTkgAAAAAOgAAAAAIAACAAAAC2VVo8gmwUcrH2EfEu0ZUZ7iy68anvdbRMUTyKo7UCNhAAAABRDxdzMRVslc1UG8fCLCgjQAAAADwzW/d9ULe7IknUYu0c6wBKUs+ggd0tIIF0icrT7pdBORIN84MD7DfxJDXpXU2xY1GrEKq8AJmr8jOZHdza9Uo=</PASSWORD>
 </MAILSERVICESETTINGS>

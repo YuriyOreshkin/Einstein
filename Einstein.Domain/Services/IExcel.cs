@@ -8,6 +8,6 @@ namespace Einstein.Domain.Services
 {
     public interface IExcel
     {
-        void Export();
+        void Export(string filename,string template, List<Sheet> sheets);
     }
 }

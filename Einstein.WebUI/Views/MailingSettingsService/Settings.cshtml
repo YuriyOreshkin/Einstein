@@ -31,15 +31,39 @@
         }
 
     }
-  
+    //Add new recipient in multiselect
     function addNew(value)
     {
         var widget = $("#recipients").getKendoMultiSelect();
         var dataSource = widget.dataSource;
-        
+
         dataSource.data().push(value);
         widget.value(widget.value().concat([value]));
         widget.close();
+    }
+
+    function Excel() {
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("SendOrdersExcel", "OrderService")",
+            datatype: 'json',
+            success: function (data) {
+
+                if (data.message == "OK") {
+
+                    showSuccess(data.result);
+
+                }
+                else {
+
+                    showError(data.result);
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+
+                showError(xhr.status + " " + thrownError);
+            }
+        })
     }
 </script>
 <script id="noDataTemplate" type="text/x-kendo-tmpl">
@@ -58,33 +82,44 @@
                             <div style="margin: 0 15px">
                                 <div class="k-form-field">
 
-                                    <label class="k-label k-form-label" for="Enable">Рассылка включена:</label>
+                                    <label class="k-label k-form-label" for="enablerss">Рассылка включена:</label>
                                     <span class="k-form-field-wrap">
                                         @Html.Kendo().SwitchFor(m => m.enablerss).Messages(ms => ms.Checked("Да").Unchecked("Нет")).Events(ev => ev.Change("saveMailingSettings"))
                                     </span>
                                 </div>
 
                                 <div class="k-form-field">
-                                    <label class="k-label k-form-label" for="beginfromtoday">Начало периода:</label>
-                                    <div class="k-form-field-wrap">
-                                        @Html.Kendo().NumericTextBoxFor(m => m.beginfromtoday).Format("0").HtmlAttributes(new { style = "width:100%;" })
+                                    <label class="k-label k-form-label" style="margin-bottom: 0;"> Период проведения мероприятий:</label>
+                                    <div style="text-align: center;font-size: 12px;font-style: italic;margin-bottom:5px;">указывается количество дней от даты формирования</div>
+                                    <div>
+                                        <div style="display: inline-block; width: 49%; ">
+                                            <label class="k-label k-form-label" for="beginfromtoday" style="display: inline-block; margin: .3rem 0;">Начало периода:</label>
+                                            <div class="k-form-field-wrap" style="width:120px;float:right;">
+                                                @Html.Kendo().NumericTextBoxFor(m => m.beginfromtoday).Format("0").HtmlAttributes(new { style = "width:100%;" })
+                                            </div>
+                                        </div>
+                                        <div style="display: inline-block; float:right;  width: 49%;">
+                                            <label class="k-label k-form-label" for="endfromtoday" style="margin: .3rem 0;">Окончание периода:</label>
+                                            <div class="k-form-field-wrap" style="width:120px;float:right;">
+                                                @Html.Kendo().NumericTextBoxFor(m => m.endfromtoday).Format("0").HtmlAttributes(new { style = "width:100%;" })
+                                            </div>
+                                        </div>
                                     </div>
+
                                 </div>
-                                <div class="k-form-field">
-                                    <label class="k-label k-form-label" for="endfromtoday">Окончание периода:</label>
-                                    <div class="k-form-field-wrap">
-                                        @Html.Kendo().NumericTextBoxFor(m => m.endfromtoday).Format("0").HtmlAttributes(new { style = "width:100%;" })
-                                    </div>
-                                </div>
+
                                 <div class="k-form-field">
                                     <label class="k-label k-form-label" for="recipients">Получатели:</label>
                                     <div class="k-form-field-wrap">
-                                        @Html.Kendo().MultiSelectFor(m => m.recipients).AutoBind(false).DataSource(d=>d.Events(de=>de.Sync("onRecipientsSync"))).NoDataTemplateId("noDataTemplate").BindTo(Model.recipients).HtmlAttributes(new { style = "width:100%;" })
+                                        @Html.Kendo().MultiSelectFor(m => m.recipients).AutoBind(false).NoDataTemplateId("noDataTemplate").BindTo(Model.recipients).HtmlAttributes(new { style = "width:100%;" })
                                     </div>
                                 </div>
                             </div>
-                        </fieldset>
 
+                        </fieldset>
+                        <div class="form-actions">
+                            @Html.Kendo().Button().Name("Mailing").Tag("div").HtmlAttributes(new { type = "button", @class = "k-primary" }).Icon("check").Content("Тест").Events(click => click.Click("Excel"))
+                        </div>
                         <div class="form-actions">
                             @Html.Kendo().Button().Name("SaveMailingSettings").Tag("div").HtmlAttributes(new { type = "button", @class = "k-primary" }).Icon("check").Content("Сохранить").Events(click => click.Click("saveMailingSettings"))
                         </div>

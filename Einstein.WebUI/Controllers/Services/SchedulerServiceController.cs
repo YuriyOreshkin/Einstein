@@ -38,7 +38,7 @@ namespace Einstein.WebUI.Controllers.Services
                 {
                     eventsService.Delete(appointment, ModelState);
                 }
-                catch (Exception ex) 
+                catch 
                 {
                     ModelState.AddModelError("error", "Не удалось удалить мероприятие.");
                 }
@@ -55,7 +55,7 @@ namespace Einstein.WebUI.Controllers.Services
                 {
                     eventsService.Insert(appointment, ModelState);
                 }
-                catch (Exception ex)
+                catch 
                 {
                     ModelState.AddModelError("error", "Не удалось создать мероприятие.");
                 }
@@ -73,7 +73,7 @@ namespace Einstein.WebUI.Controllers.Services
                 {
                     eventsService.Update(appointment, ModelState);
                 }
-                catch (Exception ex)
+                catch 
                 {
                     ModelState.AddModelError("error", "Не удалось обновить мероприятие.");
                 }

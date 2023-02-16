@@ -16,9 +16,9 @@ namespace Einstein.WebUI.Controllers
     public class PaymentController : ApiController
     {
         private OrdersService ordersService;
-        public PaymentController(IRepository _repository, IMailSender sender, IPaymentServiceConfig payservice)
+        public PaymentController(IRepository _repository, IMailSender sender, IPaymentServiceConfig payservice,IExcel excel)
         {
-            ordersService = new OrdersService(_repository, sender, payservice);
+            ordersService = new OrdersService(_repository, sender, payservice,excel);
         }
         // GET: api/Default
 

@@ -10,6 +10,7 @@ namespace Einstein.Domain.Services
     public interface IMailSender
     {
         void SendOrder(object order);
-        
+        void MailingOrders(MAILINGSERVICESETTINGS settings,string filename);
+        MAILINGSERVICESETTINGS GetMailingSettings();
     }
 }

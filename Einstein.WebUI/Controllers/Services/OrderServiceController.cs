@@ -17,9 +17,9 @@ namespace Einstein.WebUI.Controllers.Services
     {
 
         private OrdersService ordersService;
-        public OrderServiceController(IRepository _repository, IMailSender sender, IPaymentServiceConfig payservice)
+        public OrderServiceController(IRepository _repository, IMailSender sender, IPaymentServiceConfig payservice, IExcel excel)
         {
-            ordersService = new OrdersService(_repository, sender, payservice);
+            ordersService = new OrdersService(_repository, sender, payservice,excel);
         }
 
 
@@ -60,7 +60,7 @@ namespace Einstein.WebUI.Controllers.Services
                     //Отсылаем уведомление
                     ordersService.SendNotification(order);
                 }
-                catch (Exception ex)
+                catch 
                 {
                     ModelState.AddModelError("error", "Не удалось внести заявку.");
                 }
@@ -88,6 +88,23 @@ namespace Einstein.WebUI.Controllers.Services
         }
 
         [HttpPost]
+        public ActionResult SendOrdersExcel()
+        {
+            
+            try
+            {
+                ordersService.SendOrdersExcelList();
+                return Json(new { message = "OK", result = "Файл успешно сформирован!" }, JsonRequestBehavior.AllowGet);
+
+            }
+            catch(Exception ex)
+            {
+                return Json(new { message = "errors", result = "Не удалось сформировать файл! Ошибка: "+ex.Message }, JsonRequestBehavior.AllowGet);
+            }
+           
+        }
+
+        [HttpPost]
         public ActionResult PayOrder(OrderViewModel order)
         {
 
@@ -105,7 +122,7 @@ namespace Einstein.WebUI.Controllers.Services
                     var payment = ordersService.InitPayment(order);
                     return Json(payment);
                 }
-                catch (Exception ex)
+                catch 
                 {
                     ModelState.AddModelError("error", "Не удалось внести заявку.");
                 }
@@ -124,7 +141,7 @@ namespace Einstein.WebUI.Controllers.Services
                     var payment = ordersService.InitPayment(order);
                     return Json(payment);
                 }
-                catch (Exception ex)
+                catch 
                 {
                     ModelState.AddModelError("error", "Не удалось оплатить билет.");
                 }
@@ -159,7 +176,7 @@ namespace Einstein.WebUI.Controllers.Services
                     //Отсылаем уведомление
                     ordersService.SendNotification(order);
                 }
-                catch (Exception ex)
+                catch 
                 {
                     ModelState.AddModelError("error", "Не удалось внести заявку.");
                 }
@@ -188,7 +205,7 @@ namespace Einstein.WebUI.Controllers.Services
                 {
                     ordersService.Update(order, ModelState);
                 }
-                catch (Exception ex) 
+                catch 
                 {
                     ModelState.AddModelError("error", "Не удалось обновить заявку.");
                 }
@@ -209,7 +226,7 @@ namespace Einstein.WebUI.Controllers.Services
                 {
                     ordersService.Delete(order, ModelState);
                 }
-                catch (Exception ex)
+                catch 
                 {
                     ModelState.AddModelError("error", "Не удалось удалить заявку.");
                 }

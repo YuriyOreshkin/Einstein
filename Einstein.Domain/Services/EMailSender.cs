@@ -1,6 +1,7 @@
 ﻿using Einstein.Domain.Entities;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -14,24 +15,24 @@ namespace Einstein.Domain.Services
     {
         private IMailServiceConfig config;
         private ITemplateService template;
-        public EMailSender(IMailServiceConfig _config, ITemplateService _template)
+        private IMailingServiceConfig mailing;
+        public EMailSender(IMailServiceConfig _config, ITemplateService _template,IMailingServiceConfig _mailing)
         {
             config = _config;
             template = _template;
+            mailing = _mailing;
         }
 
 
-        private void SendEMail(string to, string subject, string body,string attachment=null)
+        private void SendEMail(MAILSERVICESETTINGS settings,string to, string subject, string body,string attachment=null)
         {
-            MAILSERVICESETTINGS settings = config.ReadSettings();
-            if (settings.ENABLE)
-            {
+         
                 // адрес smtp-сервера и порт, с которого будем отправлять письмо
                 SmtpClient smtp = new SmtpClient(settings.HOST, settings.PORT);
                 // логин и пароль
                 smtp.UseDefaultCredentials = false;
                 smtp.Credentials = new NetworkCredential(settings.USER, settings.PASSWORD);
-                smtp.EnableSsl = true;
+                //smtp.EnableSsl = true;
 
                 // отправитель - устанавливаем адрес и отображаемое в письме имя
                 //MailAddress from = new MailAddress(settings.USER);
@@ -52,23 +53,48 @@ namespace Einstein.Domain.Services
                 {
                     mail.Attachments.Add(new Attachment(attachment));
                 }
+           
+            smtp.Send(mail);
+           
+            mail.Dispose();
+        }
+      
 
-                smtp.Send(mail);
+        public void SendOrder(object order)
+        {
+
+            MAILSERVICESETTINGS settings = config.ReadSettings();
+            if (settings.ENABLE)
+            {
+                var property = order.GetType().GetProperties().FirstOrDefault(p => p.Name == "email");
+                var to = property != null ? property.GetValue(order).ToString() : "";
+                var body = template.GetTemplateBody(order);
+                var subject = template.GetTemplateSubject(order);
+                SendEMail(settings, to, subject, body);
             }
-            else {
+
+            else
+            {
                 throw new Exception("Сервис выключен!");
             }
         }
 
-
-        public void SendOrder(object order)
+        public void MailingOrders(MAILINGSERVICESETTINGS settings, string filename)
         {
-            var property= order.GetType().GetProperties().FirstOrDefault(p => p.Name == "email");
-            var to = property != null ? property.GetValue(order).ToString() : "";
-            var body = template.GetTemplateBody(order);
-            var subject = template.GetTemplateSubject(order);
-            SendEMail(to, subject, body);
+            MAILSERVICESETTINGS mail = config.ReadSettings();
+            try
+            {
+                SendEMail(mail, settings.RECIPIENTS, "Академия Теслы", "Рассылка списка заказов по мероприятиям, проводимым за период !", filename);
+            }
+            finally
+            {
+                File.Delete(filename);
+            }
+        }
 
+        public MAILINGSERVICESETTINGS GetMailingSettings()
+        {
+            return mailing.ReadSettings();
         }
     }
 }

@@ -2,6 +2,6 @@
 <MAILINGSERVICESETTINGS xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <ENABLE>false</ENABLE>
   <BEGINFROMTODAY>0</BEGINFROMTODAY>
-  <ENDFROMTODAY>1</ENDFROMTODAY>
-  <RECIPIENTS>somemail@yandex.ru;dfdfd</RECIPIENTS>
+  <ENDFROMTODAY>0</ENDFROMTODAY>
+  <RECIPIENTS>u.oreshkin@svf.energo.gazprom.ru</RECIPIENTS>
 </MAILINGSERVICESETTINGS>

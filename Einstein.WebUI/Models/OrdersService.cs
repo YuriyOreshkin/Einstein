@@ -10,6 +10,9 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Newtonsoft.Json;
+using System.Data.Common.CommandTrees.ExpressionBuilder;
+using System.Runtime;
+using System.IO;
 
 namespace Einstein.WebUI.Models
 {
@@ -18,12 +21,14 @@ namespace Einstein.WebUI.Models
 
         private IRepository entities;
         private IMailSender sender;
-        IPaymentServiceConfig payservice;
-        public OrdersService(IRepository entities, IMailSender sender,IPaymentServiceConfig payservice)
+        private IPaymentServiceConfig payservice;
+        private IExcel excel;
+        public OrdersService(IRepository entities, IMailSender sender,IPaymentServiceConfig payservice, IExcel excel)
         {
             this.entities = entities;
             this.sender = sender;
             this.payservice = payservice;
+            this.excel = excel;
         }
 
 
@@ -106,7 +111,7 @@ namespace Einstein.WebUI.Models
                 }
                 entities.AddPayment(payment.ToEntity(new PAYMENT()));
             }
-            catch (Exception ex)
+            catch 
             {
                 return false;
             }
@@ -242,6 +247,50 @@ namespace Einstein.WebUI.Models
                 }
             }
             return result;
+        }
+        public void SendOrdersExcelList()
+        {
+            var settings = sender.GetMailingSettings();
+            //if (settings.ENABLE)
+            //{
+                DateTime date = DateTime.Now;
+                DateTime datebegin = new DateTime(2019,01,01); //date.AddDays(settings.BEGINFROMTODAY).Date.AddHours(0).AddMinutes(0).AddSeconds(0);
+                DateTime dateend = date.AddDays(settings.ENDFROMTODAY).Date.AddHours(23).AddMinutes(59).AddSeconds(59); ;
+                var path= HttpContext.Current.Server.MapPath("~/App_Data/Mailing");
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+                var filename = Path.Combine(path,String.Format("Список заказов по мероприятиям за период с {0} по {1}.xlsx",datebegin.ToShortDateString(),dateend.ToShortDateString()));
+                
+                ExportExcel(filename, datebegin, dateend);
+                sender.MailingOrders(settings, filename);
+            //}
+        }
+
+        private void ExportExcel(string filename, DateTime datebegin, DateTime dateend)
+        {
+            var orders = entities.Orders.Where(ev => ev.EVENT.Start >= datebegin && ev.EVENT.Start <= dateend).ToList()
+                .Select(s => ConvertToViewModel(s, new OrderViewModel())).OrderBy(d=>d.dateevent).ThenBy(t=>t.timeevent);
+            List<Sheet> sheets = new List<Sheet> { new Sheet { startRow = 2, rows = new List<Dictionary<int, object>>() } };
+            foreach (var order in orders)
+            {
+                var row = new Dictionary<int, object>();
+                row.Add(0, order.eventname);
+                row.Add(1, order.dateevent);
+                row.Add(2, order.timeevent);
+                row.Add(3, order.id);
+                row.Add(4, order.dateorder);
+                row.Add(5, order.persons);
+                row.Add(6, order.amount);
+                row.Add(7, order.prepay);
+                row.Add(8, order.email);
+                row.Add(9, order.phonenumber);
+
+                sheets[0].rows.Add(row);
+            }
+
+            excel.Export(filename, "Orders export template.xlsx", sheets);
         }
 
         public OrderViewModel One(Func<OrderViewModel, bool> predicate)
