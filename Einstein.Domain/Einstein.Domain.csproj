@@ -90,6 +90,7 @@
     <Compile Include="Services\IExcel.cs" />
     <Compile Include="Services\IMailSender.cs" />
     <Compile Include="Services\IMailingServiceConfig.cs" />
+    <Compile Include="Services\IPack.cs" />
     <Compile Include="Services\IPaymentServiceConfig.cs" />
     <Compile Include="Services\IMailServiceConfig.cs" />
     <Compile Include="Services\IRepository.cs" />
@@ -103,6 +104,7 @@
     <Compile Include="Services\XMLMailingServiceConfig.cs" />
     <Compile Include="Services\XMLPaymentServiceConfig.cs" />
     <Compile Include="Services\XMLMailServiceConfig.cs" />
+    <Compile Include="Services\ZipPack.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

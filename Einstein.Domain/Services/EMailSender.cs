@@ -1,4 +1,5 @@
 ﻿using Einstein.Domain.Entities;
+using NPOI.XWPF.UserModel;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -84,6 +85,9 @@ namespace Einstein.Domain.Services
             MAILSERVICESETTINGS mail = config.ReadSettings();
             try
             {
+                
+                //var body = template.GetTemplateBody(order);
+                //var subject = template.GetTemplateSubject(order);
                 SendEMail(mail, settings.RECIPIENTS, "Академия Теслы", "Рассылка списка заказов по мероприятиям, проводимым за период !", filename);
             }
             finally
