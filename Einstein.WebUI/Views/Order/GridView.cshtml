@@ -29,9 +29,9 @@
             .Title("Мероприятие")
             .Columns(cl =>
             {
-                cl.Bound(p => p.eventname).Title("Наименование").MinResizableWidth(250).Filterable(ftb => ftb.Multi(true));
+                cl.Bound(p => p.eventname).Title("Наименование").MinResizableWidth(250).Filterable(ftb => ftb.Multi(true).DataSource(ds => ds.Read(read => read.Action("ReadMultiFilter", "OrderService").Data("{ field: 'eventname' }"))));
                 cl.Bound(p => p.dateevent).Title("Дата").Format("{0:dd.MM.yyyy}").Width(120).ClientGroupHeaderTemplate("Дата мероприятия: #= kendo.toString(kendo.parseDate(value), 'dd.MM.yyyy') #");
-                cl.Bound(p => p.timeevent).Title("Время").Filterable(ftb => ftb.Multi(true)).Width(120);
+                cl.Bound(p => p.timeevent).Title("Время").Filterable(ftb => ftb.Multi(true).DataSource(ds => ds.Read(read => read.Action("ReadMultiFilter", "OrderService").Data("{ field: 'timeevent' }")))).Width(120);
             }));
         columns.Group(gr => gr
             //.Title("Посетителей")

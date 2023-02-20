@@ -28,6 +28,23 @@ namespace Einstein.WebUI.Controllers.Services
             return Json(ordersService.GetAll().OrderByDescending(o => o.dateorder).ToDataSourceResult(request));
         }
 
+        public ActionResult ReadMultiFilter(string field)
+        {
+            if (field == "eventname")
+            {
+                var result = ordersService.GetAll().Select(s => s.eventname).Distinct().Select(t => new { eventname = t }).OrderBy(o => o.eventname);
+
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+            else if (field == "timeevent")
+            {
+                var result = ordersService.GetAll().Select(s => s.timeevent).Distinct().Select(t => new { timeevent = t }).OrderBy(o => o.timeevent);
+
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+
+            return Json("", JsonRequestBehavior.AllowGet);
+        }
         public ActionResult Booking(long id)
         {
 
