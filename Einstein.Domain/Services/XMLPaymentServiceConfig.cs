@@ -7,7 +7,7 @@ using System.Xml.Serialization;
 
 namespace Einstein.Domain.Services
 {
-    public class XMLPaymentServiceConfig : IPaymentServiceConfig
+    public class XMLPaymentServiceConfig :XMLBaseService, IPaymentServiceConfig
     {
         private string filename;
         
@@ -21,12 +21,8 @@ namespace Einstein.Domain.Services
         
         public void SaveSettings(PAYMENTSETTINGS settings)
         {
-            XmlSerializer formatter = new XmlSerializer(typeof(PAYMENTSETTINGS));
-            TextWriter writer = new StreamWriter(filename, false, Encoding.GetEncoding(1251));
-           
-            formatter.Serialize(writer, settings);
             
-            writer.Close();
+            SaveSettings(settings, typeof(PAYMENTSETTINGS), filename);
 
         }
 
@@ -35,15 +31,9 @@ namespace Einstein.Domain.Services
             if (File.Exists(filename))
             {
 
-                XmlSerializer formatter = new XmlSerializer(typeof(PAYMENTSETTINGS));
-
-                using (StreamReader fs = new StreamReader(filename, Encoding.GetEncoding(1251), false))
-                {
-                    PAYMENTSETTINGS settings = (PAYMENTSETTINGS)formatter.Deserialize(fs);
-                    fs.Close();
-                    
-                    return settings;
-                }
+                PAYMENTSETTINGS settings = (PAYMENTSETTINGS)ReadSettings(typeof(PAYMENTSETTINGS), filename);
+                
+                return settings;
             }
             else
             {

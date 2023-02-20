@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="windows-1251"?>
-<PAYMENTSETTINGS xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <ENABLE>true</ENABLE>
+<PAYMENTSETTINGS xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <ENABLE>false</ENABLE>
   <TERMINALID>1617179765362DEMO</TERMINALID>
   <FRAME>false</FRAME>
   <LANGUAGE>ru</LANGUAGE>

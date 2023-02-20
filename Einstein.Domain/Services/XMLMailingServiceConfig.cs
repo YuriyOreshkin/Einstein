@@ -7,7 +7,7 @@ using System.Xml.Serialization;
 
 namespace Einstein.Domain.Services
 {
-    public class XMLMailingServiceConfig : IMailingServiceConfig
+    public class XMLMailingServiceConfig : XMLBaseService, IMailingServiceConfig
     {
         private string filename;
      
@@ -22,12 +22,8 @@ namespace Einstein.Domain.Services
 
         public void SaveSettings(MAILINGSERVICESETTINGS settings)
         {
-            XmlSerializer formatter = new XmlSerializer(typeof(MAILINGSERVICESETTINGS));
-            TextWriter writer = new StreamWriter(filename, false, Encoding.GetEncoding(1251));
-          
-            formatter.Serialize(writer, settings);
             
-            writer.Close();
+            SaveSettings(settings, typeof(MAILINGSERVICESETTINGS), filename);
 
         }
 
@@ -35,15 +31,8 @@ namespace Einstein.Domain.Services
         {
             if (File.Exists(filename))
             {
-
-                XmlSerializer formatter = new XmlSerializer(typeof(MAILINGSERVICESETTINGS));
-
-                using (StreamReader fs = new StreamReader(filename, Encoding.GetEncoding(1251), false))
-                {
-                    MAILINGSERVICESETTINGS settings = (MAILINGSERVICESETTINGS)formatter.Deserialize(fs);
-                    fs.Close();
-                    return settings;
-                }
+                MAILINGSERVICESETTINGS settings = (MAILINGSERVICESETTINGS)ReadSettings(typeof(MAILINGSERVICESETTINGS), filename);
+                return settings;
             }
             else
             {

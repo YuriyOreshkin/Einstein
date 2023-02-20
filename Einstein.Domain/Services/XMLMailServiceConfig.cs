@@ -7,7 +7,7 @@ using System.Xml.Serialization;
 
 namespace Einstein.Domain.Services
 {
-    public class XMLMailServiceConfig : IMailServiceConfig
+    public class XMLMailServiceConfig : XMLBaseService, IMailServiceConfig
     {
         private string filename;
         private ICryptoService crypto;
@@ -22,12 +22,9 @@ namespace Einstein.Domain.Services
 
         public void SaveSettings(MAILSERVICESETTINGS settings)
         {
-            XmlSerializer formatter = new XmlSerializer(typeof(MAILSERVICESETTINGS));
-            TextWriter writer = new StreamWriter(filename, false, Encoding.GetEncoding(1251));
+           
             settings.PASSWORD = crypto.EncryptPassword(settings.PASSWORD);
-            formatter.Serialize(writer, settings);
-            
-            writer.Close();
+            SaveSettings(settings, typeof(MAILSERVICESETTINGS), filename);
 
         }
 
@@ -36,15 +33,9 @@ namespace Einstein.Domain.Services
             if (File.Exists(filename))
             {
 
-                XmlSerializer formatter = new XmlSerializer(typeof(MAILSERVICESETTINGS));
-
-                using (StreamReader fs = new StreamReader(filename, Encoding.GetEncoding(1251), false))
-                {
-                    MAILSERVICESETTINGS settings = (MAILSERVICESETTINGS)formatter.Deserialize(fs);
-                    fs.Close();
-                    settings.PASSWORD = crypto.DecryptPassword(settings.PASSWORD);
-                    return settings;
-                }
+                MAILSERVICESETTINGS settings = (MAILSERVICESETTINGS)ReadSettings(typeof(MAILSERVICESETTINGS), filename);
+                settings.PASSWORD = crypto.DecryptPassword(settings.PASSWORD);
+                return settings;
             }
             else
             {

@@ -101,6 +101,7 @@
     <Compile Include="Services\NPOIExcel.cs" />
     <Compile Include="Services\RepositoryUsers.cs" />
     <Compile Include="Services\SettingsUsers.cs" />
+    <Compile Include="Services\XMLBaseService.cs" />
     <Compile Include="Services\XMLMailingServiceConfig.cs" />
     <Compile Include="Services\XMLPaymentServiceConfig.cs" />
     <Compile Include="Services\XMLMailServiceConfig.cs" />
