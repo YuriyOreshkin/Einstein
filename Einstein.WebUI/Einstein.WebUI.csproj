@@ -191,6 +191,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\ImageBrowserController.cs" />
+    <Compile Include="Controllers\MailingController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Controllers\PaymentController.cs" />
     <Compile Include="Controllers\Services\MailingSettingsServiceController.cs" />
@@ -424,6 +425,7 @@
     <Content Include="Views\Users\Index.cshtml" />
     <Content Include="Views\Order\ETicket.cshtml" />
     <Content Include="Views\MailingSettingsService\Settings.cshtml" />
+    <Content Include="Views\Mailing\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\Shared\" />

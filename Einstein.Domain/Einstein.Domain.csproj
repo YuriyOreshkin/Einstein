@@ -85,6 +85,7 @@
     <Compile Include="Services\CryptoService.cs" />
     <Compile Include="Services\EFRepository.cs" />
     <Compile Include="Services\EMailSender.cs" />
+    <Compile Include="Services\FileBaseTemplate.cs" />
     <Compile Include="Services\FileTermsService.cs" />
     <Compile Include="Services\ICryptoService.cs" />
     <Compile Include="Services\IExcel.cs" />

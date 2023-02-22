@@ -1,0 +1,20 @@
+﻿
+@(Html.Kendo().TabStrip()
+                        .HtmlAttributes(new { style = " height: calc(83vh);" })
+                        .Name("MailingTabStrip")
+                        
+                        .TabPosition(TabStripTabPosition.Left)
+                        .Items(items =>
+                        {
+                            items.Add().Text("Основные настройки").Selected(true).LoadContentFrom("Settings", "MailingSettingsService");
+
+                            items.Add().Text("Шаблон письма").LoadContentFrom("Editor", "TemplateService");
+
+                            items.Add().Text("Расписание").LoadContentFrom("Editor", "TermsService");
+
+                        })
+                        .Events(ev=>ev.ContentLoad("onError"))
+                        
+)
+
+

@@ -30,7 +30,6 @@ namespace Einstein.WebUI.Controllers.Services
             //Save
             try
             {
-
                  service.SaveTemplate(body);
             }
             catch (Exception exception)

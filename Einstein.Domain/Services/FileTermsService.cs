@@ -9,7 +9,7 @@ using System.Web;
 
 namespace Einstein.Domain.Services
 {
-    public class FileTermsService : ITermsService
+    public class FileTermsService : FileBaseTemplate, ITermsService
     {
         private string filename;
         public FileTermsService(string _filename)
@@ -21,19 +21,9 @@ namespace Einstein.Domain.Services
         public string GetTemplate()
         {
             
-            return Read(filename);
+            return GetTemplateText(filename);
         }
 
-        /// <summary>
-        /// Read data from file
-        /// </summary>
-        private string Read(string filename)
-        {
-            if (File.Exists(filename))
-                return File.ReadAllText(filename);
-
-            return String.Empty;
-        }
 
 
         /// <summary>
@@ -41,12 +31,7 @@ namespace Einstein.Domain.Services
         /// </summary>
         public void SaveTemplate(string text)
          {
-             string html =HttpUtility.HtmlDecode(text);
-
-             using (StreamWriter file = new StreamWriter(filename, false))
-             {
-                 file.WriteLine(html);
-             }
+            SaveTemplate(filename,null, text);
          }
 
     }

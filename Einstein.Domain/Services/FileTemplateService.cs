@@ -9,7 +9,7 @@ using System.Web;
 
 namespace Einstein.Domain.Services
 {
-    public class FileTemplateService : ITemplateService
+    public class FileTemplateService : FileBaseTemplate, ITemplateService
     {
         private string filename;
         private  string _anchor = "order";
@@ -18,23 +18,6 @@ namespace Einstein.Domain.Services
             filename = _filename;
         }
 
-        //Text
-        public string GetTemplateText()
-        {
-            
-            return Read(filename);
-        }
-
-        /// <summary>
-        /// Read data from file
-        /// </summary>
-        private string Read(string filename)
-        {
-            if (File.Exists(filename))
-                return File.ReadAllText(filename);
-
-            return String.Empty;
-        }
 
         private void GetLookups(PropertyInfo[] properties, object obj, string anchor, ref Dictionary<string, string> rules)
         {
@@ -103,36 +86,22 @@ namespace Einstein.Domain.Services
         /// </summary>
         public void SaveTemplate(string subject, string text)
          {
-             string html ="<subject>"+subject+"</subject>" +"<body>" + HttpUtility.HtmlDecode(text) + "</body>";
-
-             using (StreamWriter file = new StreamWriter(filename, false))
-             {
-                 file.WriteLine(html);
-             }
+            SaveTemplate(filename, subject, text);
+            
          }
 
-        private string TextInTag(string tag,string text)
-        {
-            string pattern = "(<"+tag+">)(.*)(</"+tag+">)";
-            Regex regex = new Regex(pattern);
-
-            var match = regex.Match(text);
-
-            return match.Groups[2].Value;
-        }
+       
 
         public string GetTemplateBody()
         {
-            var text = GetTemplateText();
-            var body = TextInTag("body", text);
+            var body = GetHtmlBody(filename);
             return body;
-
         }
 
         public string GetTemplateSubject()
         {
-            var text = GetTemplateText();
-            var subject = TextInTag("subject", text);
+
+            var subject = GetHtmlSubject(filename);
 
             return subject;
         }
