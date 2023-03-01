@@ -195,6 +195,7 @@
     <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Controllers\PaymentController.cs" />
     <Compile Include="Controllers\Services\MailingSettingsServiceController.cs" />
+    <Compile Include="Controllers\Services\MailingTemplateServiceController.cs" />
     <Compile Include="Controllers\Services\UsersServiceController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Controllers\SchedulerController.cs" />
@@ -214,6 +215,7 @@
     <Compile Include="Models\AvailableEventsViewModel.cs" />
     <Compile Include="Models\CustomPrincipal.cs" />
     <Compile Include="Models\MailingSettingsViewModel.cs" />
+    <Compile Include="Models\PeriodViewModel.cs" />
     <Compile Include="Models\UserViewModel.cs" />
     <Compile Include="Models\LoginViewModel.cs" />
     <Compile Include="Models\PaymentSettingsViewModel.cs" />

@@ -20,15 +20,15 @@ namespace Einstein.WebUI.Models
     {
 
         private IRepository entities;
-        private IMailSender sender;
+        private IOrderSender sender;
         private IPaymentServiceConfig payservice;
-        private IExcel excel;
-        public OrdersService(IRepository entities, IMailSender sender,IPaymentServiceConfig payservice, IExcel excel)
+        private IBackgroundJobs backgroundJobs;
+        public OrdersService(IRepository entities, IOrderSender sender,IPaymentServiceConfig payservice, IBackgroundJobs _backgroundJobs)
         {
             this.entities = entities;
             this.sender = sender;
             this.payservice = payservice;
-            this.excel = excel;
+            this.backgroundJobs = _backgroundJobs;
         }
 
 
@@ -248,30 +248,14 @@ namespace Einstein.WebUI.Models
             }
             return result;
         }
+       
+
         public void SendOrdersExcelList()
         {
-            var settings = sender.GetMailingSettings();
-            //if (settings.ENABLE)
-            //{
-                DateTime date = DateTime.Now;
-                DateTime datebegin = new DateTime(2019,01,01); //date.AddDays(settings.BEGINFROMTODAY).Date.AddHours(0).AddMinutes(0).AddSeconds(0);
-                DateTime dateend = date.AddDays(settings.ENDFROMTODAY).Date.AddHours(23).AddMinutes(59).AddSeconds(59); ;
-                var path= HttpContext.Current.Server.MapPath("~/App_Data/Mailing");
-                if (!Directory.Exists(path))
-                {
-                    Directory.CreateDirectory(path);
-                }
-                var filename = Path.Combine(path,String.Format("Список заказов по мероприятиям за период с {0} по {1}.xlsx",datebegin.ToShortDateString(),dateend.ToShortDateString()));
-                
-                ExportExcel(filename, datebegin, dateend);
-                sender.MailingOrders(settings, filename);
-            //}
-        }
-
-        private void ExportExcel(string filename, DateTime datebegin, DateTime dateend)
-        {
+            var datebegin = backgroundJobs.GetDateBegin();
+            var dateend = backgroundJobs.GetDateEnd();
             var orders = entities.Orders.Where(ev => ev.EVENT.Start >= datebegin && ev.EVENT.Start <= dateend).ToList()
-                .Select(s => ConvertToViewModel(s, new OrderViewModel())).OrderBy(d=>d.dateevent).ThenBy(t=>t.timeevent);
+               .Select(s => ConvertToViewModel(s, new OrderViewModel())).OrderBy(d => d.dateevent).ThenBy(t => t.timeevent);
             List<Sheet> sheets = new List<Sheet> { new Sheet { startRow = 2, rows = new List<Dictionary<int, object>>() } };
             foreach (var order in orders)
             {
@@ -289,9 +273,10 @@ namespace Einstein.WebUI.Models
 
                 sheets[0].rows.Add(row);
             }
-
-            excel.Export(filename, "Orders export template.xlsx", sheets);
+            backgroundJobs.MailingOrders(sheets);
         }
+
+
 
         public OrderViewModel One(Func<OrderViewModel, bool> predicate)
         {

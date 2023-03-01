@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace Einstein.Domain.Services
 {
-    public interface IMailSender
+    public interface IBackgroundJobs
     {
-        void SendOrder(object order);
-        void MailingOrders(MAILINGSERVICESETTINGS settings,string filename);
-        MAILINGSERVICESETTINGS GetMailingSettings();
+        void MailingOrders(List<Sheet> sheets);
+        DateTime GetDateBegin();
+        DateTime GetDateEnd();
     }
 }

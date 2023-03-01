@@ -17,9 +17,9 @@ namespace Einstein.WebUI.Controllers.Services
     {
 
         private OrdersService ordersService;
-        public OrderServiceController(IRepository _repository, IMailSender sender, IPaymentServiceConfig payservice, IExcel excel)
+        public OrderServiceController(IRepository _repository, IOrderSender sender, IPaymentServiceConfig payservice, IBackgroundJobs backgroundJobs)
         {
-            ordersService = new OrdersService(_repository, sender, payservice,excel);
+            ordersService = new OrdersService(_repository, sender, payservice, backgroundJobs);
         }
 
 

@@ -26,12 +26,13 @@
 )
 
 <script>
+
     function onError(e) {
         var content = $(e.contentElement).text();
         var error = content.indexOf("Ошибка:") > -1
-        
+
         if (error) {
-           
+
             showError(content);
         }
     }

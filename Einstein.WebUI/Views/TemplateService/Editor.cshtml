@@ -1,21 +1,40 @@
 ﻿@model Einstein.WebUI.Models.TemplateViewModel
 <script>
+    function getName(e) {
+        var id = e.sender.element.context.id;
+        var name = id.substring(id.lastIndexOf("-") + 1);
 
-    function TemplateParametersInfo(e)
+        return name;
+
+    }
+        function TemplateParametersInfo(e)
     {
-        var window = $("#window").data("kendoWindow");
-        window.center().open();
+            var window = $("#window").data("kendoWindow");
+            var name = getName(e);
+            var url = "/" + name + "/AvailableParameters";
+            console.log(url);
+            window.content("");
+            window.refresh({
+                url: url,
+                type: "POST",
+                datatype: "json"
+            }
+            ).center().open();
+          
+        
     }
 
     function SaveTemplate(e)
     {
-        var editor = $("#template-editor").data("kendoEditor");
+        var name = getName(e);
+        var editor = $("#template-editor-"+name).data("kendoEditor");
         var editorContents = editor.encodedValue();
-        var subject = $("#subject").val();
+        var subject = $("#subject-"+name).val();
+        var url = "/" + name + "/SaveTemplate";
 
          $.ajax({
                 type: "POST",
-                url: "@Url.Action("SaveTemplate", "TemplateService")",
+                url: url,
                 datatype: 'json',
                 data: { subject: subject, body: editorContents },
                 success: function (data) {
@@ -36,23 +55,19 @@
                     showError(thrownError + "-" + xhr.status);
                 }
             });
-      
+
     }
-
-
 </script>
-
 <div style="margin-left:auto;margin-right:auto;max-width:80%;height:86vh;">
-
     @(Html.Kendo().EditorFor(m=>m.body)
-                                                                                  .Name("template-editor")
+                                                                                  .Name("template-editor-"+@Model.name)
                                                                                   .Tools(tools => tools.Clear()
-                                                                                    .CustomTemplate(save => save.Template("" + Html.Kendo().Button().Name("temlate-save").Icon("save").HtmlAttributes(new { @class = "k-primary" }).Content("Сохранить шаблон").Events(ev => ev.Click("SaveTemplate")).ToClientTemplate()))
+                                                                                    .CustomTemplate(save => save.Template("" + Html.Kendo().Button().Name("temlate-save-"+@Model.name).Icon("save").HtmlAttributes(new { @class = "k-primary" }).Content("Сохранить шаблон").Events(ev => ev.Click("SaveTemplate")).ToClientTemplate()))
                                                                                     .Separator()
                                                                                     .Bold().Italic().Underline()
                                                                                     .JustifyLeft().JustifyCenter().JustifyRight().JustifyFull()
-                                                                                     .Indent().Outdent()
-                                                                                     .Separator()
+                                                                                    .Indent().Outdent()
+                                                                                    .Separator()
                                                                                     .InsertUnorderedList().InsertOrderedList()
                                                                                     .Separator()
                                                                                     .InsertImage().CreateLink().Unlink()
@@ -65,8 +80,8 @@
                                                                                     //.Separator()
                                                                                     .TableEditing()
                                                                                     .Separator()
-                                                                                    .CustomTemplate(save => save.Template("" + Html.Kendo().Button().Name("temlate-parameters").HtmlAttributes( new { title= "Доступные параметры"}).Icon("question").Events(ev => ev.Click("TemplateParametersInfo")).ToClientTemplate()))
-                                                                                    .CustomTemplate(ct=>ct.Template("<div style='width:600px;'><label for='subject' style='vertical-align:middle;margin-right:10px;'>Тема: </label>" + Html.Kendo().TextBoxFor(m=>m.subject).HtmlAttributes(new { style= "width: 90%;" }).ToClientTemplate()+"</div>"))
+                                                                                    .CustomTemplate(save => save.Template("" + Html.Kendo().Button().Name("temlate-parameters-" + @Model.name).HtmlAttributes( new { title= "Доступные параметры"}).Icon("question").Events(ev => ev.Click("TemplateParametersInfo")).ToClientTemplate()))
+                                                                                    .CustomTemplate(ct=>ct.Template("<div style='width:600px;'><label for='subject' style='vertical-align:middle;margin-right:10px;'>Тема: </label>" + Html.Kendo().TextBox().Name("subject-" + @Model.name).Value(Model.subject).HtmlAttributes(new { style= "width: 90%;" }).ToClientTemplate()+"</div>"))
 
                         )
                         .ImageBrowser(imageBrowser => imageBrowser
@@ -96,7 +111,7 @@
     @(Html.Kendo().Window()
             .Name("window")
             .Title("Доступные параметры")
-            .LoadContentFrom("AvailableParameters", "TemplateService")
+            //.LoadContentFrom("AvailableParameters", "TemplateService")
             .Draggable()
             //.Events(ev => ev.Close("onClose"))
     )

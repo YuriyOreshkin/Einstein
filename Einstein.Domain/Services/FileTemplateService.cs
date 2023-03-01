@@ -12,10 +12,11 @@ namespace Einstein.Domain.Services
     public class FileTemplateService : FileBaseTemplate, ITemplateService
     {
         private string filename;
-        private  string _anchor = "order";
-        public FileTemplateService(string _filename)
+        private  string anchor;
+        public FileTemplateService(string _filename,string _anchor)
         {
             filename = _filename;
+            anchor = _anchor;
         }
 
 
@@ -67,7 +68,7 @@ namespace Einstein.Domain.Services
 
             Dictionary<string, string> rules = new Dictionary<string, string>();
             //var objj = typeof(PriorityViewModel).GetProperty("priority").GetValue(notification);
-            GetLookups(order.GetType().GetProperties(), order, _anchor, ref rules);
+            GetLookups(order.GetType().GetProperties(), order, anchor, ref rules);
 
 
             string result = text;
@@ -126,7 +127,7 @@ namespace Einstein.Domain.Services
         public Dictionary<string, string> AvailableParameters(Type type)
         {
             var parameters = new Dictionary<string, string>();
-            AvailableParameters(type, _anchor, ref parameters);
+            AvailableParameters(type, anchor, ref parameters);
 
             return parameters;
         }

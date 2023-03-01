@@ -8,28 +8,28 @@ using System.Web.Mvc;
 
 namespace Einstein.WebUI.Controllers.Services
 {
-    public class TemplateServiceController : Controller
+    public class MailingTemplateServiceController : Controller
     {
         private ITemplateService service;
-        public TemplateServiceController(ITemplateService _service)
+        public MailingTemplateServiceController(ITemplateService _service)
         {
             service = _service;
         }
 
         public ActionResult Editor()
         {
-            var model = new TemplateViewModel() { name = "TemplateService", subject=service.GetTemplateSubject(),  body=service.GetTemplateBody() };
+            var model = new TemplateViewModel() { name= "MailingTemplateService", subject=service.GetTemplateSubject(),  body=service.GetTemplateBody() };
 
-            return PartialView("Editor", model);
+            return PartialView("~/Views/TemplateService/Editor.cshtml", model);
 
         }
 
         public ActionResult AvailableParameters()
         {
 
-            var parameters = service.AvailableParameters(typeof(OrderViewModel));
+            var parameters = service.AvailableParameters(typeof(PeriodViewModel));
 
-            return PartialView(parameters);
+            return PartialView("~/Views/TemplateService/AvailableParameters.cshtml", parameters);
         }
 
         public JsonResult SaveTemplate(string subject, string body)
