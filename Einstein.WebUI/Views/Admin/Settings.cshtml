@@ -8,17 +8,15 @@
                         .HtmlAttributes(new { style = " height: calc(100vh - 40px);" })
                         .Name("AdminTabStrip")
 
-                        .TabPosition(TabStripTabPosition.Top)
+                        .TabPosition(TabStripTabPosition.Left)
                         .Items(items =>
                         {
                             items.Add().Text("Настройки почты").Selected(true).LoadContentFrom("Settings", "MailSettingsService");
 
-                            items.Add().Text("Рассылка").LoadContentFrom("Index", "Mailing");
+                            items.Add().Text("Выгрузка").LoadContentFrom("Settings", "MailingSettingsService");
 
-                            items.Add().Text("Шаблон письма").LoadContentFrom("Editor", "TemplateService");
-
-                            items.Add().Text("Условия").LoadContentFrom("Editor", "TermsService");
-
+                            //items.Add().Text("Рассылка").LoadContentFrom("Index", "Mailing");
+  
                             items.Add().Text("Платежи").LoadContentFrom("Settings", "PaymentSettingsService");
 
                         })

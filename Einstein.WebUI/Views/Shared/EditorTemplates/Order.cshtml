@@ -15,7 +15,7 @@
                 .DataValueField("Title")
                 .ValuePrimitive(true)
                 .AutoBind(false)
-                .DataSource(source => source.Read(read => read.Action("DropDownListReadNames", "SchedulerService")))//.Data("getParameters")))
+                .DataSource(source => source.Read(read => read.Action("DropDownListReadNames", "SchedulerService", new { text=ViewBag.Event})))//.Data("getParameters")))
                 .Events(ev => ev.Select("onDropDownListEventsNamesChange"))
             )
         </span>

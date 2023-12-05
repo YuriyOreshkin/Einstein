@@ -34,6 +34,7 @@
          {
              items.Add().Encoded(false).Text("<span class=\"k-icon k-i-settings\"></span>Настройки").Action("Settings", "Admin");
              items.Add().Encoded(false).Text("<span class=\"k-icon k-i-user\"></span>Пользователи").Action("Index", "Users");
+             items.Add().Encoded(false).Text("<span class=\"k-icon k-i-table-align-middle-center\"></span>Шаблоны").Action("Index", "Templates");
          });
      }
      item.Add().Encoded(false).Text("<span class=\"k-icon k-i-logout\"></span>Выход").Action("LogOff", "Account").HtmlAttributes(new { style="float:right;"});
@@ -113,4 +114,5 @@
         notification.show(message, "info");
 
     }
+
 </script>

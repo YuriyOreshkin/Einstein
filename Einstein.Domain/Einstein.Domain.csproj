@@ -72,6 +72,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\TEMPLATE.cs" />
     <Compile Include="Entities\CATEGORY.cs" />
     <Compile Include="Entities\EVENT.cs" />
     <Compile Include="Entities\MAILINGSERVICESETTINGS.cs" />
@@ -92,6 +93,7 @@
     <Compile Include="Services\ICryptoService.cs" />
     <Compile Include="Services\IExcel.cs" />
     <Compile Include="Services\IBackgroundJobs.cs" />
+    <Compile Include="Services\ITemplatesServiceConfig.cs" />
     <Compile Include="Services\ISender.cs" />
     <Compile Include="Services\IOrderSender.cs" />
     <Compile Include="Services\IMailingServiceConfig.cs" />
@@ -103,11 +105,13 @@
     <Compile Include="Services\ITemplateService.cs" />
     <Compile Include="Services\FileTemplateService.cs" />
     <Compile Include="Services\IUsers.cs" />
+    <Compile Include="Services\IXmlService.cs" />
     <Compile Include="Services\NPOIExcel.cs" />
     <Compile Include="Services\RepositoryUsers.cs" />
     <Compile Include="Services\SettingsUsers.cs" />
     <Compile Include="Services\XMLBaseService.cs" />
     <Compile Include="Services\XMLMailingServiceConfig.cs" />
+    <Compile Include="Services\XMLTemplatesServiceConfig.cs" />
     <Compile Include="Services\XMLPaymentServiceConfig.cs" />
     <Compile Include="Services\XMLMailServiceConfig.cs" />
     <Compile Include="Services\ZipPack.cs" />

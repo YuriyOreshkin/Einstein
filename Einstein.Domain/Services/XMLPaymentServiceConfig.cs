@@ -7,31 +7,32 @@ using System.Xml.Serialization;
 
 namespace Einstein.Domain.Services
 {
-    public class XMLPaymentServiceConfig :XMLBaseService, IPaymentServiceConfig
+    public class XMLPaymentServiceConfig : IPaymentServiceConfig
     {
         private string filename;
-        
-        
-        public XMLPaymentServiceConfig(string _filename)
+        private IXmlService xml;
+
+        public XMLPaymentServiceConfig(string _filename, IXmlService _xml)
         {
           
             filename = _filename;
+            xml = _xml;
         }
 
         
         public void SaveSettings(PAYMENTSETTINGS settings)
         {
             
-            SaveSettings(settings, typeof(PAYMENTSETTINGS), filename);
+            xml.SaveSettings(settings, typeof(PAYMENTSETTINGS), filename);
 
         }
 
         public PAYMENTSETTINGS ReadSettings()
         {
-            if (File.Exists(filename))
+            if (xml.FileExist(filename))
             {
 
-                PAYMENTSETTINGS settings = (PAYMENTSETTINGS)ReadSettings(typeof(PAYMENTSETTINGS), filename);
+                PAYMENTSETTINGS settings = (PAYMENTSETTINGS)xml.ReadSettings(typeof(PAYMENTSETTINGS), filename);
                 
                 return settings;
             }

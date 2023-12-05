@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="windows-1251"?>
-<MAILSERVICESETTINGS xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <ENABLE>true</ENABLE>
-  <HOST>10.48.1.18</HOST>
-  <PORT>25</PORT>
-  <USER>sev_oss_askue@gazpromenergo.ru</USER>
-  <PASSWORD></PASSWORD>
+<MAILSERVICESETTINGS xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <ENABLE>false</ENABLE>
+  <HOST> smtp.yandex.ru</HOST>
+  <PORT>26</PORT>
+  <USER>somemail@yandex.ru</USER>
+  <PASSWORD>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAyF6vwOLdoku6WXsfJqHwYQQAAAACAAAAAAAQZgAAAAEAACAAAACkkNfClS5/y2u0wTZrJGlafmovhXGVZggZIlRan5abfwAAAAAOgAAAAAIAACAAAABjgHbYNFOvkCXyH2UkHq9uKnDIvQf86GZNzOBfhefgyRAAAADQpVc41H1eQJg447hVnIvkQAAAAD01+ELWtjyv2XBYJPme3WIOtXyTP8Rb9lnDfbfRenXF7lz+UItwa4qDf2f434HizF1FHk5+0e1TDQ+j5aWF3h0=</PASSWORD>
 </MAILSERVICESETTINGS>

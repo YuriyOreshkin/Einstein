@@ -75,10 +75,10 @@
     <button class="k-button k-button-solid-base k-button-solid k-button-md k-rounded-md k-primary" onclick="addNew('#: value #')" ontouchend="addNew('#: value #')">Добавить</button>
 </script>
 
-                <div class="k-form-container" style="margin-left:auto;margin-right:auto;max-width:600px;">
+                <div class="k-form-container" style="margin-left:auto;margin-right:auto;max-width:600px;height:83vh;">
                     <form id="mailing-settings">
                         <fieldset class="k-form-fieldset k-widget">
-                            <legend class="k-form-legend" style="padding-left:15px;">Рассылка списка заказов</legend>
+                            <legend class="k-form-legend" style="padding-left:15px;">Выгрузка списка заказов</legend>
                             <div style="margin: 0 15px">
                                 <div class="k-form-field">
 
@@ -118,7 +118,7 @@
 
                         </fieldset>
                         <div class="form-actions">
-                            @Html.Kendo().Button().Name("Mailing").Tag("div").HtmlAttributes(new { type = "button", @class = "k-primary" }).Icon("check").Content("Тест").Events(click => click.Click("Excel"))
+                            @Html.Kendo().Button().Name("Mailing").Tag("div").HtmlAttributes(new { type = "button" }).Icon("check").Content("Тест").Events(click => click.Click("Excel"))
                         </div>
                         <div class="form-actions">
                             @Html.Kendo().Button().Name("SaveMailingSettings").Tag("div").HtmlAttributes(new { type = "button", @class = "k-primary" }).Icon("check").Content("Сохранить").Events(click => click.Click("saveMailingSettings"))

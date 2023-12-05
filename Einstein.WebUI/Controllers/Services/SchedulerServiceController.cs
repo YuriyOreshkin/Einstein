@@ -84,9 +84,9 @@ namespace Einstein.WebUI.Controllers.Services
         }
 
 
-        public JsonResult DropDownListReadNames()
+        public JsonResult DropDownListReadNames(string text)
         {
-            var titles = eventsService.GetAvailableEvents(DateTime.Now,DateTime.Now.AddMonths(2));
+            var titles = eventsService.GetAvailableEvents(DateTime.Now,DateTime.Now.AddMonths(2)).Where(e=>String.IsNullOrEmpty(text) ? true : e.Title.ToLower().Contains(text.ToLower()) );
             return Json(titles, JsonRequestBehavior.AllowGet);
         }
 

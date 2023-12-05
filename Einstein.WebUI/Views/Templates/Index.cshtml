@@ -1,0 +1,39 @@
+﻿@model IEnumerable<Einstein.WebUI.Models.TemplateSettingsViewModel>
+@{
+    ViewBag.Title = "Шаблоны";
+}
+@(Html.Kendo().TabStrip()
+                        .HtmlAttributes(new { style = " height: calc(100vh - 40px);" })
+                        .Name("TemplateTabStrip")
+
+                        .TabPosition(TabStripTabPosition.Left)
+                        .Items(items =>
+                        {
+                            //foreach(var tab in Model)
+                            //{
+                            //    items.Add().Text(tab.title).LoadContentFrom("Editor", "TemplateEditor", new { _template=tab.filename });
+                            //}
+
+                            items.Add().Text("Заказ").Selected(true).LoadContentFrom("Editor", "TemplateService");
+                            items.Add().Text("Условия").LoadContentFrom("Editor", "TermsService");
+
+                            items.Add().Text("Выгрузка").LoadContentFrom("Editor", "MailingTemplateService");
+
+
+                        })
+                        .Events(ev=>ev.ContentLoad("onError"))
+
+)
+<script>
+
+    function onError(e) {
+        var content = $(e.contentElement).text();
+        var error = content.indexOf("Ошибка:") > -1
+
+        if (error) {
+
+            showError(content);
+        }
+    }
+</script>
+

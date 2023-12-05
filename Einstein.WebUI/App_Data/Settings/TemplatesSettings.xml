@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<TEMPLATES xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Items>
+    <TEMPLATE ID="NewOrder" ANCHOR="order" TITLE="Заказ" FILENAME="NewOrderTemplate.html" />
+    <TEMPLATE ID="Landing" ANCHOR="mailing" TITLE="Выгрузка" FILENAME="MailingTemplate.html" />
+    <TEMPLATE ID="Terms" TITLE="Условия" FILENAME="Terms.html" />
+  </Items>
+</TEMPLATES>

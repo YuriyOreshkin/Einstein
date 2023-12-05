@@ -24,14 +24,18 @@ namespace Einstein.WebUI.IoC
             ninjectKernel.Bind<DefaultModelValidatorProviders>().ToConstant(new DefaultModelValidatorProviders(GlobalConfiguration.Configuration.Services.GetModelValidatorProviders()));
 
             ninjectKernel.Bind<IRepository>().To<EFRepository>();
-            ninjectKernel.Bind<IMailServiceConfig>().To<XMLMailServiceConfig>().InSingletonScope().WithConstructorArgument("_filename", HttpContext.Current.Server.MapPath("~/App_Data/Settings/MailSettings.xml"));
-            ninjectKernel.Bind<ITemplateService>().To<FileTemplateService>().InSingletonScope().WithConstructorArgument("_filename", HttpContext.Current.Server.MapPath("~/App_Data/Templates/OrderTemplate.html")).WithConstructorArgument("_anchor", "order");
             
+           
+            ninjectKernel.Bind<ITemplateService>().To<FileTemplateService>().InSingletonScope().WithConstructorArgument("_filename", HttpContext.Current.Server.MapPath("~/App_Data/Templates/OrderTemplate.html")).WithConstructorArgument("_anchor", "order");
             ninjectKernel.Bind<ITemplateService>().To<FileTemplateService>().WhenInjectedInto<MailingTemplateServiceController>().InSingletonScope().WithConstructorArgument("_filename", HttpContext.Current.Server.MapPath("~/App_Data/Templates/MailingTemplate.html")).WithConstructorArgument("_anchor", "mailing");
             ninjectKernel.Bind<ITemplateService>().To<FileTemplateService>().WhenInjectedInto<EMailBackgroundJobs>().InSingletonScope().WithConstructorArgument("_filename", HttpContext.Current.Server.MapPath("~/App_Data/Templates/MailingTemplate.html")).WithConstructorArgument("_anchor", "mailing");
             ninjectKernel.Bind<ITermsService>().To<FileTermsService>().InSingletonScope().WithConstructorArgument("_filename", HttpContext.Current.Server.MapPath("~/App_Data/Terms.html"));
-            ninjectKernel.Bind<IPaymentServiceConfig>().To<XMLPaymentServiceConfig>().InSingletonScope().WithConstructorArgument("_filename", HttpContext.Current.Server.MapPath("~/App_Data/Settings/PaymentSettings.xml"));
-            ninjectKernel.Bind<IMailingServiceConfig>().To<XMLMailingServiceConfig>().InSingletonScope().WithConstructorArgument("_filename", HttpContext.Current.Server.MapPath("~/App_Data/Settings/MailingSettings.xml"));
+
+            ninjectKernel.Bind<IXmlService>().To<XMLService>().InSingletonScope().WithConstructorArgument("_path", HttpContext.Current.Server.MapPath("~/App_Data/Settings"));
+            ninjectKernel.Bind<IMailServiceConfig>().To<XMLMailServiceConfig>().InSingletonScope().WithConstructorArgument("_filename", "MailSettings.xml");
+            ninjectKernel.Bind<IPaymentServiceConfig>().To<XMLPaymentServiceConfig>().InSingletonScope().WithConstructorArgument("_filename", "PaymentSettings.xml");
+            ninjectKernel.Bind<IMailingServiceConfig>().To<XMLMailingServiceConfig>().InSingletonScope().WithConstructorArgument("_filename", "MailingSettings.xml");
+            ninjectKernel.Bind<ITemplatesServiceConfig>().To<XMLTemplatesServiceConfig>().InSingletonScope().WithConstructorArgument("_filename", "TemplatesSettings.xml");
             ninjectKernel.Bind<IExcel>().To<NPOIExcel>().InSingletonScope().WithConstructorArgument("_template_path", HttpContext.Current.Server.MapPath("~/App_Data/Templates"));
 
             ninjectKernel.Bind<ISender>().To<EMailSender>().InSingletonScope();

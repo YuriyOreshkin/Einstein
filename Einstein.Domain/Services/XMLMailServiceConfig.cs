@@ -7,15 +7,16 @@ using System.Xml.Serialization;
 
 namespace Einstein.Domain.Services
 {
-    public class XMLMailServiceConfig : XMLBaseService, IMailServiceConfig
+    public class XMLMailServiceConfig : IMailServiceConfig
     {
         private string filename;
         private ICryptoService crypto;
-
-        public XMLMailServiceConfig(string _filename, ICryptoService _crypto)
+        private IXmlService xml;
+        public XMLMailServiceConfig(string _filename, IXmlService _xml, ICryptoService _crypto)
         {
             crypto = _crypto;
             filename = _filename;
+            xml = _xml;
         }
 
        
@@ -24,16 +25,16 @@ namespace Einstein.Domain.Services
         {
            
             settings.PASSWORD = crypto.EncryptPassword(settings.PASSWORD);
-            SaveSettings(settings, typeof(MAILSERVICESETTINGS), filename);
+            xml.SaveSettings(settings, typeof(MAILSERVICESETTINGS), filename);
 
         }
 
         public MAILSERVICESETTINGS ReadSettings()
         {
-            if (File.Exists(filename))
+            if (xml.FileExist(filename))
             {
 
-                MAILSERVICESETTINGS settings = (MAILSERVICESETTINGS)ReadSettings(typeof(MAILSERVICESETTINGS), filename);
+                MAILSERVICESETTINGS settings = (MAILSERVICESETTINGS)xml.ReadSettings(typeof(MAILSERVICESETTINGS), filename);
                 settings.PASSWORD = crypto.DecryptPassword(settings.PASSWORD);
                 return settings;
             }
