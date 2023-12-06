@@ -32,7 +32,7 @@ namespace Einstein.Domain.Services
                 // логин и пароль
                 smtp.UseDefaultCredentials = false;
                 smtp.Credentials = new NetworkCredential(settings.USER, settings.PASSWORD);
-                //smtp.EnableSsl = true;
+                smtp.EnableSsl = true;
 
                 // отправитель - устанавливаем адрес и отображаемое в письме имя
                 //MailAddress from = new MailAddress(settings.USER);
