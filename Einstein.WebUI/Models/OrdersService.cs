@@ -271,6 +271,7 @@ namespace Einstein.WebUI.Models
                 row.Add(7, order.prepay);
                 row.Add(8, order.email);
                 row.Add(9, order.phonenumber);
+                row.Add(10, order.description);
 
                 sheets[0].rows.Add(row);
             }

@@ -53,10 +53,14 @@ namespace Einstein.Domain.Services
                 {
                     mail.Attachments.Add(new Attachment(attachment));
                 }
-           
-            smtp.Send(mail);
-           
-            mail.Dispose();
+            try
+            {
+                smtp.Send(mail);
+            }
+            finally
+            {
+                mail.Dispose();
+            }
         }
       
 
