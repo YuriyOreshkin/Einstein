@@ -5,7 +5,14 @@
 @Scripts.Render("~/Scripts/gridview.js")
 @*<h2>Календарь мероприятий</h2>*@
 
-<div style="height:calc(100vh - 40px);">
+<div style="height:calc(100vh - 74px);">
+    <div id="filter-searcher" class="filter-section">
+        <span class="k-textbox k-space-left" style="width: 100%;">
+            @(Html.Kendo().TextBox().Name("searchbox").HtmlAttributes(new { placeholder = "Поиск" }))
+            <span class="k-icon k-i-search"></span>
+        </span>
+    </div>
+
     @(Html.Kendo().Scheduler<Einstein.WebUI.Models.EventViewModel>()
                                         .Name("scheduler")
                                         .HtmlAttributes(new { style = "height: 100%" })
@@ -38,6 +45,7 @@
                                                 m.Field(f => f.Title).DefaultValue("");
                                                 m.Field(f => f.MaxPersons).DefaultValue(1);
                                                 m.Field(f => f.MaxPersons14).DefaultValue(1);
+                                                m.Field(f => f.Color).DefaultValue("#6BCC65");
                                                 m.RecurrenceId(f => f.RecurrenceID);
                                             })
                                             .Read("Read", "SchedulerService")
@@ -54,21 +62,37 @@
     )
 
 </div>
+@(Html.Kendo().Tooltip()
+    .For("#scheduler")
+    .Filter(".k-event")
+   .ContentTemplateId("tooltipTemplate")
+.Position(TooltipPosition.Top)
+.Animation(a=>a.Open(e=>e.Zoom(ZoomDirection.In).Duration(200)))
+.Width(250)
+
+)
 <script id="tooltipTemplate" type="text/x-kendo-template">
     <div class="template-wrapper">
-        <p>#=target.data('Title')#</p>
+    @*<div style="margin-bottom:10px;">#=target.data('title')#</div>*@
+    #=target.html() #
+    @*#=onToolTipShow(target[0])#*@
+        @*#=kendo.render(target[0])#
+        <p>#=target.data('title')#</p>*@
     </div>
 </script>
 
 <script id="eventTemplate" type="text/x-kendo-template">
-    <div class='event-template #if(FreePlaces > 0 && start> new Date()){# enable-background #}else{# disable-background #}#' title='#: kendo.toString(start, ' HH:mm') # - #: kendo.toString(end, 'HH:mm' ) #'>
+
+       <div class='event-template #if(FreePlaces > 0 && start> new Date()){# enable-background #}else{# disable-background #}#'  title='#: kendo.toString(start, ' HH:mm') # - #: kendo.toString(end, 'HH:mm' ) #'>
+
         @*<span>#= start#</span>*@
-        <div class='title'>#= title#</div>
-        <div class='orders-info'>
-            <div class='orders-info-item' >
+
+        <div class='title' style="background-color: #= Color #; height: 60%;"><div style= "height: 100%; overflow: hidden; text-overflow: ellipsis;padding:3px;" >#= title#</div></div>
+        <div class='orders-info' style="height: 30%;" >
+            <div class='orders-info-item' style='display: inline-block;'>
                 <span class="k-icon  k-i-user"></span>
                 @*<span class="badge badge-persons">#=Persons# | #=Persons14#</span>*@
-                <span class="badge badge-persons"title="Заявлено человек">#=Persons# </span>
+                <span class="badge badge-persons" title="Заявлено человек">#=Persons# </span>
                 <span class="badge badge-freeplaces" title="Свободных мест">#=FreePlaces#</span>
 
             </div>
@@ -77,17 +101,18 @@
                 <span class="k-icon  k-i-checkbox"></span>
                 <span class="badge badge-freeplaces">#=FreePlaces# | #=SetFreePlaces14(FreePlaces,FreePlaces14)#</span>
             </div>*@
-            <div style="position:absolute;bottom:0;right:0;margin: 5px;">
-                <span title="Сумма"><strong>#=kendo.toString(kendo.parseInt(Total), "c")#</strong></span>
-                <a class="action-orders k-button"  target="_blank" title="Заявки" href="#if(TaskID > 0) {  #@Url.Action("GridView","Order")?eventid=#=TaskID# #}else {#@Url.Action("GridViewByDate","Order")?recurrenceId=#=recurrenceId#&start=#: kendo.toString(start, 'dd.MM.yyyy HH:mm' )# #}#"><span class="k-icon k-i-cart" style="font-size: 20px;"></span></a>
+            <div style=" float:right;">
+                @*<span title="Сумма"><strong>#=kendo.toString(kendo.parseInt(Total), "c")#</strong></span>*@
+                @*<a class="action-orders k-button"  target="_blank" title="Заявки" href="#if(TaskID > 0) {  #@Url.Action("GridView","Order")?eventid=#=TaskID# #}else {#@Url.Action("GridViewByDate","Order")?recurrenceId=#=recurrenceId#&start=#: kendo.toString(start, 'dd.MM.yyyy HH:mm' )# #}#"><span class="k-icon k-i-cart" style="font-size: 20px;"></span></a>*@
+                <a class="action-orders" target="_blank" title="Заявки" href="#if(TaskID > 0) {  #@Url.Action("GridView","Order")?eventid=#=TaskID# #}else {#@Url.Action("GridViewByDate","Order")?recurrenceId=#=recurrenceId#&start=#: kendo.toString(start, 'dd.MM.yyyy HH:mm' )# #}#"><span title="Заявки"><strong>#=kendo.toString(kendo.parseInt(Total), "c")#</strong></span></a>
             </div>
-
-
         </div>
     </div>
+
 </script>
 <script>
 
+    
     //Валидация данных
     (function ($, kendo) {
         $.extend(true, kendo.ui.validator, {
@@ -101,7 +126,7 @@
                         var min = numerictextbox.min();
                         var max = $(input).data("max");//numerictextbox.max();
                         var msg = "Количество всего посетителей";
-                       
+
                         input.attr("data-maximumvalidation-msg", msg + " должно быть в диапазоне от 1 до " + max);
 
                         return (val >= min && val <= max);
@@ -142,6 +167,46 @@
         }
     });
 
+    $("#searchbox").on("input", function () {
+
+        schedulerFiltering();
+    });
+
+    function onToolTipShow(e)
+    {
+
+        var tooltip = $("#scheduler").data("kendoTooltip");
+        //$(".k-tooltip-content").html("<p>Test</p>");
+
+        tooltip.content("dcdscd");
+        console.log(tooltip);
+    }
+    function schedulerFiltering() {
+        var query = { logic: "or", filters: [{}] };
+
+        //seacher
+        var scheduler = $("#scheduler").data("kendoScheduler");
+        var text = $("#searchbox").val();
+
+        if (text.length > 0) {
+            //Title or Content
+            query.filters.push({
+                logic: "or",
+                filters: [
+                    { field: "title", operator: "contains", value: text },
+                ]
+            });
+
+            scheduler.dataSource.filter(query);
+        }
+        else {
+            scheduler.dataSource.filter({});
+        }
+
+
+
+
+    }
 
     function onMaxPersonsChange(e) {
         //var numerictextbox = $("#MaxPersons14").data("kendoNumericTextBox");
@@ -165,7 +230,7 @@
     }
 
     function onSchedulerEdit(e) {
-       
+
         var scheduler = $("#scheduler-edit-form");
         if (kendo.support.mobileOS) {
 
@@ -183,14 +248,13 @@
         widget.resize(true);
     }
 
-
     $(window).resize(function () {
 
-        var height = $(window).outerHeight() - 40;
+        var height = $(window).outerHeight() - 74;
         setSchedulerHeight(height);
     });
 
-    
+
 
 </script>
 <style>
@@ -216,7 +280,7 @@
     .orders-info {
         /*position: absolute;*/
         bottom: 0px;
-        margin: 0 8px 5px;
+        margin: 3px 8px 5px;
     }
 
     .orders-info-item {
@@ -251,6 +315,20 @@
         border: none;
     }
 
+    .k-scheduler-tools + .k-scheduler-navigation {
+        float: left;
+        clear: unset;
+    }
+
+    .k-pdf {
+        height: 30px;
+    }
+
+    .k-scheduler-toolbar > .k-scheduler-tools {
+        float: left;
+        margin: 0 25px 0 0px;
+    }
+
     /* Hide toolbar, navigation and footer during export */
     .k-pdf-export .k-scheduler-toolbar,
     .k-pdf-export .k-scheduler-navigation .k-nav-today,
@@ -259,4 +337,21 @@
     .k-pdf-export .k-scheduler-footer {
         display: none;
     }
+    .action-orders:active, /* активная/посещенная ссылка */
+    .action-orders:hover, /* при наведении */
+    .action-orders {
+        text-decoration: none;
+        color: #fff;
+    }
+   /* .action-orders {
+        text-decoration: none !important;
+        color: white;
+    }*/
+    
+    .template-wrapper {
+
+        text-align: left;
+    }
+   
+    
 </style>

@@ -175,6 +175,7 @@ namespace Einstein.WebUI.Models
             view.Persons14 = task.Persons14;
             view.Price = task.Price;
             view.Total = task.Total;
+            view.Color = task.Color;
             return view;
     }
 

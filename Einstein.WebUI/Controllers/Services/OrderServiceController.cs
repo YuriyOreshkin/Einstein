@@ -77,9 +77,9 @@ namespace Einstein.WebUI.Controllers.Services
                     //Отсылаем уведомление
                     ordersService.SendNotification(order);
                 }
-                catch 
+                catch(Exception ex) 
                 {
-                    ModelState.AddModelError("error", "Не удалось внести заявку.");
+                    ModelState.AddModelError("error", "Не удалось внести заявку." );
                 }
             }
 

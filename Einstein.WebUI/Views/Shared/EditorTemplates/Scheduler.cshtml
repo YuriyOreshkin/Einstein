@@ -28,7 +28,8 @@
         @(Html.LabelFor(model => model.Title))
     </div>
     <div data-container-for="title" class="k-edit-field task-edit-box">
-        @Html.TextBoxFor(model => model.Title, new { @class = "k-textbox", data_bind = "value:title", style = "width:100%;" })
+        @Html.Kendo().ColorPickerFor(model => model.Color).Buttons(false).TileSize(30).Palette(new string[] { "\\#6BCC65", "\\#ddd1c3", "\\#d2d2d2", "\\#746153", "\\#3a4c8b", "\\#ffcc33", "\\#fb455f", "\\#ac120f", "\\#E69155", "\\#6C6691", "\\#55AEE6" ,"\\#E6E455","\\#c3c3c3","\\#99d9ea", "\\#49D6E6", "\\#99E655"}).Columns(8)
+        @Html.TextBoxFor(model => model.Title, new { @class = "k-textbox", data_bind = "value:title", style = "width:83%; float:right" })
     </div>
 
     <div class="k-edit-label task-edit-label">
@@ -89,29 +90,29 @@
     <div data-container-for="MaxPersons" class="k-edit-field task-edit-box">
         @Html.Kendo().NumericTextBoxFor(m => m.MaxPersons).Format("n0").Events(ev => ev.Change("onMaxPersonsChange")).Min(Model.Persons > 0 ? Model.Persons : 1).Decimals(0).HtmlAttributes(new { style = "width: 100%;" })
     </div>
-        @*<div data-container-for="MaxPersons" class="k-edit-field task-edit-box">
-                <div style="display: inline-block; width: 49%;">
-                    <label for="MaxPersons">Всего</label>
-                    @Html.Kendo().NumericTextBoxFor(m => m.MaxPersons).Format("n0").Events(ev => ev.Change("onMaxPersonsChange")).Min(Model.Persons > 0 ? Model.Persons : 1).Decimals(0).HtmlAttributes(new { style = "width: 100%;" })
-                </div>
-                <div style="display: inline-block; float:right;  width: 49%;">
-                    <label for="MaxPersons14">Дети до 14</label>
-                    @Html.Kendo().NumericTextBoxFor(m => m.MaxPersons14).Format("n0").Min(0).Decimals(0).HtmlAttributes(new { style = "width: 100%;" })
-                </div>
-                <span class="k-invalid-msg" data-for="MaxPersons14"></span>
-            </div>*@
-        <div class="k-edit-label task-edit-label">
-            @(Html.LabelFor(model => model.Price))
-        </div>
-        <div data-container-for="Price" class="k-edit-field task-edit-box">
-            @Html.Kendo().CurrencyTextBoxFor(m => m.Price).Min(0).HtmlAttributes(new { style = "width: 100%;" })
-        </div>
-
-        <style>
-            .task-edit-label {
-                text-align: left;
-                padding: 3px 0;
-            }
-        </style>
+    @*<div data-container-for="MaxPersons" class="k-edit-field task-edit-box">
+            <div style="display: inline-block; width: 49%;">
+                <label for="MaxPersons">Всего</label>
+                @Html.Kendo().NumericTextBoxFor(m => m.MaxPersons).Format("n0").Events(ev => ev.Change("onMaxPersonsChange")).Min(Model.Persons > 0 ? Model.Persons : 1).Decimals(0).HtmlAttributes(new { style = "width: 100%;" })
+            </div>
+            <div style="display: inline-block; float:right;  width: 49%;">
+                <label for="MaxPersons14">Дети до 14</label>
+                @Html.Kendo().NumericTextBoxFor(m => m.MaxPersons14).Format("n0").Min(0).Decimals(0).HtmlAttributes(new { style = "width: 100%;" })
+            </div>
+            <span class="k-invalid-msg" data-for="MaxPersons14"></span>
+        </div>*@
+    <div class="k-edit-label task-edit-label">
+        @(Html.LabelFor(model => model.Price))
+    </div>
+    <div data-container-for="Price" class="k-edit-field task-edit-box">
+        @Html.Kendo().CurrencyTextBoxFor(m => m.Price).Min(0).HtmlAttributes(new { style = "width: 100%;" })
+    </div>
+    
+    <style>
+        .task-edit-label {
+            text-align: left;
+            padding: 3px 0;
+        }
+    </style>
 
 

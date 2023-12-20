@@ -80,6 +80,9 @@ namespace Einstein.WebUI.Models
         [DisplayName("Цена")]
         public decimal Price { get; set; }
 
+        [DisplayName("Цвет")]
+        public string Color { get; set; }
+
         private bool isAllDay;
         bool ISchedulerEvent.IsAllDay
         {
@@ -112,6 +115,7 @@ namespace Einstein.WebUI.Models
             @event.MaxPersons = MaxPersons;
             @event.MaxPersons14 = MaxPersons14;
             @event.Price = Price;
+            @event.Color = Color;
           
             return @event;
 

@@ -173,7 +173,8 @@ namespace Einstein.WebUI.Models
                         MaxPersons14= evententity.MaxPersons14,
                         StartTimezone = evententity.StartTimezone,
                         EndTimezone = evententity.EndTimezone,
-                        Price=evententity.Price
+                        Price=evententity.Price,
+                        Color=evententity.Color
                     };
                     entities.AddEvent(newevent);
                     var recException = newevent.Start.ToUniversalTime().ToString("yyyyMMddTHHmmssZ");

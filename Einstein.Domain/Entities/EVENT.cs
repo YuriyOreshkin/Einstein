@@ -29,6 +29,8 @@ namespace Einstein.Domain.Entities
         public int MaxPersons { get; set; }
         public int MaxPersons14 { get; set; }
 
+        public string Color { get; set; }
+
         public decimal Price { get; set; }
 
         [NotMapped]
