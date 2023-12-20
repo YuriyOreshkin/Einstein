@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="windows-1251"?>
-<MAILINGSERVICESETTINGS xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<MAILINGSERVICESETTINGS xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <ENABLE>true</ENABLE>
   <BEGINFROMTODAY>0</BEGINFROMTODAY>
   <ENDFROMTODAY>1</ENDFROMTODAY>
-  <RECIPIENTS>u.oreshkin@svf.energo.gazprom.ru</RECIPIENTS>
+  <RECIPIENTS>u.oreshkin@svf.energo.gazprom.ru,koozya@rambler.ru</RECIPIENTS>
 </MAILINGSERVICESETTINGS>

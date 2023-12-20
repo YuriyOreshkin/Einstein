@@ -28,7 +28,7 @@ namespace Einstein.WebUI.Models
             settings.ENABLE = enablerss;
             settings.BEGINFROMTODAY = beginfromtoday;
             settings.ENDFROMTODAY = endfromtoday;
-            settings.RECIPIENTS = String.Join(";",recipients);
+            settings.RECIPIENTS = String.Join(",",recipients);
 
             return settings;
         }

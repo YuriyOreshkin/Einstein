@@ -29,7 +29,7 @@ namespace Einstein.WebUI.Controllers.Services
                     enablerss = settings.ENABLE,
                     beginfromtoday = settings.BEGINFROMTODAY,
                     endfromtoday = settings.ENDFROMTODAY,
-                    recipients = settings.RECIPIENTS.Split(';')
+                    recipients = settings.RECIPIENTS.Split(',')
                     
                 };
 
