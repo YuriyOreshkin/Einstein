@@ -12,7 +12,7 @@
 
 @(Html.Kendo().Grid<Einstein.WebUI.Models.OrderViewModel>()
     .Name("gridOrders")
-    .HtmlAttributes(new { @class = "data-view", style = "height:calc(100vh - 40px);" })
+    .HtmlAttributes(new { @class = "data-view" })
     .ToolBar(toolbar =>
     {
         if (User.IsInRole("1"))
