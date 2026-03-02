@@ -93,24 +93,26 @@
         $.ajax({
             type: "POST",
            
-            url: "http://localhost:52134/api/Payment/",
+            /*url: "http://localhost:52134/api/Payment/",*/
+            /*url: "https://einstein.frisha.ru/api/Payment/",*/
+            /*url: "https://78.47.91.82:81/api/Payment/",*/
             datatype: 'json',
             data: {
                 "TerminalKey": "1617179765362",
-                "OrderId": "38",
+                "OrderId": "91398",
                 "Success": true,
                 "Status": "CONFIRMED",
                 "PaymentId": "190629356201",
                 "ErrorCode": "0",
-                "Amount": 80000,
+                "Amount": 40000,
                 "CardId": 244272070,
                 "Pan": "220220******2438",
                 "ExpDate": "424"
             },
                 success: function (data) {
                     kendo.ui.progress($(".form-actions"), false);
-
-                    console.log("jr")
+                    showSuccess("Оплата подтверждена!", true);
+                    
                     },
                 error: function (xhr, ajaxOptions, thrownError) {
                     kendo.ui.progress($(".form-actions"), false);
