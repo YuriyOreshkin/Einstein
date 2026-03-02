@@ -13,6 +13,7 @@
                 .HtmlAttributes(new { style = "width:100%;" })
                 .DataTextField("Title")
                 .DataValueField("Title")
+                .NoDataTemplate("не найдено ни одного мероприятия")
                 .ValuePrimitive(true)
                 .AutoBind(false)
                 .DataSource(source => source.Read(read => read.Action("DropDownListReadNames", "SchedulerService", new { text=ViewBag.Event})))//.Data("getParameters")))
@@ -28,6 +29,7 @@
 
             @(Html.Kendo().DatePickerFor(m => m.dateevent)
                  .HtmlAttributes(new { style = "width:100%;" })
+                 .Value(DateTime.Now)
                  .Enable(false)
                  .Events(ev => ev.Change("onDatePickerDateChange"))
                  )

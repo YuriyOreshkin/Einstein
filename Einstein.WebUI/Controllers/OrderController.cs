@@ -20,11 +20,11 @@ namespace Einstein.WebUI.Controllers
             payment = _payment;
         }
 
-        public ActionResult Index(string id)
+        public ActionResult Index(string text)
         {
             var settings = payment.ReadSettings();
             ViewBag.Pay = settings != null ? settings.ENABLE : false;
-            ViewBag.Event = id;
+            ViewBag.Event = text;
             return View(new OrderViewModel());
         }
        
