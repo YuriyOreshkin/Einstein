@@ -162,7 +162,7 @@ namespace Einstein.WebUI.Models
             view.End = DateTime.SpecifyKind(task.End, DateTimeKind.Local);
             view.StartTimezone = task.StartTimezone;
             view.EndTimezone = task.EndTimezone;
-            view.Description = task.Description;
+            view.Description =String.IsNullOrEmpty(task.Description) ? "" : task.Description;
             view.IsAllDay = task.IsAllDay;
             view.RecurrenceRule = task.RecurrenceRule;
             view.RecurrenceException = task.RecurrenceException;

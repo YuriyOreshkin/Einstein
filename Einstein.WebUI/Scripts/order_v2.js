@@ -204,19 +204,18 @@ function SetTimes(times) {
     var dropdowntimes = $("#timeevent").data("kendoDropDownList");
     dropdowntimes.select(-1);
     dropdowntimes.trigger("select");
-
+ 
     if (times.length > 0) {
         var dataSource = new kendo.data.DataSource({
             data: times.sort((a, b) =>  parseInt(a.Value) - parseInt(b.Value) )
         });
         dropdowntimes.setDataSource(dataSource);
-        //times.forEach(function (obj, index) {
-        //    dropdowntimes.da
-        //});
+        
         dropdowntimes.enable(true);
+        
     }
     else {
-
+       
         dropdowntimes.enable(false);
     }
 }
@@ -312,9 +311,9 @@ function AvailableEvents(dates) {
 
 function onDropDownListEventsNamesChange(e) {
 
-   
+    
     var event = e.dataItem;
-  
+    
     if (event) {
         AvailableEvents(event.Dates)
     }
@@ -327,7 +326,7 @@ function onDropDownListEventsNamesChange(e) {
 function onDropDownListTimesChange(e) {
 
     var item = e.dataItem;
- 
+   
     if (item) {
         SetFreePlaces(item.FreePlaces, item.FreePlaces14);
         SetPrice(item.Price);
@@ -348,10 +347,11 @@ function onDatePickerDateChange(e) {
     var event = dropdownnames.dataItem();
 
     if (event && date) {
-
+        
         event.Dates.forEach(function (obj, index) {
             var avdate = kendo.parseDate(obj.Date);
             if (avdate.valueOf() === date.valueOf()) {
+                
                 SetTimes(obj.Times);
             }
         });

@@ -2,62 +2,148 @@
 @{
     ViewBag.Title = "Заявка";
 }
-<script src="https://securepay.tinkoff.ru/html/payForm/js/tinkoff_v2.js"></script>
-@Scripts.Render("~/Scripts/order_v2.js")
+@if (ViewBag.Pay)
+{
+    <script src="https://securepay.tinkoff.ru/html/payForm/js/tinkoff_v2.js"></script>
+}
+    @Scripts.Render("~/Scripts/order_v2.js")
 
-<div @*style="height:82vh;"*@>
-    <div class="k-form-container" @*style="margin-left: 25%; width:50%;"*@ style="margin-left:auto;margin-right:auto;max-width:600px;">
-        <form id="order">
-            <fieldset class="k-form-fieldset k-widget">
-                <legend class="k-form-legend" style="padding-bottom: 5px; text-align: center; ">Оформление заказа</legend>
+    <div @*style="height:82vh;"*@>
+        <div class="k-form-container" @*style="margin-left: 25%; width:50%;"*@ style="margin-left:auto;margin-right:auto;max-width:600px;">
+            <form id="order">
+                <fieldset class="k-form-fieldset k-widget">
+                    <legend class="k-form-legend" style="padding-bottom: 5px; text-align: center; ">Оформление заказа</legend>
 
-                @Html.Partial("~/Views/Shared/EditorTemplates/Order.cshtml", Model)
-                <div style="margin: 5px 15px 0">
-                    <div class="k-form-field-wrap">
-                        <input class="k-checkbox" data-val="true" data-val-required="Необходимо прочитать условия и дать согласие!" id="terms" name="terms" type="checkbox" value="true">
-                        <label class="k-checkbox-label" for="terms">Я согласен с <a href="@Url.Action("Terms","Order")" target="_blank">условиями</a></label>
+                    @Html.Partial("~/Views/Shared/EditorTemplates/Order.cshtml", Model)
+                    <div style="margin: 5px 15px 0">
+                        <div class="k-form-field-wrap">
+                            <input class="k-checkbox" data-val="true" data-val-required="Необходимо прочитать условия и дать согласие!" id="terms" name="terms" type="checkbox" value="true">
+                            <label class="k-checkbox-label" for="terms">Я согласен с <a href="@Url.Action("Terms","Order")" target="_blank">условиями</a></label>
+                        </div>
+                        <span class="k-invalid-msg" data-for="terms"></span>
                     </div>
-                    <span class="k-invalid-msg" data-for="terms"></span>
+                </fieldset>
+                <div class="form-actions">
+                    @if (ViewBag.Pay)
+                    {
+                        @*@(Html.Kendo().Button().Name("Confirm").Tag("div").HtmlAttributes(new { type = "button", @class = "k-primary" }).Icon("cart").Content("Confirm").Events(ev => ev.Click("Confirm")))*@
+                        @(Html.Kendo().Button().Name("Buy").Tag("div").HtmlAttributes(new { type = "button", @class = "k-primary" }).Icon("cart").Content("Оплатить заказ").Events(ev => ev.Click("BuyTickets")))
+                    }
+                    else
+                    {
+                        @(Html.Kendo().Button().Name("Save").Tag("div").HtmlAttributes(new { type = "button", @class = "k-primary" }).Icon("flip-vertical").Content("Отправить").Events(ev => ev.Click("SendOrder")))
+                    }
                 </div>
-            </fieldset>
-            <div class="form-actions">
-                @if (ViewBag.Pay)
-                {
-                    @*@(Html.Kendo().Button().Name("Confirm").Tag("div").HtmlAttributes(new { type = "button", @class = "k-primary" }).Icon("cart").Content("Confirm").Events(ev => ev.Click("Confirm")))*@
-                    @(Html.Kendo().Button().Name("Buy").Tag("div").HtmlAttributes(new { type = "button", @class = "k-primary" }).Icon("cart").Content("Оплатить заказ").Events(ev => ev.Click("BuyTickets")))
-                }
-                else
-                {
-                    @(Html.Kendo().Button().Name("Save").Tag("div").HtmlAttributes(new { type = "button", @class = "k-primary" }).Icon("flip-vertical").Content("Отправить").Events(ev => ev.Click("SendOrder")))
-                }
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
-</div>
 
-<script>
-    var dataSource;
+    <script>
+    /*var dataSource;*/
     $(document).ready(function () {
 
-        var dropdownlist = $("#eventname").data("kendoDropDownList");
-        dataSource = dropdownlist.dataSource;
-
-        dataSource.bind("requestEnd", dataSource_requestEnd);
-        dataSource.read();
+        SetDefaultValues();
 
     });
 
+
+        function SetDefaultValues() {
+            var dataSource = GetEventsdataSource();
+            var params = getParams();
+            /*  dataSource.bind("requestEnd", dataSource_requestEnd);*/
+            
+            dataSource.read().done(function () {
+               
+                    SetDefaultValueEvent(params.title);
+                    if (params.start) {
+                        SetDefaultValueDate(params.start);
+                    }
+               
+            });
+           
+           
+        }
+
+        function SetDefaultValueDate(start) {
+            var datepicker = $("#dateevent").data("kendoDatePicker");
+            var date = kendo.parseDate(start);
+
+            if (date) {
+                datepicker.value(date);
+                datepicker.trigger("change");
+                SetDefaultValueTime(start);
+            }
+            else {
+                datepicker.value("");
+                datepicker.trigger("change");
+                
+            }
+        }
+
+        function SetDefaultValueTime(start) {
+            var dropdownlist = $("#timeevent").data("kendoDropDownList");
+            dropdownlist.dataSource.read();
+           
+                var dataItems = dropdownlist.dataSource.data();
+
+                for (var i = 0; i < dataItems.length; i++) {
+                    var dataItem = dataItems[i];
+                    var time = kendo.toString(kendo.parseDate(start), "HH:mm -");
+                    if (dataItem[dropdownlist.options.dataTextField].includes(time)) {
+                        dropdownlist.value(dataItem[dropdownlist.options.dataValueField]);
+                        onDropDownListTimesChange({ dataItem: dataItem })
+                        break;
+                    }
+                }
+        }
+    function SetDefaultValueEvent(title)
+    {
+        var dropdownlist = $("#eventname").data("kendoDropDownList");
+        if (title) {
+            
+            var dataItems = dropdownlist.dataSource.data();
+
+            for (var i = 0; i < dataItems.length; i++) {
+                var dataItem = dataItems[i];
+                if (dataItem[dropdownlist.options.dataTextField].toLowerCase().includes(title.toLowerCase())) {
+                    dropdownlist.value(dataItem[dropdownlist.options.dataValueField]);
+                    onDropDownListEventsNamesChange({ dataItem: dataItem })
+                    break;
+                }
+            }
+        }
+        else {
+            
+            dropdownlist.select(-1);
+            dropdownlist.trigger("select");
+           /* onDropDownListEventsNamesChange([]);*/
+        }
+    }
+
+    function getParams() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const title = urlParams.get('title');
+        const start = urlParams.get('start');
+        return { title: title, start: start };
+
+    }
+    function GetEventsdataSource() {
+        var dropdownlist = $("#eventname").data("kendoDropDownList");
+        var dataSource = dropdownlist.dataSource;
+        return dataSource;
+    }
+
     function dataSource_requestEnd(e) {
         var response = e.response;
-        var type = e.type;
 
-        if (response.length > 0) {
-
-            onDropDownListEventsNamesChange({ dataItem: response[0] })
+        if (response.length ==1 ) {
+            //GetEventsdataSource().read().done(;
+            //onDropDownListEventsNamesChange({ dataItem: response[0] })
 
         }
         else {
-            onDropDownListEventsNamesChange({});
+
+           /* onDropDownListEventsNamesChange({});*/
         };
     }
 
@@ -92,7 +178,7 @@
     {
         $.ajax({
             type: "POST",
-           
+
             /*url: "http://localhost:52134/api/Payment/",*/
             /*url: "https://einstein.frisha.ru/api/Payment/",*/
             /*url: "https://78.47.91.82:81/api/Payment/",*/
@@ -112,7 +198,7 @@
                 success: function (data) {
                     kendo.ui.progress($(".form-actions"), false);
                     showSuccess("Оплата подтверждена!", true);
-                    
+
                     },
                 error: function (xhr, ajaxOptions, thrownError) {
                     kendo.ui.progress($(".form-actions"), false);
@@ -134,7 +220,7 @@
                 data: $('#order').serialize(),
                 success: function (data) {
                     kendo.ui.progress($(".form-actions"), false);
-                    console.log(data);
+                    
                     if (data.Errors) {
                         ShowMessage(data);
                     }
@@ -167,7 +253,7 @@
                     kendo.ui.progress($(".form-actions"), false);
 
                     ShowMessage(data);
-                    dataSource.read();
+                    SetDefaultValues();
                     },
                 error: function (xhr, ajaxOptions, thrownError) {
                     kendo.ui.progress($(".form-actions"), false);
@@ -177,25 +263,25 @@
 
         }
     }
-</script>
-<style>
-    legend {
-        border-bottom: 1px solid #e5e5e5;
-        margin-bottom: 20px;
-    }
+    </script>
+    <style>
+        legend {
+            border-bottom: 1px solid #e5e5e5;
+            margin-bottom: 20px;
+        }
 
-    .k-form-fieldset {
-        margin: 15px 0 0;
-        padding: 0 0;
-        border-width: 0;
-        box-sizing: border-box;
-    }
+        .k-form-fieldset {
+            margin: 15px 0 0;
+            padding: 0 0;
+            border-width: 0;
+            box-sizing: border-box;
+        }
 
-    .k-form-field-wrap {
-        width: 100%;
-    }
+        .k-form-field-wrap {
+            width: 100%;
+        }
 
-    .k-form-field {
-        margin-bottom: 10px;
-    }
-</style>
+        .k-form-field {
+            margin-bottom: 10px;
+        }
+    </style>

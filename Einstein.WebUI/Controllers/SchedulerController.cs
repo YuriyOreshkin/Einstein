@@ -8,6 +8,12 @@ namespace Einstein.WebUI.Controllers
 {
     public class SchedulerController : Controller
     {
+
+        public ActionResult Events()
+        {
+            return View();
+        }
+
         // GET: Scheduler
         [Authorize]
         public ActionResult Index()

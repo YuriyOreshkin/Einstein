@@ -38,7 +38,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
+    <Optimize>false</Optimize>
     <OutputPath>bin\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -428,6 +428,7 @@
     <Content Include="Views\MailingSettingsService\Settings.cshtml" />
     <Content Include="Views\Templates\Index.cshtml" />
     <Content Include="Views\TemplateEditor\Editor.cshtml" />
+    <Content Include="Views\Scheduler\Events.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\Shared\" />

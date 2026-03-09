@@ -28,7 +28,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
+    <Optimize>false</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -82,6 +82,11 @@
     <Compile Include="Entities\USER.cs" />
     <Compile Include="Entities\MAILSERVICESETTINGS.cs" />
     <Compile Include="Entities\ORDER.cs" />
+    <Compile Include="Migrations\202603021020599_InitialCreate.cs" />
+    <Compile Include="Migrations\202603021020599_InitialCreate.designer.cs">
+      <DependentUpon>202603021020599_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\CryptoService.cs" />
     <Compile Include="Services\EFRepository.cs" />
@@ -120,7 +125,11 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\202603021020599_InitialCreate.resx">
+      <DependentUpon>202603021020599_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

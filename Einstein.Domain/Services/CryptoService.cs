@@ -35,8 +35,7 @@ namespace Einstein.Domain.Services
         public string DecryptPassword(string ProxyPassword)
         {
             if (string.IsNullOrEmpty(ProxyPassword)) return ProxyPassword;
-
-
+          
             byte[] pass = null;
 
             pass = Convert.FromBase64String(ProxyPassword);

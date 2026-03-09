@@ -1,0 +1,333 @@
+﻿
+@{
+    ViewBag.Title = "Расписание";
+}
+@Scripts.Render("~/Scripts/gridview.js")
+@*<h2>Календарь мероприятий</h2>*@
+
+<div id="events-content">
+    
+    <div id="filter-searcher" class="filter-section">
+        <span class="k-textbox k-space-left" style="width: 100%;">
+            @(Html.Kendo().TextBox().Name("searchbox").HtmlAttributes(new { placeholder = "Поиск" }))
+            <span class="k-icon k-i-search"></span>
+        </span>
+    </div>
+
+    @(Html.Kendo().Scheduler<Einstein.WebUI.Models.EventViewModel>()
+                                        .Name("scheduler")
+                                        .HtmlAttributes(new { style = "height: 100%" })
+                                        .MajorTimeHeaderTemplate("#=kendo.toString(date, 'HH:mm')#")
+                                        .Views(views =>
+                                        {
+                                            views.AgendaView();
+
+                                        })
+                                        
+                                        .Editable(false)
+                                        .EventTemplateId("eventCardsTemplate")
+                                        .Timezone("W-SU")
+                                        .Mobile(MobileMode.Auto)
+                                        .Height(920)
+                                        .DataSource(d => d
+                                            .Model(m =>
+                                            {
+                                                m.Id(f => f.TaskID);
+                                                
+                                            })
+                                            .Read("Read", "SchedulerService")
+                                            .Events(events => events.Error("error_handler"))
+                                        )
+                                        
+    )
+
+</div>
+
+<script id="eventCardsTemplate" type="text/x-kendo-template">
+     <div class="k-card k-card-horizontal">
+        <div class="k-card-media" style="background-color: #= Color #;width:30px;"></div>
+       <div class="k-vbox k-column" style="width:100%">
+         <div class="k-card-header">
+                    <h5 class="k-card-title" >#= title#</h5>
+                    <h6 class="k-card-subtitle">#= kendo.toString(start, 'dd.MM.yyyy dddd HH:mm' )# — #= kendo.toString(end, 'HH:mm' )#</h6>
+         </div>
+        #if(description){#
+            <div class="k-card-body">
+                <p>#= kendo.toString(description) #</p>
+            </div>
+        #}#
+        <div class="k-card-actions k-actions-vertical k-actions-center">
+             @*<span class="k-card-action">*@
+                      <a class="action-order" target="_blank"  href="@Url.Action("Index","Order")?title=#=title#&start=#: kendo.toString(start, 'dd.MM.yyyy HH:mm' )#"> <span class="k-button k-flat k-primary" ><span class="k-icon k-i-cart"></span>Купить билет</span></a>
+              @*</span>*@
+        </div>
+        <div class="k-card-footer">
+                    <span class="event-info-item event-price"><span>Цена: </span><strong>#=kendo.toString(kendo.parseInt(Price), "c")#</strong></span>
+                    #if(FreePlaces > 0 ){#
+                     <span class="event-info-item" style="background-color: rgb(48,214,100);" ><span>Мест: </span> #= FreePlaces#</strong><span class="k-icon  k-i-user" style="font-size: 1px; padding-left: 5px;"></span></span>
+                    #} else {#
+                        <span class="event-info-item" style="background-color: rgb(255,48,100);" ><span>Мест нет</span></span>
+                    #}#
+         </div>
+       </div>
+        @*<hr class="k-card-separator k-separator-vertical">*@
+
+    </div>
+</script>   
+<script>
+
+    
+   
+    $(document).ready(function () {
+
+        if (!kendo.support.mobileOS) {
+            $(window).resize();
+        }
+    });
+
+    $("#searchbox").on("input", function () {
+
+        schedulerFiltering();
+    });
+
+
+    function schedulerFiltering() {
+        var query = { logic: "or", filters: [{}] };
+       
+        //seacher
+        var scheduler = $("#scheduler").data("kendoScheduler");
+        
+        var text = $("#searchbox").val();
+
+        if (text.length > 0) {
+            //Title or Content
+            query.filters.push({
+                logic: "or",
+                filters: [
+                    { field: "title", operator: "contains", value: text },
+                ]
+            });
+
+            scheduler.dataSource.filter(query);
+        }
+        else {
+            scheduler.dataSource.filter({});
+        }
+
+
+
+
+    }
+
+
+    function setSchedulerHeight(height) {
+        var widget = $("#scheduler").data("kendoScheduler");
+        widget.element.height(height);
+        $(".k-scheduler-content").height(height-80);
+        widget.resize(true);
+    }
+
+    $(window).resize(function () {
+
+        var wheight = $(window).outerHeight();
+        var mMHeight = $("#mainMenu").height();
+        var fHeight = $("#filter-searcher").height();
+        
+        setSchedulerHeight(wheight - mMHeight - fHeight-4);
+    });
+
+
+
+</script>
+<style>
+    .k-card {
+        border-radius: var(--kendo-border-radius-lg, 0.375rem);
+        border-width: 1px;
+        border-style: solid;
+        box-sizing: border-box;
+        outline: 0;
+        font-family: var(--kendo-font-family, inherit);
+        font-size: var(--kendo-font-size, inherit);
+        line-height: var(--kendo-line-height, normal);
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        overflow: hidden;
+        -webkit-touch-callout: none;
+        -webkit-tap-highlight-color: rgba(0,0,0,0);
+    }
+    .k-card-separator.k-separator-vertical, .k-card-horizontal > .k-card-separator {
+        border-inline-start-width: 1px;
+    }
+
+    .k-card-separator {
+        margin: 0;
+        border-width: 0;
+        border-style: solid;
+        border-color: inherit;
+        display: block;
+        flex: 0 0 auto;
+        align-self: stretch;
+    }
+    .k-separator-vertical, .k-hstack > .k-separator, .k-hbox > .k-separator {
+        width: 0;
+        height: auto;
+        border-width: 0 0 0 1px;
+    }
+
+    .k-card-footer {
+        border-color: var(--kendo-color-border, rgba(0, 0, 0, 0.08));
+        color: var(--kendo-color-on-app-surface, #424242);
+    }
+
+    .k-card-footer {
+        padding-block: var(--kendo-spacing-2, 0.5rem);
+        padding-inline: var(--kendo-spacing-2, 0.5rem);
+        border-width: 1px 0 0;
+        border-style: solid;
+        outline: 0;
+        flex-shrink: 0;
+    }
+
+    .k-card-horizontal {
+        flex-flow: row nowrap;
+    }
+    .k-card-actions {
+        padding-block: var(--kendo-spacing-2, 0.5rem);
+        padding-inline: var(--kendo-spacing-2, 0.5rem);
+        border-width: 0;
+        border-style: solid;
+        border-color: inherit;
+        overflow: hidden;
+        display: flex;
+        flex-shrink: 0;
+        flex-basis: auto;
+        gap: var(--kendo-spacing-2, 0.5rem);
+    }
+    .k-card-header {
+        padding-block: var(--kendo-spacing-3, 0.75rem);
+        padding-inline: var(--kendo-spacing-4, 1rem);
+        border-width: 0 0 1px;
+        border-style: solid;
+        outline: 0;
+        flex-shrink: 0;
+        overflow: hidden;
+        position: relative;
+        z-index: 1;
+    }
+
+
+    
+    .k-card-title {
+        margin: 0 0 var(--kendo-spacing-2, 0.5rem);
+       /* font-size: var(--kendo-font-size-lg, inherit);*/
+        /*line-height: var(--kendo-line-height-sm, normal);
+        font-weight: var(--kendo-font-weight-normal, normal);*/
+    }
+
+    .k-card-subtitle {
+        margin: 0 0 var(--kendo-spacing-2, 0.5rem);
+        font-size: var(--kendo-font-size-sm, inherit);
+        line-height: var(--kendo-line-height-lg, normal);
+        font-weight: var(--kendo-font-weight-normal, normal);
+    }
+
+    h5 {
+        display: block;
+        font-size: 0.83em;
+        margin-block-start: 1.67em;
+        margin-block-end: 1.67em;
+        margin-inline-start: 0px;
+        margin-inline-end: 0px;
+        font-weight: bold;
+        unicode-bidi: isolate;
+    }
+
+    h6 {
+        display: block;
+        font-size: 0.67em;
+        margin-block-start: 2.33em;
+        margin-block-end: 2.33em;
+        margin-inline-start: 0px;
+        margin-inline-end: 0px;
+        font-weight: bold;
+        unicode-bidi: isolate;
+    }
+
+    .k-actions-center {
+        justify-content: center;
+    }
+
+    .k-actions-vertical {
+        flex-flow: column nowrap;
+        align-items: normal;
+    }
+
+    .k-i-reload {
+        display: none;
+    }
+    .event-price {
+        background-color: rgb(32,32,32); /*#747272*/
+       /* border: 1px solid #747272;*/
+        /* background-color: #3d3d3d;*/
+       
+    }
+
+    .event-info-item {
+        border-radius: 100px;
+        font-size: 16px;
+        font-weight: 500;
+        letter-spacing: 0;
+        line-height: 25px;
+        padding: 6px 18px;
+        color: #fff;
+        opacity: 85%;
+    }
+
+
+
+    .k-event {
+        background: none;
+        border: none;
+    }
+
+    .k-scheduler-tools + .k-scheduler-navigation {
+        float: left;
+        clear: unset;
+    }
+
+    .k-pdf {
+        height: 30px;
+    }
+
+    .k-scheduler-toolbar > .k-scheduler-tools {
+        float: left;
+        margin: 0 25px 0 0px;
+    }
+
+    /* Hide toolbar, navigation and footer during export */
+    .k-pdf-export .k-scheduler-toolbar,
+    .k-pdf-export .k-scheduler-navigation .k-nav-today,
+    .k-pdf-export .k-scheduler-navigation .k-nav-prev,
+    .k-pdf-export .k-scheduler-navigation .k-nav-next,
+    .k-pdf-export .k-scheduler-footer {
+        display: none;
+    }
+    .action-orders:active, /* активная/посещенная ссылка */
+    .action-orders:hover, /* при наведении */
+    .action-orders {
+        text-decoration: none;
+        color: #fff;
+    }
+   /* .action-orders {
+        text-decoration: none !important;
+        color: white;
+    }*/
+    
+    .template-wrapper {
+
+        text-align: left;
+    }
+   
+    
+</style>
