@@ -8,9 +8,54 @@
 <div id="events-content">
     
     <div id="filter-searcher" class="filter-section">
+
         <span class="k-textbox k-space-left" style="width: 100%;">
-            @(Html.Kendo().TextBox().Name("searchbox").HtmlAttributes(new { placeholder = "Поиск" }))
+            @(Html.Kendo().DropDownList()
+                                                    .Name("filterEventNames")
+                                                    .OptionLabel("Любое мероприятие...")
+                                                    .HtmlAttributes(new { style = "width: 100%;" })
+                                                    //.Events(events=>events.Open("onFilterEventNamesOpen"))
+                                                    .DataTextField("Title")
+                                                    .DataValueField("Title")
+                                                    .AutoBind(false)
+                                                    .DataSource(source => source.Read(read => read.Action("DropDownListReadNames", "SchedulerService")))
+                                                    .Events(ev => ev.Change("schedulerFiltering"))
+            )
             <span class="k-icon k-i-search"></span>
+        </span>
+        <span class="k-textbox k-space-left" style="width: 100%;">
+            @(Html.Kendo().DropDownList()
+                                                    .Name("filterPersons")
+                                                    .OptionLabel(new  SelectListItem { Value="0", Text = "Любое кол-во мест..." })
+                                                    .HtmlAttributes(new { style = "width: 100%;" })
+                                                    //.Events(events=>events.Open("onFilterEventNamesOpen"))
+                                                    .DataTextField("Text")
+                                                    .DataValueField("Value")
+                                                    .BindTo(new List<SelectListItem>() { 
+                                                        new SelectListItem
+                                                        {
+                                                            Text="1 — 5",
+                                                            Value="1—"
+                                                        },
+                                                        new SelectListItem
+                                                        {
+                                                            Text="5 — 10",
+                                                            Value="5—"
+                                                        },
+                                                        new SelectListItem
+                                                        {
+                                                            Text="10 — 15",
+                                                            Value="10—"
+                                                        },
+                                                        new SelectListItem
+                                                        {
+                                                            Text="больше 15",
+                                                            Value="15—"
+                                                        }
+                                                    })
+                                                    .Events(ev => ev.Change("schedulerFiltering"))
+            )
+            <span class="k-icon k-i-user"></span>
         </span>
     </div>
 
@@ -18,12 +63,12 @@
                                         .Name("scheduler")
                                         .HtmlAttributes(new { style = "height: 100%" })
                                         .MajorTimeHeaderTemplate("#=kendo.toString(date, 'HH:mm')#")
+                                        .Max(DateTime.Now.AddMonths(3).AddDays(-7))
                                         .Views(views =>
                                         {
                                             views.AgendaView();
 
                                         })
-                                        
                                         .Editable(false)
                                         .EventTemplateId("eventCardsTemplate")
                                         .Timezone("W-SU")
@@ -33,12 +78,14 @@
                                             .Model(m =>
                                             {
                                                 m.Id(f => f.TaskID);
-                                                
+
                                             })
                                             .Read("Read", "SchedulerService")
-                                            .Events(events => events.Error("error_handler"))
+                                            .Events(events => {
+                                                events.Error("error_handler");
+                                            })
                                         )
-                                        
+
     )
 
 </div>
@@ -57,14 +104,14 @@
             </div>
         #}#
         <div class="k-card-actions k-actions-vertical k-actions-center">
-             @*<span class="k-card-action">*@
+             <span class="k-card-action">
                       <a class="action-order" target="_blank"  href="@Url.Action("Index","Order")?title=#=title#&start=#: kendo.toString(start, 'dd.MM.yyyy HH:mm' )#"> <span class="k-button k-flat k-primary" ><span class="k-icon k-i-cart"></span>Купить билет</span></a>
-              @*</span>*@
+              </span>
         </div>
         <div class="k-card-footer">
                     <span class="event-info-item event-price"><span>Цена: </span><strong>#=kendo.toString(kendo.parseInt(Price), "c")#</strong></span>
                     #if(FreePlaces > 0 ){#
-                     <span class="event-info-item" style="background-color: rgb(48,214,100);" ><span>Мест: </span> #= FreePlaces#</strong><span class="k-icon  k-i-user" style="font-size: 1px; padding-left: 5px;"></span></span>
+                     <span class="event-info-item" style="background-color: rgb(48,214,100);" ><span>Мест: </span> #= FreePlaces#</strong><span class="k-icon  k-i-user" style="font-size: 14px; margin-bottom: 3px; padding-left: 5px;"></span></span>
                     #} else {#
                         <span class="event-info-item" style="background-color: rgb(255,48,100);" ><span>Мест нет</span></span>
                     #}#
@@ -76,6 +123,8 @@
 </script>   
 <script>
 
+
+
     
    
     $(document).ready(function () {
@@ -85,37 +134,41 @@
         }
     });
 
-    $("#searchbox").on("input", function () {
+ 
 
-        schedulerFiltering();
-    });
-
+   
 
     function schedulerFiltering() {
-        var query = { logic: "or", filters: [{}] };
-       
-        //seacher
-        var scheduler = $("#scheduler").data("kendoScheduler");
         
-        var text = $("#searchbox").val();
+        var query =  { logic: "and", filters: [] };;
 
-        if (text.length > 0) {
-            //Title or Content
-            query.filters.push({
-                logic: "or",
-                filters: [
-                    { field: "title", operator: "contains", value: text },
-                ]
-            });
-
-            scheduler.dataSource.filter(query);
+        var ename = $("#filterEventNames").data("kendoDropDownList").value();
+        var persons = $("#filterPersons").data("kendoDropDownList").value();
+        
+        if (ename) {
+           
+            query.filters.push({ field: "title", operator: "eq", value: ename });
         }
-        else {
-            scheduler.dataSource.filter({});
+        if (persons != "0") {
+           
+            var arr = persons.split("—");
+            if (arr[0]) {
+                var min = kendo.parseInt(arr[0]);
+                query.filters.push({ field: "FreePlaces", operator: "gte", value: min });
+            }
+            if (arr[1]) {
+                var max = kendo.parseInt(arr[1]);
+                query.filters.push({ field: "FreePlaces", operator: "lte", value: max });
+            }
         }
 
+        
+       
+        var scheduler = $("#scheduler").data("kendoScheduler");
 
-
+        
+        scheduler.dataSource.filter(query);
+       
 
     }
 
