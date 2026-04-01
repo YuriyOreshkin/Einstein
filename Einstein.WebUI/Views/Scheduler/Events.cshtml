@@ -103,19 +103,20 @@
                 <p>#= kendo.toString(description) #</p>
             </div>
         #}#
+
+        <div class="k-card-footer">
+                        <div class="footer-item"><span class="event-info-item event-price"><span>Цена: </span><strong>#=kendo.toString(kendo.parseInt(Price), "c0")#</strong></span></div>
+                    #if(FreePlaces > 0 ){#
+                        <div class="footer-item" style="margin: 9px 0 0 0"><span class="event-info-item" style="background-color: rgb(48,214,100);" ><span>Мест: </span> #= FreePlaces#</strong><span class="k-icon  k-i-user" style="font-size: 14px; margin-bottom: 3px; padding-left: 5px;"></span></span></div>
+                    #} else {#
+                        <div class="footer-item"><span class="event-info-item" style="background-color: rgb(255,48,100);" ><span>Мест нет</span></span></div>
+                    #}#
+         </div>
         <div class="k-card-actions k-actions-vertical k-actions-center">
              <span class="k-card-action">
                       <a class="action-order" target="_blank"  href="@Url.Action("Index","Order")?title=#=title#&start=#: kendo.toString(start, 'dd.MM.yyyy HH:mm' )#"> <span class="k-button k-flat k-primary" ><span class="k-icon k-i-cart"></span>Купить билет</span></a>
               </span>
         </div>
-        <div class="k-card-footer">
-                    <span class="event-info-item event-price"><span>Цена: </span><strong>#=kendo.toString(kendo.parseInt(Price), "c")#</strong></span>
-                    #if(FreePlaces > 0 ){#
-                     <span class="event-info-item" style="background-color: rgb(48,214,100);" ><span>Мест: </span> #= FreePlaces#</strong><span class="k-icon  k-i-user" style="font-size: 14px; margin-bottom: 3px; padding-left: 5px;"></span></span>
-                    #} else {#
-                        <span class="event-info-item" style="background-color: rgb(255,48,100);" ><span>Мест нет</span></span>
-                    #}#
-         </div>
        </div>
         @*<hr class="k-card-separator k-separator-vertical">*@
 
@@ -130,6 +131,7 @@
     $(document).ready(function () {
 
         if (!kendo.support.mobileOS) {
+            
             $(window).resize();
         }
     });
@@ -176,23 +178,34 @@
     function setSchedulerHeight(height) {
         var widget = $("#scheduler").data("kendoScheduler");
         widget.element.height(height);
-        $(".k-scheduler-content").height(height-80);
+      
         widget.resize(true);
     }
 
     $(window).resize(function () {
+       
+            var wheight = $(window).outerHeight();
+            var mMHeight = $("#mainMenu").height();
+            var fHeight = $("#filter-searcher").height();
+        if (!kendo.support.mobileOS) {
 
-        var wheight = $(window).outerHeight();
-        var mMHeight = $("#mainMenu").height();
-        var fHeight = $("#filter-searcher").height();
-        
-        setSchedulerHeight(wheight - mMHeight - fHeight-4);
+            setSchedulerHeight(wheight - mMHeight - fHeight - 4);
+        }
     });
 
 
 
 </script>
 <style>
+
+   
+
+    .k-scheduler-mobile .k-scheduler-footer {
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex-pack: justify;
+        justify-content: space-between;
+    }
     .k-card {
         border-radius: var(--kendo-border-radius-lg, 0.375rem);
         border-width: 1px;
@@ -335,8 +348,13 @@
         padding: 6px 18px;
         color: #fff;
         opacity: 85%;
+        white-space:nowrap;
     }
-
+    .footer-item{
+        width:fit-content;
+        display:inline-block;
+        height:100%;
+    }
 
 
     .k-event {

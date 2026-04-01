@@ -104,7 +104,7 @@
             <div style=" float:right;">
                 @*<span title="Сумма"><strong>#=kendo.toString(kendo.parseInt(Total), "c")#</strong></span>*@
                 @*<a class="action-orders k-button"  target="_blank" title="Заявки" href="#if(TaskID > 0) {  #@Url.Action("GridView","Order")?eventid=#=TaskID# #}else {#@Url.Action("GridViewByDate","Order")?recurrenceId=#=recurrenceId#&start=#: kendo.toString(start, 'dd.MM.yyyy HH:mm' )# #}#"><span class="k-icon k-i-cart" style="font-size: 20px;"></span></a>*@
-                <a class="action-orders" target="_blank" title="Заявки" href="#if(TaskID > 0) {  #@Url.Action("GridView","Order")?eventid=#=TaskID# #}else {#@Url.Action("GridViewByDate","Order")?recurrenceId=#=recurrenceId#&start=#: kendo.toString(start, 'dd.MM.yyyy HH:mm' )# #}#"><span title="Заявки"><strong>#=kendo.toString(kendo.parseInt(Total), "c")#</strong></span></a>
+                <a class="action-orders" target="_blank" title="Заявки" href="#if(TaskID > 0) {  #@Url.Action("GridView","Order")?eventid=#=TaskID# #}else {#@Url.Action("GridViewByDate","Order")?recurrenceId=#=recurrenceId#&start=#: kendo.toString(start, 'dd.MM.yyyy HH:mm' )# #}#"><span title="Заявки"><strong>#=kendo.toString(kendo.parseInt(Total), "c0")#</strong></span></a>
             </div>
         </div>
     </div>
