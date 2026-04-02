@@ -145,7 +145,7 @@
             $(window).resize();
         }
         else {
-            $(".k-scheduler-content").height(520);
+            $(".k-scheduler-content").height(540);
             
         }
     });
@@ -181,8 +181,14 @@
             query.filters.push({ field: "title", operator: "eq", value: ename });
 
             var selected = dropdownlist_names.dataItem();
-            var start = kendo.parseDate(selected.Dates[0].Times[0].Start);
-            scheduler.date(start);
+            if (selected.Dates.length > 0 && selected.Dates[0].Times.length > 0 && !selected.Dates[0].Times[0].Start) {
+                var start = kendo.parseDate(selected.Dates[0].Times[0].Start);
+                scheduler.date(start);
+            }
+            else {
+                scheduler.date(new Date());
+            }
+           
         }
         if (persons != "0") {
 
@@ -197,14 +203,7 @@
             }
         }
 
-
-
-        
-
-
         scheduler.dataSource.filter(query);
-
-
     }
 
 
@@ -212,7 +211,6 @@
         var widget = $("#scheduler").data("kendoScheduler");
         widget.element.height(height);
         $(".k-scheduler-content").height(height - 80);
-        console.log('ed');
         widget.resize(true);
     }
 
