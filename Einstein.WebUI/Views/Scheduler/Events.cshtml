@@ -74,7 +74,7 @@
                                         .EventTemplateId("eventCardsTemplate")
                                         .Timezone("W-SU")
                                         .Mobile(MobileMode.Auto)
-                                        .Height(650)
+                                        .Height(670)
                                         .DataSource(d => d
                                             .Model(m =>
                                             {
@@ -95,7 +95,11 @@
 
     <div class="k-card-header">
                    <h5 class="k-card-title" >#= Title#</h5>
-                   <h6 class="k-card-subtitle">ближайшее #= kendo.toString(kendo.parseDate(Dates[0].Times[0].Start), 'dd.MM.yyyy с HH:mm' )# до #= kendo.toString(kendo.parseDate(Dates[0].Times[0].End), 'HH:mm' )#</h6>
+                  #if(Dates.length > 0 && Dates[0].Times.length > 0 && Dates[0].Times[0].Start && Dates[0].Times[0].End){#
+                    <h6 class="k-card-subtitle">ближайшее #= kendo.toString(kendo.parseDate(Dates[0].Times[0].Start), 'dd.MM.yyyy с HH:mm' )# до #= kendo.toString(kendo.parseDate(Dates[0].Times[0].End), 'HH:mm' )#</h6>
+                  #} else {#
+                    <h6 class="k-card-subtitle">не планируется</h6>
+                  #}#
         </div>
 </script>
 
