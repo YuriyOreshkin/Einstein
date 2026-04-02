@@ -181,7 +181,7 @@
             query.filters.push({ field: "title", operator: "eq", value: ename });
 
             var selected = dropdownlist_names.dataItem();
-            if (selected.Dates.length > 0 && selected.Dates[0].Times.length > 0 && !selected.Dates[0].Times[0].Start) {
+            if (selected.Dates.length > 0 && selected.Dates[0].Times.length > 0 && selected.Dates[0].Times[0].Start) {
                 var start = kendo.parseDate(selected.Dates[0].Times[0].Start);
                 scheduler.date(start);
             }
