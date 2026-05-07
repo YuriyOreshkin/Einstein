@@ -94,12 +94,8 @@
 <script id="eventDDLTemplate" type="text/x-kendo-template">
 
     <div class="k-card-header">
-                   <h5 class="k-card-title" >#= Title#</h5>
-                  #if(Dates.length > 0 && Dates[0].Times.length > 0 && Dates[0].Times[0].Start && Dates[0].Times[0].End){#
-                    <h6 class="k-card-subtitle">ближайшее #= kendo.toString(kendo.parseDate(Dates[0].Times[0].Start), 'dd.MM.yyyy с HH:mm' )# до #= kendo.toString(kendo.parseDate(Dates[0].Times[0].End), 'HH:mm' )#</h6>
-                  #} else {#
-                    <h6 class="k-card-subtitle">не планируется</h6>
-                  #}#
+                   <h5 class="k-card-title" >#= Title#</h5>                  
+                    <h6 class="k-card-subtitle">#= nearestTime(Dates)# </h6>
         </div>
 </script>
 
@@ -155,13 +151,7 @@
         var widget = $("#scheduler").data("kendoScheduler");
         $(".k-pane-wrapper").height(height);
         $(".k-scheduler-content").height(650);
-        console.log(widget.element.context);
-        //height = (height * 80) / 100;
-        //console.log(height);
-        //size widget to take the whole view
         widget.element.context.css('height','700px');
-        //widget.element.closest(".k-widget").height(height);
-
         widget.resize(true);
     }
 
@@ -229,7 +219,26 @@
         //}
     });
 
+    function nearestTime(dates) {
 
+        var result = "не планируется";
+        if (dates.length > 0 ) {
+            var nearestDates = dates.sort(function (a, b) {
+
+                var c = new Date(kendo.parseDate(a.Date));
+                var d = new Date(kendo.parseDate(b.Date));
+                return c - d;
+            });
+
+            if (nearestDates[0].Times.length > 0) {
+                var nearestTime = nearestDates[0].Times.sort((a, b) => parseInt(a.Value) - parseInt(b.Value))[0];
+
+               
+                result = "ближайшее " + kendo.toString(kendo.parseDate(nearestTime.Start), 'dd.MM.yyyy с HH:mm') + " до " + kendo.toString(kendo.parseDate(nearestTime.End), 'HH:mm');
+            }
+        }
+           return result;
+    }
 
 </script>
 <style>
