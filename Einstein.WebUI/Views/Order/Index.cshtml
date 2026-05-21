@@ -66,7 +66,7 @@
 
         function SetDefaultValueDate(start) {
             var datepicker = $("#dateevent").data("kendoDatePicker");
-            var date = kendo.parseDate(start);
+            var date = kendo.parseDate(start,"dd.MM.yyyy");
 
             if (date) {
                 datepicker.value(date);
@@ -82,19 +82,19 @@
 
         function SetDefaultValueTime(start) {
             var dropdownlist = $("#timeevent").data("kendoDropDownList");
-            dropdownlist.dataSource.read();
+           /* dropdownlist.dataSource.read();*/
            
-                var dataItems = dropdownlist.dataSource.data();
-
+            var dataItems = dropdownlist.dataSource.data();
                 for (var i = 0; i < dataItems.length; i++) {
                     var dataItem = dataItems[i];
                     var time = kendo.toString(kendo.parseDate(start), "HH:mm -");
                     if (dataItem[dropdownlist.options.dataTextField].includes(time)) {
                         dropdownlist.value(dataItem[dropdownlist.options.dataValueField]);
                         onDropDownListTimesChange({ dataItem: dataItem })
-                        break;
+                        return;
                     }
-                }
+            }
+
         }
     function SetDefaultValueEvent(title)
     {
