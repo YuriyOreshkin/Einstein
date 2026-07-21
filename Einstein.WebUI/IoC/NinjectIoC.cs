@@ -29,8 +29,10 @@ namespace Einstein.WebUI.IoC
             ninjectKernel.Bind<ITemplateService>().To<FileTemplateService>().InSingletonScope().WithConstructorArgument("_filename", HttpContext.Current.Server.MapPath("~/App_Data/Templates/OrderTemplate.html")).WithConstructorArgument("_anchor", "order");
             ninjectKernel.Bind<ITemplateService>().To<FileTemplateService>().WhenInjectedInto<MailingTemplateServiceController>().InSingletonScope().WithConstructorArgument("_filename", HttpContext.Current.Server.MapPath("~/App_Data/Templates/MailingTemplate.html")).WithConstructorArgument("_anchor", "mailing");
             ninjectKernel.Bind<ITemplateService>().To<FileTemplateService>().WhenInjectedInto<EMailBackgroundJobs>().InSingletonScope().WithConstructorArgument("_filename", HttpContext.Current.Server.MapPath("~/App_Data/Templates/MailingTemplate.html")).WithConstructorArgument("_anchor", "mailing");
-            ninjectKernel.Bind<ITermsService>().To<FileTermsService>().InSingletonScope().WithConstructorArgument("_filename", HttpContext.Current.Server.MapPath("~/App_Data/Terms.html"));
-
+            //ninjectKernel.Bind<ITermsService>().To<FileTermsService>().InSingletonScope().WithConstructorArgument("_filename", HttpContext.Current.Server.MapPath("~/App_Data/Terms.html"));
+            ninjectKernel.Bind<ITemplateService>().To<FileTemplateService>().WhenInjectedInto<TermsServiceController>().InSingletonScope().WithConstructorArgument("_filename", HttpContext.Current.Server.MapPath("~/App_Data/Terms.html")).WithConstructorArgument("_anchor", "term"); 
+            ninjectKernel.Bind<ITemplateService>().To<FileTemplateService>().WhenInjectedInto<TicketTemplateServiceController>().InSingletonScope().WithConstructorArgument("_filename", HttpContext.Current.Server.MapPath("~/App_Data/Templates/TicketTemplate.html")).WithConstructorArgument("_anchor", "order"); 
+            
             ninjectKernel.Bind<IXmlService>().To<XMLService>().InSingletonScope().WithConstructorArgument("_path", HttpContext.Current.Server.MapPath("~/App_Data/Settings"));
             ninjectKernel.Bind<IMailServiceConfig>().To<XMLMailServiceConfig>().InSingletonScope().WithConstructorArgument("_filename", "MailSettings.xml");
             ninjectKernel.Bind<IPaymentServiceConfig>().To<XMLPaymentServiceConfig>().InSingletonScope().WithConstructorArgument("_filename", "PaymentSettings.xml");

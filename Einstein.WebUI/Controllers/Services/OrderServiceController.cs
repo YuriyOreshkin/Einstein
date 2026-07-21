@@ -53,7 +53,8 @@ namespace Einstein.WebUI.Controllers.Services
             {
                 return RedirectToAction("Index", "Order");
             }
-            return View("~/Views/Order/ETicket.cshtml", order);
+            return RedirectToAction("Ticket", "TicketTemplateService", order);
+            //return View("~/Views/Order/ETicket.cshtml", order);
         }
         [HttpPost]
         public ActionResult Pdf_Export_Save(string contentType, string base64, string fileName)

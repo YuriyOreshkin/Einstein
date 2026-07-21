@@ -94,7 +94,6 @@
     <Compile Include="Services\EMailOrderSender.cs" />
     <Compile Include="Services\EMailSender.cs" />
     <Compile Include="Services\FileBaseTemplate.cs" />
-    <Compile Include="Services\FileTermsService.cs" />
     <Compile Include="Services\ICryptoService.cs" />
     <Compile Include="Services\IExcel.cs" />
     <Compile Include="Services\IBackgroundJobs.cs" />
@@ -106,7 +105,6 @@
     <Compile Include="Services\IPaymentServiceConfig.cs" />
     <Compile Include="Services\IMailServiceConfig.cs" />
     <Compile Include="Services\IRepository.cs" />
-    <Compile Include="Services\ITermsService.cs" />
     <Compile Include="Services\ITemplateService.cs" />
     <Compile Include="Services\FileTemplateService.cs" />
     <Compile Include="Services\IUsers.cs" />

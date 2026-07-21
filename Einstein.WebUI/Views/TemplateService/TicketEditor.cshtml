@@ -1,47 +1,11 @@
-﻿@model string
-<script>
+﻿@*TicketTemplate*@
+@model Einstein.WebUI.Models.TemplateViewModel
+<div style="margin-left:auto;margin-right:auto;max-width:600px;height:86vh;">
 
-    
-    function SaveTerms(e)
-    {
-        var editor = $("#terms-editor").data("kendoEditor");
-        var editorContents = editor.encodedValue();       
-
-         $.ajax({
-                type: "POST",
-                url: "@Url.Action("SaveTemplate", "TermsService")",
-                datatype: 'json',
-                data: { body: editorContents },
-                success: function (data) {
-
-                    if (data.message == "OK") {
-
-                        showSuccess("Шаблон успешно сохранён!")
-
-                    }
-                    else {
-
-                        showError(data.errors);
-
-                    }
-                },
-                error: function (xhr, ajaxOptions, thrownError) {
-
-                    showError(thrownError + "-" + xhr.status);
-                }
-            });
-
-    }
-
-
-</script>
-
-<div style="margin-left:auto;margin-right:auto;max-width:100%;height:86vh;">
-
-    @(Html.Kendo().EditorFor(m=>m)
-                                                                                  .Name("terms-editor")
+    @(Html.Kendo().EditorFor(m=>m.body)
+                                                                                  .Name("template-editor-"+@Model.name)
                                                                                   .Tools(tools => tools.Clear()
-                                                                                    .CustomTemplate(save => save.Template("" + Html.Kendo().Button().Name("terms-save").Icon("save").HtmlAttributes(new { @class = "k-primary" }).Content("Сохранить").Events(ev => ev.Click("SaveTerms")).ToClientTemplate()))
+                                                                                    .CustomTemplate(save => save.Template("" + Html.Kendo().Button().Name("ticket-save-"+@Model.name).Icon("save").HtmlAttributes(new { @class = "k-primary" }).Content("Сохранить шаблон").Events(ev => ev.Click("SaveTemplate")).ToClientTemplate()))
                                                                                     .Separator()
                                                                                     .Bold().Italic().Underline()
                                                                                     .JustifyLeft().JustifyCenter().JustifyRight().JustifyFull()
@@ -52,12 +16,13 @@
                                                                                     .InsertImage().CreateLink().Unlink()
                                                                                     .Separator()
                                                                                     .FontColor().FontName().FontSize()
-                                                                                    .Separator()
-                                                                                    .Print()
-                                                                                    .Pdf()
+                                                                                    //.Separator()
+                                                                                    //.Print()
+                                                                                    //.Pdf()
                                                                                     .Separator()
                                                                                     .TableEditing()
-                                                                                    
+                                                                                    .CustomTemplate(save => save.Template("" + Html.Kendo().Button().Name("temlate-parameters-"+@Model.name).HtmlAttributes(new { title = "Доступные параметры" }).Icon("question").Events(ev => ev.Click("TemplateParametersInfo")).ToClientTemplate()))
+
 
                         )
                         .ImageBrowser(imageBrowser => imageBrowser

@@ -32,7 +32,7 @@ namespace Einstein.Domain.Services
         /// </summary>
         public void SaveTemplate(string filename,string subject,string text)
         {
-            string html = subject==null ? HttpUtility.HtmlDecode(text) : "<subject>" + subject + "</subject>" + "<body>" + HttpUtility.HtmlDecode(text) + "</body>";
+            string html = subject==null ? "<body>" + HttpUtility.HtmlDecode(text) + "</body>" : "<subject>" + subject + "</subject>" + "<body>" + HttpUtility.HtmlDecode(text) + "</body>";
            
             using (StreamWriter file = new StreamWriter(filename, false))
             {

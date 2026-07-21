@@ -16,20 +16,29 @@ namespace Einstein.WebUI.Controllers.Services
             service = _service;
         }
 
-        public ActionResult Editor()
+        public ActionResult Editor(string name)
         {
-            var model = new TemplateViewModel() { name = "TemplateService", subject=service.GetTemplateSubject(),  body=service.GetTemplateBody() };
+            var model = new TemplateViewModel() { name = name, subject=service.GetTemplateSubject(),  body=service.GetTemplateBody() };
+            switch (name)
+            {
+                case "TicketTemplateService":
+                    return PartialView("~/Views/TemplateService/TicketEditor.cshtml", model);
+                case "TermsService":
+                    return PartialView("~/Views/TemplateService/TermsEditor.cshtml", model);
 
-            return PartialView("Editor", model);
+                default:
+                    return PartialView("~/Views/TemplateService/OrderEditor.cshtml", model);
+            }
+            
 
         }
 
-        public ActionResult AvailableParameters()
+        public virtual ActionResult AvailableParameters()
         {
 
             var parameters = service.AvailableParameters(typeof(OrderViewModel));
 
-            return PartialView(parameters);
+            return PartialView("~/Views/TemplateService/AvailableParameters.cshtml",parameters);
         }
 
         public JsonResult SaveTemplate(string subject, string body)

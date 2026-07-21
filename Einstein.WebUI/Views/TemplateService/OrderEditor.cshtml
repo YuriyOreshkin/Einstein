@@ -3,58 +3,59 @@
     function getName(e) {
         var id = e.sender.element.context.id;
         var name = id.substring(id.lastIndexOf("-") + 1);
-
         return name;
 
     }
-        function TemplateParametersInfo(e)
-    {
-            var window = $("#window").data("kendoWindow");
-            var name = getName(e);
-            var url = "/" + name + "/AvailableParameters";
-            console.log(url);
-            window.content("");
-            window.refresh({
-                url: url,
-                type: "POST",
-                datatype: "json"
-            }
-            ).center().open();
+    function TemplateParametersInfo(e) {
+        var window = $("#window").data("kendoWindow");
+        var name = getName(e);
+        var url = "/" + name + "/AvailableParameters";
 
+        window.content("");
+        window.refresh({
+            url: url,
+            type: "POST",
+            datatype: "json"
+        });
 
     }
+    function onWindowRefresh(e) {
+        //Open
+        this.center().open();
+    }
 
-    function SaveTemplate(e)
-    {
+
+
+    function SaveTemplate(e) {
         var name = getName(e);
-        var editor = $("#template-editor-"+name).data("kendoEditor");
+        var editor = $("#template-editor-" + name).data("kendoEditor");
         var editorContents = editor.encodedValue();
-        var subject = $("#subject-"+name).val();
+        var subject = $("#subject-" + name).val();
         var url = "/" + name + "/SaveTemplate";
 
-         $.ajax({
-                type: "POST",
-                url: url,
-                datatype: 'json',
-                data: { subject: subject, body: editorContents },
-                success: function (data) {
+        $.ajax({
+            type: "POST",
+            url: url,
+            datatype: 'json',
+            data: { subject: subject, body: editorContents },
+            success: function (data) {
 
-                    if (data.message == "OK") {
+                if (data.message == "OK") {
 
-                        showSuccess("Шаблон успешно сохранён!")
+                    showSuccess("Шаблон успешно сохранён!")
 
-                    }
-                    else {
-
-                        showError(data.errors);
-
-                    }
-                },
-                error: function (xhr, ajaxOptions, thrownError) {
-
-                    showError(thrownError + "-" + xhr.status);
                 }
-            });
+                else {
+
+                    showError(data.errors);
+
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+
+                showError(thrownError + "-" + xhr.status);
+            }
+        });
 
     }
 </script>
@@ -80,8 +81,9 @@
                                                                                     //.Separator()
                                                                                     .TableEditing()
                                                                                     .Separator()
-                                                                                    .CustomTemplate(save => save.Template("" + Html.Kendo().Button().Name("temlate-parameters-" + @Model.name).HtmlAttributes( new { title= "Доступные параметры"}).Icon("question").Events(ev => ev.Click("TemplateParametersInfo")).ToClientTemplate()))
-                                                                                    .CustomTemplate(ct=>ct.Template("<div style='width:600px;'><label for='subject' style='vertical-align:middle;margin-right:10px;'>Тема: </label>" + Html.Kendo().TextBox().Name("subject-" + @Model.name).Value(Model.subject).HtmlAttributes(new { style= "width: 90%;" }).ToClientTemplate()+"</div>"))
+                                                                                    .CustomTemplate(save => save.Template("" + Html.Kendo().Button().Name("temlate-parameters-order-" + @Model.name).HtmlAttributes( new { title= "Доступные параметры"}).Icon("question").Events(ev => ev.Click("TemplateParametersInfo")).ToClientTemplate()))
+                                                                                    .Separator()
+                                                                                    .CustomTemplate(ct=>ct.Template("<div style='width:600px;'><label for='subject' style='vertical-align:middle;margin-right:10px;'>Тема: </label>" + Html.Kendo().TextBox().Name("subject-"+@Model.name).Value(Model.subject).HtmlAttributes(new { style= "width: 90%;" }).ToClientTemplate()+"</div>"))
 
                         )
                         .ImageBrowser(imageBrowser => imageBrowser
@@ -113,6 +115,6 @@
             .Title("Доступные параметры")
             //.LoadContentFrom("AvailableParameters", "TemplateService")
             .Draggable()
-            //.Events(ev => ev.Close("onClose"))
+            .Events(ev => ev.Refresh("onWindowRefresh"))
     )
 </div>

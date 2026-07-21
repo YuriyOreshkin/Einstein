@@ -14,10 +14,11 @@
                             //    items.Add().Text(tab.title).LoadContentFrom("Editor", "TemplateEditor", new { _template=tab.filename });
                             //}
 
-                            items.Add().Text("Заказ").Selected(true).LoadContentFrom("Editor", "TemplateService");
-                            items.Add().Text("Условия").LoadContentFrom("Editor", "TermsService");
+                            items.Add().Text("Заказ").Selected(true).LoadContentFrom("Editor", "TemplateService", new { name = "TemplateService" });
+                            items.Add().Text("Билет").LoadContentFrom("Editor", "TicketTemplateService", new { name = "TicketTemplateService" });
+                            items.Add().Text("Условия").LoadContentFrom("Editor", "TermsService", new { name = "TermsService" });
+                            items.Add().Text("Выгрузка").LoadContentFrom("Editor", "MailingTemplateService", new { name= "MailingTemplateService" });
 
-                            items.Add().Text("Выгрузка").LoadContentFrom("Editor", "MailingTemplateService");
 
 
                         })

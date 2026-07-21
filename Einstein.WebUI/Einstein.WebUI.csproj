@@ -195,7 +195,7 @@
     <Compile Include="Controllers\PaymentController.cs" />
     <Compile Include="Controllers\Services\MailingSettingsServiceController.cs" />
     <Compile Include="Controllers\Services\MailingTemplateServiceController.cs" />
-    <Compile Include="Controllers\Services\TemplateEditorController.cs" />
+    <Compile Include="Controllers\Services\TicketTemplateServiceController.cs" />
     <Compile Include="Controllers\Services\UsersServiceController.cs" />
     <Compile Include="Controllers\TemplatesController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
@@ -416,20 +416,21 @@
     <Content Include="Scripts\kendo\2019.3.1023\kendo.mobile.min.js.map" />
     <Content Include="Views\MailSettingsService\Settings.cshtml" />
     <Content Include="Views\Admin\Settings.cshtml" />
-    <Content Include="Views\TemplateService\Editor.cshtml" />
+    <Content Include="Views\TemplateService\OrderEditor.cshtml" />
     <Content Include="Views\TemplateService\AvailableParameters.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Order\Search.cshtml" />
     <Content Include="Views\Order\ListView.cshtml" />
-    <Content Include="Views\TermsService\Editor.cshtml" />
+    <Content Include="Views\TemplateService\TermsEditor.cshtml" />
     <Content Include="Views\Order\Terms.cshtml" />
     <Content Include="Views\PaymentSettingsService\Settings.cshtml" />
     <Content Include="Views\Users\Index.cshtml" />
     <Content Include="Views\Order\ETicket.cshtml" />
     <Content Include="Views\MailingSettingsService\Settings.cshtml" />
     <Content Include="Views\Templates\Index.cshtml" />
-    <Content Include="Views\TemplateEditor\Editor.cshtml" />
     <Content Include="Views\Scheduler\Events.cshtml" />
+    <Content Include="Views\TemplateService\TicketEditor.cshtml" />
+    <Content Include="Views\Order\Ticket.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\Shared\" />

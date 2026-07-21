@@ -8,23 +8,23 @@ using System.Web.Mvc;
 
 namespace Einstein.WebUI.Controllers.Services
 {
-    public class MailingTemplateServiceController : Controller
+    public class MailingTemplateServiceController : TemplateServiceController
     {
-        private ITemplateService service;
-        public MailingTemplateServiceController(ITemplateService _service)
+        ITemplateService service;
+        public MailingTemplateServiceController(ITemplateService _service) :base(_service)
         {
             service = _service;
         }
 
-        public ActionResult Editor()
-        {
-            var model = new TemplateViewModel() { name= "MailingTemplateService", subject=service.GetTemplateSubject(),  body=service.GetTemplateBody() };
+        //public ActionResult Editor()
+        //{
+        //    var model = new TemplateViewModel() { name= "MailingTemplateService", subject=service.GetTemplateSubject(),  body=service.GetTemplateBody() };
 
-            return PartialView("~/Views/TemplateService/Editor.cshtml", model);
+        //    return PartialView("~/Views/TemplateService/Editor.cshtml", model);
 
-        }
+        //}
 
-        public ActionResult AvailableParameters()
+        public override ActionResult AvailableParameters()
         {
 
             var parameters = service.AvailableParameters(typeof(PeriodViewModel));
@@ -32,21 +32,21 @@ namespace Einstein.WebUI.Controllers.Services
             return PartialView("~/Views/TemplateService/AvailableParameters.cshtml", parameters);
         }
 
-        public JsonResult SaveTemplate(string subject, string body)
-        {
-            //Save
-            try
-            {
+        //public JsonResult SaveTemplate(string subject, string body)
+        //{
+        //    //Save
+        //    try
+        //    {
 
-                 service.SaveTemplate(subject, body);
-            }
-            catch (Exception exception)
-            {
-                return Json(new { message = "errors", errors = "Ошибка: " + exception.Message }, JsonRequestBehavior.AllowGet);
-            }
+        //         service.SaveTemplate(subject, body);
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        return Json(new { message = "errors", errors = "Ошибка: " + exception.Message }, JsonRequestBehavior.AllowGet);
+        //    }
 
 
-            return Json(new { message = "OK"  }, JsonRequestBehavior.AllowGet);
-        }
+        //    return Json(new { message = "OK"  }, JsonRequestBehavior.AllowGet);
+        //}
     }
 }
